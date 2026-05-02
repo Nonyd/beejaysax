@@ -56,7 +56,7 @@ const HERO_IMG =
 export default function AboutPage() {
   return (
     <>
-      <section className="relative flex min-h-[60vh] overflow-hidden">
+      <section className="relative flex min-h-[60vh] overflow-hidden" style={{ paddingTop: 72 }}>
         <div className="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
           <div className="bg-bjs-black" />
           <div className="relative hidden min-h-[40vh] lg:block">

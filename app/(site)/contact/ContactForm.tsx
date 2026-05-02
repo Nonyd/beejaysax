@@ -65,7 +65,10 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-16 px-6 py-32 md:grid-cols-2 md:gap-24 md:px-12">
+    <div
+      className="mx-auto grid max-w-6xl gap-16 px-6 py-32 md:grid-cols-2 md:gap-24 md:px-12"
+      style={{ paddingTop: 80 }}
+    >
       <div>
         <SectionLabel>Reach Out</SectionLabel>
         <h1 className="mt-3 text-bjs-white" style={h1TextStyle}>

@@ -52,45 +52,38 @@ export default function Footer() {
           Blessed & Highly Favoured.
         </p>
 
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 24,
+            justifyContent: 'center',
+            marginBottom: 40,
+            flexWrap: 'wrap',
+          }}
+        >
           {[
-            { label: 'Instagram', href: 'https://www.instagram.com/beejaysax' },
-            { label: 'YouTube', href: 'https://www.youtube.com' },
-            { label: 'Facebook', href: 'https://www.facebook.com' },
+            { label: 'Instagram', href: 'https://instagram.com/beejaysax' },
+            { label: 'YouTube', href: 'https://youtube.com/@beejaysax' },
+            { label: 'Facebook', href: 'https://facebook.com/beejaysax' },
             { label: 'Spotify', href: 'https://open.spotify.com' },
-          ].map((social) => (
+            { label: 'TikTok', href: 'https://tiktok.com/@beejaysax' },
+          ].map((s) => (
             <a
-              key={social.label}
-              href={social.href}
+              key={s.label}
+              href={s.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={social.label}
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
-                border: '1px solid #1E1E1E',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
                 fontFamily: 'var(--font-sans)',
-                fontSize: 9,
-                letterSpacing: '0.08em',
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: '#4A4A4A',
+                color: '#3A3A3A',
                 textDecoration: 'none',
-                transition: 'all 200ms',
-              }}
-              onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.borderColor = '#C9A84C'
-                ;(e.currentTarget as HTMLAnchorElement).style.color = '#C9A84C'
-              }}
-              onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.borderColor = '#1E1E1E'
-                ;(e.currentTarget as HTMLAnchorElement).style.color = '#4A4A4A'
               }}
             >
-              {social.label.slice(0, 2).toUpperCase()}
+              {s.label}
             </a>
           ))}
         </div>

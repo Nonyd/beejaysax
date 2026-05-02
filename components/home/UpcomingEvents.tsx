@@ -61,8 +61,12 @@ export default function UpcomingEvents({ events }: { events: Event[] }) {
           </div>
         ) : (
           <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-            style={{ gap: 20, marginTop: 48 }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+              gap: 20,
+              marginTop: 48,
+            }}
           >
             {events.map((e) => (
               <div key={e.id} className="min-w-0 w-full">

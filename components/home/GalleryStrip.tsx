@@ -30,6 +30,7 @@ function MarqueeRow({
 }) {
   const innerStyle: CSSProperties = {
     display: 'flex',
+    whiteSpace: 'nowrap',
     width: 'max-content',
     gap: 12,
     animation: 'marquee 50s linear infinite',
@@ -42,14 +43,15 @@ function MarqueeRow({
         <Link
           key={`${dup}-${img.id}`}
           href="/gallery"
-          className="relative h-[180px] w-[260px] shrink-0 overflow-hidden transition-all duration-300 ease-out hover:brightness-110"
+          className="relative shrink-0 overflow-hidden transition-all duration-300 ease-out hover:brightness-110"
+          style={{ flexShrink: 0, width: 280, height: 180 }}
         >
           <Image
             src={img.imagePath}
             alt={img.caption ?? 'BeeJay Sax — gallery photo'}
             fill
             className="object-cover"
-            sizes="260px"
+            sizes="280px"
           />
         </Link>
       ))}
