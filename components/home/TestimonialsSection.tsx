@@ -51,16 +51,28 @@ export default function TestimonialsSection() {
         <SectionLabel>They Say</SectionLabel>
         <h2 className="mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold text-bjs-white">The Sound Speaks</h2>
 
-        <div ref={root} className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div
+          ref={root}
+          className="mt-14 grid auto-rows-fr grid-cols-1 gap-8 md:grid-cols-3 md:gap-6"
+        >
           {QUOTES.map((q) => (
             <blockquote
               key={q.by}
               data-quote-card
-              className="relative border border-bjs-border bg-bjs-surface2 p-10 transition-colors hover:border-bjs-gold"
+              className="relative flex min-h-0 min-w-0 flex-col overflow-hidden border border-bjs-border bg-bjs-surface2 p-8 pt-14 transition-colors hover:border-bjs-gold md:p-10 md:pt-16"
             >
-              <span className="pointer-events-none absolute right-6 top-4 font-serif text-[120px] leading-none text-bjs-gold/20">&ldquo;</span>
-              <p className="relative font-serif text-[clamp(20px,3vw,32px)] italic leading-[1.5] text-bjs-white">{q.quote}</p>
-              <footer className="relative mt-6 font-sans text-[12px] uppercase tracking-wide text-bjs-gold">{q.by}</footer>
+              <span
+                className="pointer-events-none absolute left-2 top-2 select-none font-serif text-[72px] leading-none text-bjs-gold/15 md:left-4 md:top-3 md:text-[100px]"
+                aria-hidden
+              >
+                &ldquo;
+              </span>
+              <p className="relative z-10 min-w-0 flex-1 font-serif text-[clamp(18px,2.8vw,28px)] italic leading-snug text-bjs-white">
+                {q.quote}
+              </p>
+              <footer className="relative z-10 mt-6 shrink-0 font-sans text-[12px] uppercase leading-relaxed tracking-wide text-bjs-gold">
+                {q.by}
+              </footer>
             </blockquote>
           ))}
         </div>

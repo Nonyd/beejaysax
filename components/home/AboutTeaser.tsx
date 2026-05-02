@@ -11,6 +11,7 @@ import {
   slideInFromRight,
   revealHeading,
 } from '@/lib/animations'
+import { HOMEPAGE_ABOUT_STATS } from '@/lib/homepage-stats'
 
 export default function AboutTeaser() {
   const imageRef = useRef<HTMLDivElement>(null)
@@ -29,9 +30,10 @@ export default function AboutTeaser() {
     if (img) slideInFromLeft(img)
     if (textBlock) slideInFromRight(textBlock)
     if (heading) revealHeading(heading)
-    if (s1.current) animateCounter(s1.current, 2, 2)
-    if (s2.current) animateCounter(s2.current, 20, 2)
-    if (s3.current) animateCounter(s3.current, 3, 2)
+    const { albums, yearsMinistry, yearsMinistrySuffix, continents } = HOMEPAGE_ABOUT_STATS
+    if (s1.current) animateCounter(s1.current, albums, 2)
+    if (s2.current) animateCounter(s2.current, yearsMinistry, 2, { suffix: yearsMinistrySuffix })
+    if (s3.current) animateCounter(s3.current, continents, 2)
   }, [])
 
   return (
@@ -50,7 +52,10 @@ export default function AboutTeaser() {
 
         <div ref={textRef}>
           <SectionLabel>The Artist</SectionLabel>
-          <h2 ref={headingRef} className="mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold leading-[0.95] tracking-[-0.01em] text-bjs-white">
+          <h2
+            ref={headingRef}
+            className="bjs-display-heading mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold leading-[0.95] tracking-[-0.01em] text-bjs-white"
+          >
             A Sound That Moves Heaven.
           </h2>
           <span className="gold-rule my-8 block" />

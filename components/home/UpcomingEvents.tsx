@@ -20,10 +20,10 @@ export default function UpcomingEvents({ events }: { events: Event[] }) {
   return (
     <section className="bg-bjs-black py-32">
       <div className="mx-auto max-w-7xl px-8">
-        <div ref={headRef} className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-          <div>
+        <div ref={headRef} className="flex min-w-0 flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <div className="min-w-0 max-w-full">
             <SectionLabel>On Stage</SectionLabel>
-            <h2 className="mt-6 font-serif text-[clamp(52px,9vw,120px)] font-bold leading-[0.9] tracking-[-0.02em] text-bjs-white">
+            <h2 className="mt-6 max-w-full font-serif text-[clamp(32px,9vw,120px)] font-bold leading-[0.92] tracking-[-0.02em] text-bjs-white">
               Catch BeeJay
               <br />
               <span className="text-bjs-gold">Live.</span>

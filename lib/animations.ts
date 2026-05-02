@@ -9,22 +9,35 @@ export function registerGSAP() {
   }
 }
 
-/** Character reveal without SplitText (Club GSAP); splits text into spans. */
+/** Character reveal without SplitText (Club GSAP); splits text into spans per character, grouped by word so lines never break mid-word. */
 export function revealHeading(element: HTMLElement | null, delay = 0) {
   if (!element || typeof window === 'undefined') return
 
   const text = element.textContent ?? ''
   element.textContent = ''
-  const chars = [...text].map((c) => {
-    const span = document.createElement('span')
-    span.textContent = c === ' ' ? '\u00a0' : c
-    span.style.display = 'inline-block'
-    span.style.overflow = 'hidden'
-    element.appendChild(span)
-    return span
-  })
+  const segments = text.split(/(\s+)/)
+  const charSpans: HTMLSpanElement[] = []
 
-  return gsap.from(chars, {
+  for (const segment of segments) {
+    if (/^\s+$/.test(segment)) {
+      element.appendChild(document.createTextNode(' '))
+      continue
+    }
+    const wordWrap = document.createElement('span')
+    wordWrap.style.display = 'inline-block'
+    wordWrap.style.whiteSpace = 'nowrap'
+    for (const c of segment) {
+      const span = document.createElement('span')
+      span.textContent = c
+      span.style.display = 'inline-block'
+      span.style.overflow = 'hidden'
+      wordWrap.appendChild(span)
+      charSpans.push(span)
+    }
+    element.appendChild(wordWrap)
+  }
+
+  return gsap.from(charSpans, {
     y: 100,
     opacity: 0,
     rotateX: -90,
@@ -33,6 +46,10 @@ export function revealHeading(element: HTMLElement | null, delay = 0) {
     ease: 'power4.out',
     delay,
   })
+}
+
+export type AnimateCounterOptions = {
+  suffix?: string
 }
 
 export function fadeUpOnScroll(
@@ -122,8 +139,14 @@ export function parallaxElement(element: HTMLElement | null, speed = 0.5) {
   })
 }
 
-export function animateCounter(element: HTMLElement | null, target: number, duration = 2) {
+export function animateCounter(
+  element: HTMLElement | null,
+  target: number,
+  duration = 2,
+  options?: AnimateCounterOptions
+) {
   if (!element) return
+  const suffix = options?.suffix ?? ''
   const obj = { val: 0 }
   return gsap.to(obj, {
     val: target,
@@ -131,6 +154,9 @@ export function animateCounter(element: HTMLElement | null, target: number, dura
     ease: 'power2.out',
     onUpdate: () => {
       element.textContent = Math.round(obj.val).toString()
+    },
+    onComplete: () => {
+      element.textContent = suffix ? `${target}${suffix}` : String(target)
     },
     scrollTrigger: {
       trigger: element,

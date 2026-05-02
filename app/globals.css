@@ -74,6 +74,22 @@ body {
   overflow-x: hidden;
 }
 
+/* Large serif headings: balanced wrapping, no awkward mid-word breaks */
+h1.font-serif,
+h2.font-serif {
+  text-wrap: balance;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+.bjs-display-heading {
+  text-wrap: balance;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
 ::selection {
   background: #c9a84c;
   color: #080808;
