@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { format } from 'date-fns'
-import { Music } from 'lucide-react'
 import { sectionLabelStyle } from '@/lib/typography-styles'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -62,8 +61,15 @@ export default async function ReleaseDetailPage({ params }: Props) {
               sizes="50vw"
             />
           ) : (
-            <div className="flex h-full items-center justify-center">
-              <Music className="h-24 w-24 text-bjs-gold/25" />
+            <div
+              className="flex h-full w-full items-center justify-center px-8"
+              style={{
+                background: 'linear-gradient(135deg, #1a1204 0%, #2d1f06 50%, #0d0a02 100%)',
+              }}
+            >
+              <p className="text-center font-serif text-[clamp(18px,4vw,28px)] font-semibold leading-tight tracking-[0.12em] text-bjs-gold">
+                {release.title}
+              </p>
             </div>
           )}
         </div>

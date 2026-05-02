@@ -42,7 +42,10 @@ export default function FeaturedRelease({ release }: { release: Release | null }
                   background: 'linear-gradient(135deg, #1a1204 0%, #2d1f06 50%, #0d0a02 100%)',
                 }}
               >
-                <p className="text-center font-serif text-lg font-semibold tracking-[0.12em] text-bjs-gold md:text-2xl">
+                <p
+                  className="text-center text-lg font-semibold tracking-[0.12em] text-bjs-gold md:text-2xl"
+                  style={{ fontFamily: 'var(--font-serif)' }}
+                >
                   PRAISE SESSION 1
                 </p>
               </div>

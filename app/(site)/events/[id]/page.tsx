@@ -73,7 +73,10 @@ export default async function EventDetailPage({ params }: Props) {
               sizes="100vw"
             />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-bjs-surface2 to-bjs-black" />
+            <div
+              className="h-full w-full"
+              style={{ background: 'linear-gradient(135deg, #0d0a02 0%, #1a1204 100%)' }}
+            />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-bjs-black via-bjs-black/70 to-transparent" />
         </div>

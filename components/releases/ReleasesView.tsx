@@ -76,8 +76,15 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
                     sizes="(max-width:768px) 50vw, 25vw"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <Music className="h-12 w-12 text-bjs-gold/25" />
+                  <div
+                    className="flex h-full w-full items-center justify-center px-3"
+                    style={{
+                      background: 'linear-gradient(135deg, #1a1204 0%, #2d1f06 50%, #0d0a02 100%)',
+                    }}
+                  >
+                    <p className="line-clamp-3 text-center font-serif text-[clamp(11px,2.8vw,15px)] font-semibold leading-snug tracking-[0.1em] text-bjs-gold">
+                      {r.title}
+                    </p>
                   </div>
                 )}
                 <span className="absolute left-2 top-2 border border-[rgba(201,168,76,0.3)] bg-[rgba(8,8,8,0.85)] px-2 py-1 font-sans text-[9px] uppercase tracking-[0.1em] text-bjs-gold backdrop-blur-sm">
