@@ -74,20 +74,56 @@ body {
   overflow-x: hidden;
 }
 
-/* Large serif headings: balanced wrapping, no awkward mid-word breaks */
+/* Large serif headings: avoid balance (can reflow oddly with display fonts); never hyphenate */
 h1.font-serif,
 h2.font-serif {
-  text-wrap: balance;
+  text-wrap: wrap;
   word-break: normal;
   overflow-wrap: normal;
   hyphens: none;
+  -webkit-hyphens: none;
 }
 
 .bjs-display-heading {
-  text-wrap: balance;
+  text-wrap: wrap;
   word-break: normal;
   overflow-wrap: normal;
   hyphens: none;
+  -webkit-hyphens: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes bjs-testimonial-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 20px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .bjs-testimonial-card {
+    opacity: 0;
+    animation: bjs-testimonial-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .bjs-testimonial-card:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .bjs-testimonial-card:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .bjs-testimonial-card:nth-child(3) {
+    animation-delay: 0.25s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bjs-testimonial-card {
+    opacity: 1;
+  }
 }
 
 ::selection {

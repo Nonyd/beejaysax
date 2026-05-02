@@ -9,7 +9,7 @@ import {
   animateCounter,
   slideInFromLeft,
   slideInFromRight,
-  revealHeading,
+  fadeUpOnScroll,
 } from '@/lib/animations'
 import { HOMEPAGE_ABOUT_STATS } from '@/lib/homepage-stats'
 
@@ -29,7 +29,7 @@ export default function AboutTeaser() {
     const textBlock = textRef.current
     if (img) slideInFromLeft(img)
     if (textBlock) slideInFromRight(textBlock)
-    if (heading) revealHeading(heading)
+    if (heading) fadeUpOnScroll(heading)
     const { albums, yearsMinistry, yearsMinistrySuffix, continents } = HOMEPAGE_ABOUT_STATS
     if (s1.current) animateCounter(s1.current, albums, 2)
     if (s2.current) animateCounter(s2.current, yearsMinistry, 2, { suffix: yearsMinistrySuffix })
@@ -54,9 +54,11 @@ export default function AboutTeaser() {
           <SectionLabel>The Artist</SectionLabel>
           <h2
             ref={headingRef}
-            className="bjs-display-heading mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold leading-[0.95] tracking-[-0.01em] text-bjs-white"
+            className="bjs-display-heading mt-6 max-w-full font-serif text-[clamp(38px,6vw,80px)] font-semibold leading-[1.05] tracking-[-0.01em] text-bjs-white"
           >
-            A Sound That Moves Heaven.
+            <span className="block sm:inline">A Sound That </span>
+            <span className="whitespace-nowrap">Moves</span>{' '}
+            <span className="whitespace-nowrap">Heaven.</span>
           </h2>
           <span className="gold-rule my-8 block" />
 
