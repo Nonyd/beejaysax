@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Video } from '@prisma/client'
 import SectionLabel from '@/components/ui/SectionLabel'
 import Image from 'next/image'
+import OutlineButton from '@/components/ui/OutlineButton'
 import { Play } from 'lucide-react'
 import { registerGSAP, scaleInOnScroll, fadeUpOnScroll } from '@/lib/animations'
 
@@ -29,25 +30,34 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
   const thumb = (id: string) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
 
   return (
-    <section className="bg-bjs-surface py-32">
-      <div className="mx-auto max-w-7xl px-8">
+    <section className="border-y border-bjs-border bg-bjs-surface py-24 md:py-32 lg:py-40">
+      <div className="mx-auto max-w-6xl px-6 md:px-8 lg:px-12">
         <SectionLabel>Watch</SectionLabel>
-        <h2 className="mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold leading-[0.95] text-bjs-white">
-          Experience The
-          <br />
-          Performance.
+        <h2 className="mt-3">
+          <span className="h2-text block text-bjs-white">Experience The</span>
+          <span className="h2-text block text-bjs-gold">Performance.</span>
         </h2>
 
-        <div ref={featuredRef} className="relative mt-12 aspect-video overflow-hidden border border-bjs-border bg-bjs-black">
+        <div ref={featuredRef} className="relative mt-12 aspect-video w-full overflow-hidden bg-bjs-black">
           {!playMain ? (
-            <button type="button" className="group absolute inset-0 z-10 flex flex-col items-center justify-center bg-bjs-black/60" onClick={() => setPlayMain(true)}>
-              <span className="flex h-[70px] w-[70px] items-center justify-center rounded-full bg-bjs-gold text-bjs-black transition-transform group-hover:scale-105">
-                <Play className="ml-1 h-8 w-8 fill-current" />
-              </span>
-              <span className="mt-4 max-w-xl px-4 text-center font-serif text-xl text-bjs-white">{main.title}</span>
-            </button>
-          ) : null}
-          {playMain ? (
+            <>
+              <button
+                type="button"
+                className="group absolute inset-0 z-10 flex flex-col items-center justify-center"
+                onClick={() => setPlayMain(true)}
+                aria-label={`Play video: ${main.title}`}
+              >
+                <span className="absolute inset-0 bg-[rgba(8,8,8,0.5)]" />
+                <span className="relative z-[1] flex h-[60px] w-[60px] items-center justify-center rounded-full bg-bjs-gold text-bjs-black transition-all duration-200 hover:scale-110 hover:bg-bjs-gold-lt">
+                  <Play className="ml-1 h-7 w-7 fill-current" />
+                </span>
+              </button>
+              <Image src={thumb(main.youtubeId)} alt="" fill className="object-cover" sizes="100vw" />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[rgba(8,8,8,0.8)] to-transparent px-6 py-4">
+                <p className="relative z-[1] font-sans text-[13px] text-bjs-white">{main.title}</p>
+              </div>
+            </>
+          ) : (
             <iframe
               title={main.title}
               src={`https://www.youtube.com/embed/${main.youtubeId}?autoplay=1`}
@@ -55,15 +65,13 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
               allowFullScreen
             />
-          ) : (
-            <Image src={thumb(main.youtubeId)} alt={`${main.title} — YouTube thumbnail`} fill className="object-cover" sizes="100vw" />
           )}
         </div>
 
         {rest.length > 0 && (
-          <div ref={rowRef} className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div ref={rowRef} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             {rest.map((v, i) => (
-              <div key={v.id} data-video-tile className="relative aspect-video overflow-hidden border border-bjs-border">
+              <div key={v.id} data-video-tile className="relative aspect-video overflow-hidden bg-bjs-black">
                 {playIdx === i ? (
                   <iframe
                     title={v.title}
@@ -74,13 +82,20 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
                   />
                 ) : (
                   <>
-                    <button type="button" className="absolute inset-0 z-10 flex items-center justify-center bg-bjs-black/50" onClick={() => setPlayIdx(i)}>
-                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-bjs-gold text-bjs-black">
+                    <button
+                      type="button"
+                      className="group absolute inset-0 z-10 flex items-center justify-center bg-[rgba(8,8,8,0.5)]"
+                      onClick={() => setPlayIdx(i)}
+                      aria-label={`Play video: ${v.title}`}
+                    >
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-bjs-gold text-bjs-black transition-all duration-200 hover:scale-110 hover:bg-bjs-gold-lt">
                         <Play className="ml-0.5 h-5 w-5 fill-current" />
                       </span>
                     </button>
-                    <Image src={thumb(v.youtubeId)} alt={`${v.title} — YouTube thumbnail`} fill className="object-cover" sizes="50vw" />
-                    <p className="absolute bottom-2 left-2 right-2 font-serif text-sm text-bjs-white drop-shadow">{v.title}</p>
+                    <Image src={thumb(v.youtubeId)} alt="" fill className="object-cover" sizes="50vw" />
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[rgba(8,8,8,0.8)] to-transparent px-4 py-3">
+                      <p className="font-sans text-[13px] text-bjs-white">{v.title}</p>
+                    </div>
                   </>
                 )}
               </div>
@@ -88,15 +103,10 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
           </div>
         )}
 
-        <p className="mt-10 text-center">
-          <a
-            href="https://www.youtube.com/@beejaysax"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-sans text-sm text-bjs-gold underline-offset-4 hover:underline"
-          >
+        <p className="mt-8 text-center">
+          <OutlineButton href="https://www.youtube.com/@beejaysax" target="_blank" rel="noopener noreferrer">
             View All Videos
-          </a>
+          </OutlineButton>
         </p>
       </div>
     </section>

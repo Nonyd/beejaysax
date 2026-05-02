@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import SectionLabel from '@/components/ui/SectionLabel'
-import EventCard from '@/components/events/EventCard'
+import EventsPageContent from '@/components/events/EventsPageContent'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 
@@ -33,7 +33,7 @@ export default async function EventsPage() {
         prisma.event.findMany({
           where: { status: 'PAST' },
           orderBy: { eventDate: 'desc' },
-          take: 12,
+          take: 24,
         }),
       []
     ),
@@ -41,44 +41,26 @@ export default async function EventsPage() {
 
   return (
     <>
-      <section className="relative flex min-h-[50vh] flex-col justify-end bg-gradient-to-t from-bjs-black via-bjs-black/90 to-transparent px-8 pb-16 pt-32">
-        <div className="mx-auto max-w-7xl">
+      <section
+        className="relative flex min-h-[360px] h-[45vh] flex-col justify-end overflow-hidden"
+        style={{
+          background: [
+            'linear-gradient(135deg, #080808 0%, #0F0F0F 50%, #080808 100%)',
+            'radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 60%)',
+          ].join(', '),
+        }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(201,168,76,0.04)_0%,transparent_60%)]" />
+        <div className="relative mx-auto w-full max-w-6xl px-6 pb-12 pt-32 md:px-8 lg:px-12">
           <SectionLabel>Events</SectionLabel>
-          <h1 className="mt-6 font-serif text-[clamp(52px,9vw,120px)] font-bold leading-[0.9] text-bjs-white">On Stage.</h1>
-          <p className="mt-4 max-w-xl font-sans text-bjs-muted">Gospel events, concerts, and live ministry moments.</p>
+          <h1 className="h1-text mt-3 text-bjs-white">On Stage.</h1>
         </div>
       </section>
 
-      <section className="border-t border-bjs-border bg-bjs-surface py-16">
-        <div className="mx-auto max-w-7xl px-8">
-          <h2 className="font-serif text-2xl text-bjs-white">Upcoming</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {upcomingEvents.map((e) => (
-              <EventCard key={e.id} event={e} />
-            ))}
-          </div>
-          {upcomingEvents.length === 0 && (
-            <p className="mt-8 font-sans text-bjs-muted">No upcoming events listed yet.</p>
-          )}
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-8">
-          <h2 className="font-serif text-2xl text-bjs-white">Past</h2>
-          <div className="mt-10 grid gap-6 opacity-70 md:grid-cols-2 lg:grid-cols-3">
-            {pastEvents.map((e) => (
-              <EventCard key={e.id} event={e} showViewButton />
-            ))}
-          </div>
-          {pastEvents.length === 0 && (
-            <p className="mt-8 font-sans text-bjs-muted">Past events will appear here.</p>
-          )}
-        </div>
-      </section>
+      <EventsPageContent upcomingEvents={upcomingEvents} pastEvents={pastEvents} />
 
       <div className="border-t border-bjs-border py-8 text-center">
-        <Link href="/" className="font-sans text-sm text-bjs-gold hover:underline">
+        <Link href="/" className="font-sans text-sm text-bjs-gold transition-colors hover:text-bjs-gold-lt">
           ← Home
         </Link>
       </div>

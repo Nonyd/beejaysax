@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { Menu, X } from 'lucide-react'
 import OutlineButton from '@/components/ui/OutlineButton'
 import { registerGSAP } from '@/lib/animations'
 
@@ -17,6 +16,11 @@ const LINKS = [
   { href: '/contact', label: 'Contact' },
 ]
 
+const SOCIAL = [
+  { href: 'https://www.instagram.com', label: 'Instagram', abbr: 'IG' },
+  { href: 'https://www.youtube.com', label: 'YouTube', abbr: 'YT' },
+]
+
 export default function Navbar() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
@@ -24,7 +28,7 @@ export default function Navbar() {
   const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80)
+    const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
     return () => window.removeEventListener('scroll', onScroll)
@@ -38,7 +42,7 @@ export default function Navbar() {
       gsap.fromTo(
         '[data-mobile-link]',
         { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.06, duration: 0.55, ease: 'power3.out' }
+        { y: 0, opacity: 1, stagger: 0.08, duration: 0.55, ease: 'power3.out', delay: 0.05 }
       )
     }, overlayRef)
     return () => {
@@ -50,16 +54,16 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed left-0 top-0 z-50 w-full transition-all duration-[400ms] ease-out ${
-          scrolled ? 'border-b border-bjs-border bg-bjs-black/95 backdrop-blur-md' : 'border-b border-transparent bg-transparent'
+        className={`fixed left-0 top-0 z-50 h-16 w-full transition-all duration-300 ease-out ${
+          scrolled
+            ? 'border-b border-bjs-border bg-[rgba(8,8,8,0.92)] backdrop-blur-[20px] backdrop-saturate-[180%]'
+            : 'border-b border-transparent bg-transparent'
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
+        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6 md:px-8 lg:px-12">
           <Link href="/" className="group flex items-baseline gap-0">
-            <span className="font-sans text-[13px] font-semibold uppercase tracking-[0.18em] text-bjs-white">
-              BEEJAY
-            </span>
-            <span className="font-serif text-sm italic text-bjs-gold"> SAX</span>
+            <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-bjs-white">BEEJAY</span>
+            <span className="font-serif text-[13px] italic text-bjs-gold"> SAX</span>
           </Link>
 
           <nav className="hidden items-center gap-10 lg:flex">
@@ -69,34 +73,36 @@ export default function Navbar() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  className={`group relative font-sans text-[11px] uppercase tracking-[0.18em] transition-colors duration-300 ${
-                    active ? 'text-bjs-gold' : 'text-bjs-white hover:text-bjs-gold'
+                  className={`font-sans text-[10px] font-medium uppercase tracking-[0.2em] transition-colors duration-200 ${
+                    active ? 'text-bjs-gold' : 'text-[rgba(245,240,232,0.5)] hover:text-bjs-white'
                   }`}
                 >
                   {l.label}
-                  <span
-                    className={`absolute -bottom-1 left-1/2 h-0.5 w-0.5 -translate-x-1/2 rounded-full bg-bjs-gold transition-transform duration-300 group-hover:scale-150 ${
-                      active ? 'scale-150' : 'scale-0 group-hover:scale-150'
-                    }`}
-                  />
                 </Link>
               )
             })}
           </nav>
 
           <div className="hidden lg:block">
-            <OutlineButton href="/contact?inquiry=booking" size="sm">
+            <OutlineButton href="/contact?inquiry=booking" size="sm" variant="fill" className="text-[10px] font-semibold tracking-[0.15em]">
               Book BeeJay
             </OutlineButton>
           </div>
 
           <button
             type="button"
-            className="text-bjs-white lg:hidden"
+            className="relative z-[110] flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
             onClick={() => setMenuOpen((o) => !o)}
           >
-            {menuOpen ? <X size={28} /> : <Menu size={28} />}
+            <span
+              className={`block h-[1.5px] w-5 bg-bjs-white transition-transform duration-300 ${menuOpen ? 'translate-y-[6.5px] rotate-45' : ''}`}
+            />
+            <span className={`block h-[1.5px] w-5 bg-bjs-white transition-opacity duration-300 ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
+            <span
+              className={`block h-[1.5px] w-5 bg-bjs-white transition-transform duration-300 ${menuOpen ? '-translate-y-[6.5px] -rotate-45' : ''}`}
+            />
           </button>
         </div>
       </header>
@@ -104,32 +110,41 @@ export default function Navbar() {
       {menuOpen && (
         <div
           ref={overlayRef}
-          className="fixed inset-0 z-50 flex flex-col bg-bjs-black px-8 pb-10 pt-28 lg:hidden"
+          className="fixed inset-0 z-[100] flex flex-col bg-bjs-black px-8 pb-10 pt-24 lg:hidden"
         >
-          <div className="flex flex-1 flex-col gap-0">
-            {LINKS.map((l) => (
-              <div key={l.href} className="border-b border-bjs-border py-5 first:pt-0">
+          <div className="flex flex-1 flex-col items-center justify-center gap-0">
+            {LINKS.map((l, i) => (
+              <div
+                key={l.href}
+                className="w-full max-w-md border-b border-bjs-gold/20 py-5 text-center first:pt-0"
+                style={{ animationDelay: `${i * 0.05}s` }}
+              >
                 <Link
                   data-mobile-link
                   href={l.href}
                   onClick={() => setMenuOpen(false)}
-                  className="font-serif text-[48px] leading-none text-bjs-white transition-colors hover:text-bjs-gold"
+                  className="font-serif text-[clamp(36px,8vw,56px)] italic leading-none text-[rgba(245,240,232,0.5)] transition-colors hover:text-bjs-white"
                 >
                   {l.label}
                 </Link>
               </div>
             ))}
           </div>
-          <div className="mt-auto flex flex-col gap-6 border-t border-bjs-border pt-8">
-            <div className="flex justify-center gap-6 text-bjs-muted">
-              <Link href="https://www.instagram.com" className="hover:text-bjs-gold" target="_blank" rel="noopener noreferrer">
-                IG
-              </Link>
-              <Link href="https://www.youtube.com" className="hover:text-bjs-gold" target="_blank" rel="noopener noreferrer">
-                YT
-              </Link>
+          <div className="mt-auto flex flex-col items-center gap-8 border-t border-bjs-border pt-8">
+            <div className="flex justify-center gap-8">
+              {SOCIAL.map((s) => (
+                <Link
+                  key={s.href}
+                  href={s.href}
+                  className="font-sans text-xs uppercase tracking-widest text-bjs-muted transition-colors hover:text-bjs-gold"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {s.abbr}
+                </Link>
+              ))}
             </div>
-            <OutlineButton href="/contact?inquiry=booking" size="lg" className="w-full justify-center">
+            <OutlineButton href="/contact?inquiry=booking" size="lg" variant="fill" className="w-full max-w-sm justify-center">
               Book BeeJay
             </OutlineButton>
           </div>

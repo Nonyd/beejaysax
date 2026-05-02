@@ -9,7 +9,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
     <LenisProvider>
       <CustomCursor />
       <Navbar />
-      <main className="overflow-x-hidden">{children}</main>
+      <main className="page-enter overflow-x-hidden">{children}</main>
       <Footer />
       <BackToTop />
     </LenisProvider>

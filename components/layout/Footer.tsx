@@ -12,7 +12,7 @@ const NAV = [
 function IconInstagram({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <rect x="2" y="2" width="20" height="20" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
     </svg>
@@ -43,46 +43,71 @@ function IconSpotify({ className }: { className?: string }) {
   )
 }
 
+function IconTikTok({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 1 1-5.2-1.74 2.89 2.89 0 0 1 2.31-2.83V8.3a6.34 6.34 0 1 0 4.87 6.17V9.07a7.88 7.88 0 0 0 4.77 1.59V7.1a4.82 4.82 0 0 1-1.53-.41z" />
+    </svg>
+  )
+}
+
+const social = [
+  { href: 'https://www.instagram.com', label: 'Instagram', Icon: IconInstagram },
+  { href: 'https://www.youtube.com', label: 'YouTube', Icon: IconYoutube },
+  { href: 'https://www.facebook.com', label: 'Facebook', Icon: IconFacebook },
+  { href: 'https://open.spotify.com', label: 'Spotify', Icon: IconSpotify },
+  { href: 'https://www.tiktok.com', label: 'TikTok', Icon: IconTikTok },
+] as const
+
 export default function Footer() {
+  const year = new Date().getFullYear()
   return (
     <footer className="border-t border-bjs-border bg-bjs-black">
-      <div className="mx-auto max-w-7xl px-8 py-16 text-center">
-        <p className="font-serif text-[clamp(48px,12vw,80px)] italic leading-none text-bjs-white">BEEJAY SAX</p>
-        <p className="section-label mt-4 text-bjs-gold">Blessed & Highly Favoured.</p>
-      </div>
+      <div className="mx-auto max-w-6xl px-6 pb-10 pt-20 md:px-8 lg:px-12">
+        <div className="border-b border-bjs-border pb-16 text-center">
+          <p className="font-sans text-[13px] font-bold uppercase tracking-[0.3em] text-bjs-white">
+            BEEJAY
+            <span className="font-serif text-[14px] font-normal italic tracking-normal text-bjs-gold"> Sax</span>
+          </p>
+          <p className="mt-4 font-serif text-lg italic text-bjs-gold/60">Blessed & Highly Favoured.</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {social.map(({ href, label, Icon }) => (
+              <Link
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="flex h-8 w-8 items-center justify-center border border-bjs-border text-bjs-muted transition-all duration-200 hover:border-bjs-gold hover:text-bjs-gold"
+              >
+                <Icon className="h-3.5 w-3.5" />
+              </Link>
+            ))}
+          </div>
+        </div>
 
-      <div className="border-t border-bjs-border py-8">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 px-8 md:flex-row">
-          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-sans text-[11px] uppercase tracking-wide text-bjs-muted">
+        <div className="flex flex-wrap items-center justify-between gap-4 py-8">
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-sans text-[10px] uppercase tracking-wide text-bjs-muted md:justify-start">
             {NAV.map((n) => (
-              <Link key={n.href} href={n.href} className="transition-colors hover:text-bjs-gold">
+              <Link key={n.href} href={n.href} className="transition-colors duration-200 hover:text-bjs-white">
                 {n.label}
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-5 text-bjs-muted">
-            <Link href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-bjs-gold" aria-label="Instagram">
-              <IconInstagram className="h-[18px] w-[18px]" />
-            </Link>
-            <Link href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-bjs-gold" aria-label="YouTube">
-              <IconYoutube className="h-[18px] w-[18px]" />
-            </Link>
-            <Link href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-bjs-gold" aria-label="Facebook">
-              <IconFacebook className="h-[18px] w-[18px]" />
-            </Link>
-            <Link href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-bjs-gold" aria-label="Spotify">
-              <IconSpotify className="h-[18px] w-[18px]" />
-            </Link>
-          </div>
         </div>
-      </div>
 
-      <div className="border-t border-bjs-border py-6">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-8 font-sans text-[11px] text-bjs-muted md:flex-row">
-          <p>© {new Date().getFullYear()} BeeJay Sax. All rights reserved.</p>
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-bjs-border pt-8 font-sans text-[10px] text-[#2A2A2A] sm:flex-row">
           <p>
-            Designed by{' '}
-            <Link href="https://sonshubmedia.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-bjs-gold">
+            © {year} BeeJay Sax
+          </p>
+          <p>
+            Built by{' '}
+            <Link
+              href="https://sonshubmedia.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors duration-200 hover:text-bjs-gold"
+            >
               SonsHub Media
             </Link>
           </p>

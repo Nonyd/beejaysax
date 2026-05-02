@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import SectionLabel from '@/components/ui/SectionLabel'
+import GalleryView from '@/components/gallery/GalleryView'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
-import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: { absolute: 'Gallery — BeeJay Sax' },
@@ -21,33 +21,23 @@ export default async function GalleryPage() {
 
   return (
     <>
-      <section className="px-8 pb-16 pt-32">
-        <div className="mx-auto max-w-7xl">
+      <section
+        className="relative flex min-h-[360px] h-[45vh] flex-col justify-end overflow-hidden"
+        style={{
+          background: [
+            'linear-gradient(135deg, #080808 0%, #0F0F0F 50%, #080808 100%)',
+            'radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 60%)',
+          ].join(', '),
+        }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(201,168,76,0.04)_0%,transparent_60%)]" />
+        <div className="relative mx-auto w-full max-w-6xl px-6 pb-12 pt-32 md:px-8 lg:px-12">
           <SectionLabel>Gallery</SectionLabel>
-          <h1 className="mt-6 font-serif text-[clamp(52px,9vw,120px)] font-bold text-bjs-white">Moments.</h1>
+          <h1 className="h1-text mt-3 text-bjs-white">Moments.</h1>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-8 pb-24">
-        <div className="columns-2 gap-4 md:columns-3 lg:columns-4">
-          {images.map((img) => (
-            <div key={img.id} className="mb-4 break-inside-avoid">
-              <div className="relative overflow-hidden">
-                <Image
-                  src={img.imagePath}
-                  alt={img.caption ?? 'BeeJay Sax — gallery photo'}
-                  width={800}
-                  height={1000}
-                  className="h-auto w-full object-cover"
-                  sizes="25vw"
-                />
-              </div>
-              {img.caption && <p className="mt-2 font-sans text-xs text-bjs-muted">{img.caption}</p>}
-            </div>
-          ))}
-        </div>
-        {images.length === 0 && <p className="font-sans text-bjs-muted">Gallery images will appear once uploaded.</p>}
-      </section>
+      <GalleryView images={images} />
     </>
   )
 }

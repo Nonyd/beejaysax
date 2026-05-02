@@ -1,11 +1,8 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
 import SectionLabel from '@/components/ui/SectionLabel'
+import ReleasesView from '@/components/releases/ReleasesView'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
-import { format } from 'date-fns'
-import { Music } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: { absolute: 'Releases — BeeJay Sax' },
@@ -28,44 +25,23 @@ export default async function ReleasesPage() {
 
   return (
     <>
-      <section className="relative flex min-h-[45vh] flex-col justify-end px-8 pb-16 pt-32">
-        <div className="mx-auto max-w-7xl">
+      <section
+        className="relative flex min-h-[360px] h-[45vh] flex-col justify-end overflow-hidden"
+        style={{
+          background: [
+            'linear-gradient(135deg, #080808 0%, #0F0F0F 50%, #080808 100%)',
+            'radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 60%)',
+          ].join(', '),
+        }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(201,168,76,0.04)_0%,transparent_60%)]" />
+        <div className="relative mx-auto w-full max-w-6xl px-6 pb-12 pt-32 md:px-8 lg:px-12">
           <SectionLabel>Discography</SectionLabel>
-          <h1 className="mt-6 font-serif text-[clamp(52px,9vw,120px)] font-bold text-bjs-white">The Music.</h1>
+          <h1 className="h1-text mt-3 text-bjs-white">The Music.</h1>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-8 pb-24">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
-          {releases.map((r) => (
-            <Link key={r.id} href={`/releases/${r.slug}`} className="group block">
-              <div className="relative aspect-square overflow-hidden border border-bjs-border bg-bjs-surface">
-                {r.coverImage ? (
-                  <Image
-                    src={r.coverImage}
-                    alt={`${r.title} — album cover`}
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-[1.06]"
-                    sizes="(max-width:768px) 50vw, 25vw"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <Music className="h-12 w-12 text-bjs-gold/25" />
-                  </div>
-                )}
-                <span className="absolute left-2 top-2 rounded border border-bjs-gold bg-bjs-gold-dim px-2 py-0.5 font-sans text-[10px] uppercase text-bjs-gold">
-                  {r.releaseType}
-                </span>
-              </div>
-              <p className="mt-3 font-serif text-lg text-bjs-white">{r.title}</p>
-              {r.releaseDate && (
-                <p className="mt-1 font-sans text-[13px] text-bjs-muted">{format(r.releaseDate, 'MMM yyyy')}</p>
-              )}
-            </Link>
-          ))}
-        </div>
-        {releases.length === 0 && <p className="font-sans text-bjs-muted">Releases will appear here once added.</p>}
-      </section>
+      <ReleasesView releases={releases} />
     </>
   )
 }

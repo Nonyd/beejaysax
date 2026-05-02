@@ -4,9 +4,9 @@ import { cn } from '@/lib/utils'
 type Size = 'sm' | 'md' | 'lg'
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'text-[10px] px-4 py-2',
-  md: 'text-[11px] px-6 py-3',
-  lg: 'text-xs px-8 py-4',
+  sm: 'text-[11px] px-5 py-2 tracking-[0.15em]',
+  md: 'text-[11px] px-7 py-3 tracking-[0.15em]',
+  lg: 'text-[11px] px-7 py-3 tracking-[0.15em]',
 }
 
 export default function GoldButton({
@@ -31,7 +31,7 @@ export default function GoldButton({
   rel?: string
 }) {
   const base =
-    'inline-flex items-center justify-center rounded-none bg-bjs-gold text-bjs-black font-sans font-semibold uppercase tracking-[0.12em] transition-all duration-300 hover:bg-bjs-gold-lt hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none'
+    'inline-flex items-center justify-center rounded-none bg-bjs-gold text-bjs-black font-sans font-semibold uppercase transition-all duration-200 ease-out hover:bg-bjs-gold-lt disabled:opacity-50 disabled:pointer-events-none'
 
   if (href) {
     return (

@@ -4,9 +4,9 @@ import { cn } from '@/lib/utils'
 type Size = 'sm' | 'md' | 'lg'
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'text-[10px] px-4 py-2',
-  md: 'text-[11px] px-6 py-3',
-  lg: 'text-xs px-8 py-4',
+  sm: 'text-[10px] px-5 py-2 tracking-[0.15em]',
+  md: 'text-[11px] px-7 py-3 tracking-[0.15em]',
+  lg: 'text-[11px] px-7 py-3 tracking-[0.15em]',
 }
 
 export default function OutlineButton({
@@ -17,6 +17,9 @@ export default function OutlineButton({
   size = 'md',
   type = 'button',
   disabled,
+  variant = 'default',
+  target,
+  rel,
 }: {
   children: React.ReactNode
   href?: string
@@ -25,13 +28,19 @@ export default function OutlineButton({
   size?: Size
   type?: 'button' | 'submit'
   disabled?: boolean
+  /** `fill` — hover fills with gold (nav CTA). `default` — border/text gold on hover only. */
+  variant?: 'default' | 'fill'
+  target?: string
+  rel?: string
 }) {
   const base =
-    'inline-flex items-center justify-center rounded-none bg-transparent border border-bjs-gold text-bjs-gold font-sans font-semibold uppercase tracking-[0.12em] transition-all duration-300 hover:bg-bjs-gold hover:text-bjs-black hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none'
+    variant === 'fill'
+      ? 'inline-flex items-center justify-center rounded-none border border-[rgba(201,168,76,0.5)] bg-transparent font-sans font-semibold uppercase text-bjs-gold transition-all duration-200 ease-out hover:border-bjs-gold hover:bg-bjs-gold hover:text-bjs-black disabled:opacity-50 disabled:pointer-events-none'
+      : 'inline-flex items-center justify-center rounded-none border border-[rgba(201,168,76,0.4)] bg-transparent font-sans font-semibold uppercase text-bjs-white transition-all duration-200 ease-out hover:border-bjs-gold hover:text-bjs-gold disabled:opacity-50 disabled:pointer-events-none'
 
   if (href) {
     return (
-      <Link href={href} className={cn(base, sizeClasses[size], className)}>
+      <Link href={href} className={cn(base, sizeClasses[size], className)} target={target} rel={rel}>
         {children}
       </Link>
     )

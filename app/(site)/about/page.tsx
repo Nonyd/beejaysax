@@ -2,6 +2,7 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import ContactCTA from '@/components/home/ContactCTA'
 import Marquee from '@/components/ui/Marquee'
 import GoldButton from '@/components/ui/GoldButton'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -15,58 +16,114 @@ export const metadata: Metadata = {
   },
 }
 
+const PERFORMANCES = [
+  {
+    title: 'The Experience',
+    year: 'Recurring',
+    description: 'Ministry on one of Africa’s largest gospel stages.',
+  },
+  {
+    title: 'Night of Worship',
+    year: 'Recurring',
+    description: 'Spirit-led worship nights across Nigeria.',
+  },
+  {
+    title: 'Indigo O2, London',
+    year: '2023',
+    description: 'Beejay Sax Live — international worship in the UK.',
+  },
+  {
+    title: 'House on the Rock — TAPE',
+    year: '2022',
+    description: 'Major gospel gathering in Lagos.',
+  },
+  {
+    title: 'Online Praise Party',
+    year: '2020',
+    description: 'Weekly sanctuary for families during lockdown.',
+  },
+  {
+    title: 'Beejay Sax Live — Eko Hotels',
+    year: '2026',
+    description: 'Flagship concert — Lagos’ finest venue.',
+  },
+]
+
+const HERO_IMG =
+  'https://images.unsplash.com/photo-1519892300558-c31723655541?q=80&w=1600&auto=format&fit=crop'
+
 export default function AboutPage() {
   return (
     <>
-      <section className="relative flex min-h-[60vh] flex-col justify-end bg-gradient-to-br from-bjs-black via-bjs-surface to-bjs-black px-8 pb-16 pt-32">
-        <div className="mx-auto max-w-7xl">
-          <h1 className="font-serif text-[clamp(52px,9vw,120px)] font-bold leading-[0.9] text-bjs-white">
-            Abolaji David <span className="text-bjs-gold">Banjoko.</span>
+      <section className="relative flex min-h-[60vh] overflow-hidden">
+        <div className="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
+          <div className="bg-bjs-black" />
+          <div className="relative hidden min-h-[40vh] lg:block">
+            <Image src={HERO_IMG} alt="BeeJay Sax" fill className="object-cover object-center" sizes="50vw" priority />
+            <div className="absolute inset-0 bg-gradient-to-r from-bjs-black via-bjs-black/40 to-transparent lg:from-bjs-black/80" />
+          </div>
+        </div>
+        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-end px-6 pb-16 pt-32 md:px-8 lg:px-12">
+          <SectionLabel>The Artist</SectionLabel>
+          <h1 className="mt-3">
+            <span className="h1-text block whitespace-nowrap text-bjs-white">Abolaji David</span>
+            <span className="h1-text block whitespace-nowrap text-bjs-gold">Banjoko.</span>
           </h1>
-          <p className="mt-4 font-serif text-xl italic text-bjs-white/70">Known as BeeJay Sax</p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-16 px-8 py-24 lg:grid-cols-2 lg:items-center">
-        <div>
-          <SectionLabel>The Origin</SectionLabel>
-          <h2 className="mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold leading-[0.95] text-bjs-white">
-            From Engineering <br /> To Ministry.
-          </h2>
-          <span className="gold-rule my-8 block" />
-          <p className="font-sans text-base leading-[1.75] text-bjs-white/85">
-            Mechanical Engineering graduate, Ogun State University — a journey from blueprints to a calling that fills arenas with worship.
-          </p>
-          <span className="mt-6 inline-block rounded border border-bjs-gold bg-bjs-gold-dim px-4 py-2 font-sans text-[11px] uppercase tracking-wide text-bjs-gold">
-            Since 2000
-          </span>
+      <section className="mx-auto max-w-6xl px-6 py-24 md:px-8 lg:px-12">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-3">
+          <div className="lg:col-span-1">
+            <SectionLabel>The Origin</SectionLabel>
+            <p className="relative mt-6 font-serif text-sm text-bjs-gold">Since 2000</p>
+            <p className="relative -mt-2 font-serif text-[96px] leading-none italic text-bjs-gold/10">2000</p>
+          </div>
+          <div className="body-text space-y-6 lg:col-span-2">
+            <p>
+              Mechanical Engineering graduate — a journey from blueprints to a calling that fills arenas with worship.
+              Known globally as BeeJay Sax, Abolaji David Banjoko carries a sound that moves heaven and stirs hearts across
+              continents.
+            </p>
+            <p>
+              From RCCG roots to stages shared with gospel greats, his ministry is built on decades of faithfulness — the
+              saxophone an extension of prayer, every note an offering.
+            </p>
+            <p>
+              Today he convenes Beejay Sax Live, hosts the Online Praise Party, and continues to release music that
+              anchors believers in praise wherever they are in the world.
+            </p>
+          </div>
         </div>
-        <div className="aspect-[4/5] bg-gradient-to-br from-bjs-surface2 to-bjs-black" />
       </section>
 
       <section className="border-y border-bjs-border bg-bjs-surface py-24">
-        <div className="mx-auto max-w-7xl px-8">
-          <SectionLabel>The Ministry</SectionLabel>
-          <h2 className="mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold text-bjs-white">
-            A Sound That Moves Heaven.
-          </h2>
-          <div className="mt-14 grid gap-10 md:grid-cols-3">
-            {[
-              ['01', 'The Saxophone', 'A rich, spirit-filled tone unlike any other in Nigerian gospel.'],
-              ['02', 'The Ministry', 'Over two decades in RCCG, leading worship in prayer and praise.'],
-              ['03', 'The Reach', 'From Lagos to London, touching lives with the sound of heaven.'],
-            ].map(([n, t, b]) => (
-              <div key={t} className="border-t border-bjs-gold pt-6">
-                <p className="font-serif text-4xl text-bjs-gold">{n}</p>
-                <h3 className="mt-4 font-serif text-xl text-bjs-white">{t}</h3>
-                <p className="mt-3 font-sans text-sm leading-relaxed text-bjs-muted">{b}</p>
-              </div>
+        <div className="mx-auto max-w-6xl px-6 md:px-8 lg:px-12">
+          <SectionLabel>Notable Performances</SectionLabel>
+          <h2 className="h2-text mt-4 text-bjs-white">Shared The Stage With</h2>
+          <div className="mt-10 overflow-hidden border-y border-bjs-border py-6">
+            <Marquee
+              text="DONNIE McCLURKIN · NATHANIEL BASSEY · TRAVIS GREENE · SPIRIT-FILLED SOUND · HEAVEN-DRIVEN PRAISE ·"
+              className="[&_span]:font-serif [&_span]:text-[clamp(24px,4vw,40px)] [&_span]:italic [&_span]:text-[rgba(245,240,232,0.15)] [&_span]:tracking-normal"
+            />
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {PERFORMANCES.map((p) => (
+              <article
+                key={p.title}
+                className="border border-bjs-border bg-bjs-black p-6 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-bjs-gold"
+              >
+                <p className="font-serif text-lg text-bjs-white">{p.title}</p>
+                <p className="mt-1 font-sans text-[11px] uppercase tracking-[0.15em] text-bjs-gold">{p.year}</p>
+                <p className="body-text mt-3 text-sm">{p.description}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-8 py-24">
+      <section className="mx-auto max-w-6xl px-6 py-24 md:px-8 lg:px-12">
         <SectionLabel>Milestones</SectionLabel>
         <ul className="mt-10 space-y-6 border-l-2 border-bjs-gold pl-8 font-sans text-bjs-white/90">
           <li>2010 — Buster Rhymes Stage, Canirivs Rivers State Carnival</li>
@@ -79,14 +136,10 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="bg-bjs-black py-16">
-        <Marquee text="DONNIE McCLURKIN · NATHANIEL BASSEY · TRAVIS GREENE · SPIRIT-FILLED SOUND ·" />
-      </section>
-
-      <section className="mx-auto max-w-7xl px-8 py-24 text-center">
+      <section className="mx-auto max-w-6xl px-6 py-16 text-center md:px-8 lg:px-12">
         <SectionLabel>The Event</SectionLabel>
-        <h2 className="mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold text-bjs-white">Beejay Sax Live.</h2>
-        <p className="mx-auto mt-6 max-w-2xl font-sans text-bjs-muted">
+        <h2 className="h2-text mt-6 text-bjs-white">Beejay Sax Live.</h2>
+        <p className="body-text mx-auto mt-6 max-w-2xl">
           The annual gathering for ethical, Godly music — serene atmosphere, unforgettable ministry.
         </p>
         <div className="mt-10 flex justify-center">

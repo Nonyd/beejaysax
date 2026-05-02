@@ -21,18 +21,18 @@ export default function FeaturedRelease({ release }: { release: Release | null }
   if (!release) return null
 
   return (
-    <section className="bg-bjs-surface py-32">
-      <div className="mx-auto max-w-7xl px-8">
-        <SectionLabel className="mb-12">Latest Release</SectionLabel>
+    <section className="border-y border-bjs-border bg-bjs-surface py-24 md:py-32 lg:py-40">
+      <div className="mx-auto max-w-6xl px-6 md:px-8 lg:px-12">
+        <SectionLabel>Latest Release</SectionLabel>
 
-        <div className="grid grid-cols-1 gap-0 lg:grid-cols-5">
+        <div className="mt-12 grid grid-cols-1 gap-0 lg:grid-cols-5">
           <div ref={coverRef} className="relative aspect-square overflow-hidden lg:col-span-2">
             {release.coverImage ? (
               <Image
                 src={release.coverImage}
                 alt={`${release.title} — album cover`}
                 fill
-                className="object-cover transition-transform duration-[600ms] hover:scale-[1.03]"
+                className="object-cover transition-transform duration-[600ms] ease-out hover:scale-[1.03]"
                 sizes="(max-width:1024px) 100vw, 40vw"
               />
             ) : (
@@ -42,18 +42,19 @@ export default function FeaturedRelease({ release }: { release: Release | null }
             )}
           </div>
 
-          <div className="flex flex-col justify-center px-0 py-12 lg:col-span-3 lg:px-12 lg:py-16">
-            <span className="inline-flex w-fit rounded border border-bjs-gold bg-bjs-gold-dim px-3 py-1 font-sans text-[11px] font-medium uppercase tracking-wide text-bjs-gold">
+          <div className="flex flex-col justify-center px-0 py-8 lg:col-span-3 lg:px-14 lg:py-0">
+            <span className="inline-block w-fit border border-[rgba(201,168,76,0.3)] px-3 py-1 font-sans text-[9px] uppercase tracking-[0.2em] text-bjs-gold">
               {release.releaseType}
             </span>
-            <h2 className="mt-6 font-serif text-[clamp(38px,6vw,80px)] font-semibold leading-[0.95] text-bjs-white">{release.title}</h2>
-            <span className="gold-rule my-8 block" />
-            <p className="line-clamp-3 font-sans text-base leading-[1.75] text-bjs-white/70">{release.description}</p>
+            <h2 className="h2-text mt-4 text-bjs-white">{release.title}</h2>
+            <span className="gold-rule my-5 block" />
+            <p className="body-text line-clamp-3">{release.description}</p>
             {release.releaseDate && (
               <p className="mt-4 font-sans text-[13px] text-bjs-muted">{format(release.releaseDate, 'MMMM d, yyyy')}</p>
             )}
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <p className="section-label mb-3 mt-8">Stream Now</p>
+            <div className="flex flex-wrap gap-3">
               {[
                 { url: release.spotifyUrl, label: 'Spotify' },
                 { url: release.appleMusicUrl, label: 'Apple Music' },
@@ -68,15 +69,21 @@ export default function FeaturedRelease({ release }: { release: Release | null }
                     href={p.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded border border-bjs-border bg-bjs-black px-4 py-2 font-sans text-[11px] uppercase tracking-wide text-bjs-gold transition-colors hover:border-bjs-gold"
+                    className="flex items-center gap-2 border border-bjs-border px-4 py-2.5 font-sans text-[11px] text-bjs-white transition-all duration-200 hover:border-bjs-gold hover:bg-bjs-gold/5"
                   >
                     {p.label}
                   </a>
                 ))}
             </div>
 
-            <Link href={`/releases/${release.slug}`} className="mt-10 inline-block font-sans text-sm text-bjs-gold underline-offset-4 hover:underline">
-              More About This Release →
+            <Link
+              href={`/releases/${release.slug}`}
+              className="group/fr mt-6 inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.15em] text-bjs-gold transition-colors hover:text-bjs-gold-lt"
+            >
+              More About This Release{' '}
+              <span className="transition-transform duration-300 group-hover/fr:translate-x-1" aria-hidden>
+                →
+              </span>
             </Link>
           </div>
         </div>

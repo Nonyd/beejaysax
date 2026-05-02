@@ -1,13 +1,16 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ChevronDown } from 'lucide-react'
 import GoldButton from '@/components/ui/GoldButton'
 import OutlineButton from '@/components/ui/OutlineButton'
 import Marquee from '@/components/ui/Marquee'
 import { registerGSAP } from '@/lib/animations'
+
+const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1519892300558-c31723655541?q=80&w=1920&auto=format&fit=crop'
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -17,6 +20,7 @@ export default function Hero() {
   const tagRef = useRef<HTMLParagraphElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const linePulseRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -26,26 +30,37 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
       if (labelRef.current) {
-        tl.from(labelRef.current, { y: 20, opacity: 0, duration: 0.6 }, 0.2)
+        tl.from(labelRef.current, { y: 20, opacity: 0, duration: 0.6 }, 0.1)
       }
       ;[line1Ref, line2Ref].forEach((ref, i) => {
         if (ref.current) {
           tl.from(
             ref.current.querySelectorAll('.hero-char'),
-            { y: '100%', opacity: 0, rotateX: -90, stagger: 0.03, duration: 1 },
+            { y: '100%', opacity: 0, stagger: 0.03, duration: 1 },
             0.35 + i * 0.05
           )
         }
       })
-      if (tagRef.current) tl.from(tagRef.current, { opacity: 0, duration: 0.6 }, 0.9)
-      if (ctaRef.current) tl.from(ctaRef.current, { y: 30, opacity: 0, duration: 0.7 }, 1.1)
-      if (scrollRef.current) tl.from(scrollRef.current, { opacity: 0, duration: 0.5 }, 1.5)
+      if (tagRef.current) tl.from(tagRef.current, { opacity: 0, duration: 0.6 }, 0.8)
+      if (ctaRef.current) tl.from(ctaRef.current.children, { y: 20, opacity: 0, stagger: 0.1, duration: 0.55 }, 1.0)
+      if (scrollRef.current) tl.from(scrollRef.current, { opacity: 0, duration: 0.5 }, 1.4)
+
+      if (linePulseRef.current) {
+        gsap.to(linePulseRef.current, {
+          scaleX: 1.15,
+          opacity: 0.7,
+          duration: 1.2,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        })
+      }
 
       if (sectionRef.current) {
         const bg = sectionRef.current.querySelector('[data-hero-bg]')
         if (bg) {
           gsap.to(bg, {
-            y: '15%',
+            y: '8%',
             ease: 'none',
             scrollTrigger: {
               trigger: sectionRef.current,
@@ -63,56 +78,81 @@ export default function Hero() {
 
   const splitLine = (text: string) =>
     [...text].map((c, i) => (
-      <span key={i} className="hero-char inline-block" style={{ perspective: '800px' }}>
+      <span key={i} className="hero-char inline-block">
         {c === ' ' ? '\u00a0' : c}
       </span>
     ))
 
   return (
     <section ref={sectionRef} className="relative h-[100svh] overflow-hidden">
-      <div data-hero-bg className="absolute inset-0 bg-gradient-to-br from-bjs-black via-[#0d0a04] to-bjs-black" />
+      <div data-hero-bg className="absolute inset-0">
+        <Image
+          src={HERO_IMAGE}
+          alt="BeeJay Sax — performance"
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+      </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(8,8,8,0.2)_0%,rgba(8,8,8,0.5)_40%,rgba(8,8,8,0.85)_75%,rgba(8,8,8,1)_100%)]" />
+      <div
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{
+          background: [
+            'linear-gradient(to right, rgba(8,8,8,0.85) 0%, rgba(8,8,8,0.3) 100%)',
+            'linear-gradient(to bottom, transparent 40%, rgba(8,8,8,0.9) 80%, #080808 100%)',
+            'radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.04) 0%, transparent 60%)',
+          ].join(', '),
+        }}
+      />
 
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
-        <p ref={labelRef} className="section-label mb-8">
-          GOSPEL SAXOPHONIST · MUSIC MINISTER
-        </p>
+      <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 md:px-12 lg:px-16">
+        <div className="max-w-5xl">
+          <p ref={labelRef} className="section-label mb-6">
+            GOSPEL SAXOPHONIST · MUSIC MINISTER
+          </p>
 
-        <h1 className="font-serif font-bold italic leading-[0.86] tracking-[-0.02em] text-[clamp(72px,12vw,170px)]">
-          <span className="block overflow-hidden text-bjs-white">
-            <span ref={line1Ref} className="inline-block">
-              {splitLine('BeeJay')}
+          <h1 className="display-text">
+            <span className="block overflow-hidden text-bjs-white">
+              <span ref={line1Ref} className="inline-block">
+                {splitLine('BeeJay')}
+              </span>
             </span>
-          </span>
-          <span className="mt-2 block overflow-hidden text-bjs-gold">
-            <span ref={line2Ref} className="inline-block">
-              {splitLine('Sax.')}
+            <span className="mt-1 block overflow-hidden text-bjs-gold">
+              <span ref={line2Ref} className="inline-block">
+                {splitLine('Sax.')}
+              </span>
             </span>
-          </span>
-        </h1>
+          </h1>
 
-        <p ref={tagRef} className="mt-8 font-serif text-xl italic text-bjs-white/60">
-          Blessed & Highly Favoured.
-        </p>
+          <p ref={tagRef} className="mt-6 font-serif text-lg italic text-[rgba(245,240,232,0.5)] md:text-xl">
+            Blessed & Highly Favoured.
+          </p>
 
-        <div ref={ctaRef} className="mt-12 flex flex-wrap justify-center gap-4">
-          <GoldButton href="/events" size="lg">
-            Upcoming Events
-          </GoldButton>
-          <OutlineButton href="/releases" size="lg">
-            Listen Now
-          </OutlineButton>
-        </div>
-
-        <div ref={scrollRef} className="absolute bottom-10 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-          <span className="section-label">SCROLL</span>
-          <ChevronDown className="h-6 w-6 animate-bounce text-bjs-gold" aria-hidden />
+          <div ref={ctaRef} className="mt-10 flex flex-wrap gap-4">
+            <GoldButton href="/events" size="lg">
+              Upcoming Events
+            </GoldButton>
+            <OutlineButton href="/releases" size="lg">
+              Listen Now
+            </OutlineButton>
+          </div>
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 border-t border-bjs-border/50 bg-bjs-surface/80 py-3 backdrop-blur-sm">
-        <Marquee text="BLESSED & HIGHLY FAVOURED · GOSPEL SAXOPHONIST · MUSIC MINISTER · BEEJAY SAX LIVE CONCERT · NIGERIA'S FINEST · SPIRIT-FILLED SOUND ·" />
+      <div
+        ref={scrollRef}
+        className="absolute bottom-28 left-6 z-10 flex items-center gap-3 md:left-12 lg:bottom-32"
+      >
+        <span className="section-label">SCROLL</span>
+        <div ref={linePulseRef} className="h-px w-10 origin-left bg-bjs-gold" aria-hidden />
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 z-10 h-9 border-t border-bjs-border bg-[rgba(8,8,8,0.6)] backdrop-blur-[10px]">
+        <div className="flex h-full items-center">
+          <Marquee text="BLESSED & HIGHLY FAVOURED · GOSPEL SAXOPHONIST · MUSIC MINISTER · BEEJAY SAX LIVE CONCERT · SPIRIT-FILLED SOUND · NIGERIA'S FINEST ·" />
+        </div>
       </div>
     </section>
   )
