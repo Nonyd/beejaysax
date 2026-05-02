@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
-import SectionLabel from '@/components/ui/SectionLabel'
 import {
   registerGSAP,
   animateCounter,
@@ -12,15 +11,17 @@ import {
   fadeUpOnScroll,
 } from '@/lib/animations'
 import { HOMEPAGE_ABOUT_STATS } from '@/lib/homepage-stats'
-import { bodyTextStyle, goldRuleStyle, h2TextStyle } from '@/lib/typography-styles'
+
+const PORTRAIT =
+  'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80'
 
 export default function AboutTeaser() {
   const imageRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
-  const s1 = useRef<HTMLSpanElement>(null)
-  const s2 = useRef<HTMLSpanElement>(null)
-  const s3 = useRef<HTMLSpanElement>(null)
+  const s1 = useRef<HTMLParagraphElement>(null)
+  const s2 = useRef<HTMLParagraphElement>(null)
+  const s3 = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -37,77 +38,180 @@ export default function AboutTeaser() {
     if (s3.current) animateCounter(s3.current, continents, 2)
   }, [])
 
+  const stats = [
+    { ref: s1, num: String(HOMEPAGE_ABOUT_STATS.albums), label: 'Albums' },
+    { ref: s2, num: `${HOMEPAGE_ABOUT_STATS.yearsMinistry}${HOMEPAGE_ABOUT_STATS.yearsMinistrySuffix}`, label: 'Years in Ministry' },
+    { ref: s3, num: String(HOMEPAGE_ABOUT_STATS.continents), label: 'Continents' },
+  ] as const
+
   return (
-    <section className="bg-bjs-black py-20 md:py-32">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 md:px-12 lg:grid-cols-2 lg:gap-24">
-        <div ref={imageRef} className="group relative aspect-[3/4] overflow-hidden">
-          <span className="absolute left-0 top-0 z-10 h-full w-[2px] bg-bjs-gold" aria-hidden />
-          <Image
-            src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80"
-            alt="BeeJay Sax performing saxophone on stage"
-            fill
-            className="object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.04]"
-            sizes="(max-width:1024px) 100vw, 50vw"
-          />
-        </div>
+    <section style={{ background: '#080808', paddingTop: 140, paddingBottom: 140 }}>
+      <div className="max-w-6xl mx-auto px-6 md:px-16">
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 80,
+            alignItems: 'center',
+          }}
+          className="grid-cols-1 md:grid-cols-2"
+        >
+          <div ref={imageRef} style={{ position: 'relative' }}>
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 2,
+                background: '#C9A84C',
+                zIndex: 1,
+              }}
+            />
 
-        <div ref={textRef}>
-          <SectionLabel>The Artist</SectionLabel>
-          <h2
-            ref={headingRef}
-            className="mt-4"
-            style={{
-              ...h2TextStyle,
-              lineHeight: 1.1,
-              color: '#F5F0E8',
-            }}
-          >
-            <span style={{ display: 'block', whiteSpace: 'nowrap' }}>A Sound That</span>
-            <span style={{ display: 'block', whiteSpace: 'nowrap' }}>Moves Heaven.</span>
-          </h2>
-          <span className="my-6 block" style={goldRuleStyle} />
-
-          <div className="max-w-md space-y-6" style={bodyTextStyle}>
-            <p>
-              Abolaji David Banjoko — known to the world as BeeJay Sax — is one of Nigeria&apos;s most distinctive gospel
-              saxophonists. His spirit-filled tone doesn&apos;t just fill rooms; it moves hearts.
-            </p>
-            <p>
-              A Mechanical Engineering graduate who traded blueprints for ministry, BeeJay has graced the stages of The
-              Experience and Night of Worship alongside Donnie McClurkin, Nathaniel Bassey, and Travis Greene.
-            </p>
-          </div>
-
-          <div className="mt-10 flex border-y border-bjs-border">
-            <div className="flex flex-1 flex-col border-r border-bjs-gold/40 py-6 text-center first:border-l-0">
-              <span ref={s1} className="font-serif text-[clamp(40px,5vw,64px)] font-bold leading-none text-bjs-gold">
-                0
-              </span>
-              <span className="mt-1 font-sans text-[10px] uppercase tracking-[0.2em] text-bjs-muted">Albums</span>
-            </div>
-            <div className="flex flex-1 flex-col border-r border-bjs-gold/40 py-6 text-center">
-              <span ref={s2} className="font-serif text-[clamp(40px,5vw,64px)] font-bold leading-none text-bjs-gold">
-                0
-              </span>
-              <span className="mt-1 font-sans text-[10px] uppercase tracking-[0.2em] text-bjs-muted">Years</span>
-            </div>
-            <div className="flex flex-1 flex-col py-6 text-center">
-              <span ref={s3} className="font-serif text-[clamp(40px,5vw,64px)] font-bold leading-none text-bjs-gold">
-                0
-              </span>
-              <span className="mt-1 font-sans text-[10px] uppercase tracking-[0.2em] text-bjs-muted">Continents</span>
+            <div
+              style={{
+                paddingLeft: 16,
+                aspectRatio: '3/4',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                src={PORTRAIT}
+                alt="BeeJay Sax performing saxophone on stage"
+                fill
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width:768px) 100vw, 50vw"
+              />
             </div>
           </div>
 
-          <Link
-            href="/about"
-            className="group/link mt-8 inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.15em] text-bjs-gold transition-colors hover:text-bjs-gold-lt"
-          >
-            Full Story{' '}
-            <span className="transition-transform duration-300 group-hover/link:translate-x-1" aria-hidden>
-              →
-            </span>
-          </Link>
+          <div ref={textRef}>
+            <p
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: '0.3em',
+                textTransform: 'uppercase',
+                color: '#C9A84C',
+                marginBottom: 20,
+              }}
+            >
+              THE ARTIST
+            </p>
+
+            <h2
+              ref={headingRef}
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600,
+                fontSize: 'clamp(32px, 4vw, 52px)',
+                lineHeight: 1.05,
+                letterSpacing: '-0.01em',
+                color: '#F5F0E8',
+                marginBottom: 24,
+              }}
+            >
+              <span style={{ display: 'block', wordBreak: 'keep-all', overflowWrap: 'normal' }}>
+                A Sound That
+              </span>
+              <span style={{ display: 'block', wordBreak: 'keep-all', overflowWrap: 'normal' }}>
+                Moves Heaven.
+              </span>
+            </h2>
+
+            <div style={{ width: 40, height: 1, background: '#C9A84C', marginBottom: 24 }} />
+
+            <p
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 15,
+                lineHeight: 1.8,
+                color: 'rgba(245,240,232,0.6)',
+                marginBottom: 16,
+              }}
+            >
+              Abolaji David Banjoko — known to the world as BeeJay Sax — is one of Nigeria&apos;s most
+              distinctive gospel saxophonists. His spirit-filled tone doesn&apos;t just fill rooms; it
+              moves hearts.
+            </p>
+            <p
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 15,
+                lineHeight: 1.8,
+                color: 'rgba(245,240,232,0.6)',
+                marginBottom: 40,
+              }}
+            >
+              A Mechanical Engineering graduate who traded blueprints for ministry, BeeJay has graced
+              the stages of The Experience and Night of Worship alongside Donnie McClurkin, Nathaniel
+              Bassey, and Travis Greene.
+            </p>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                borderTop: '1px solid #1E1E1E',
+                paddingTop: 32,
+                marginBottom: 40,
+              }}
+            >
+              {stats.map((stat, i) => (
+                <div
+                  key={stat.label}
+                  style={{
+                    paddingRight: 24,
+                    borderRight: i < 2 ? '1px solid #1E1E1E' : 'none',
+                    paddingLeft: i > 0 ? 24 : 0,
+                  }}
+                >
+                  <p
+                    ref={stat.ref}
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: 'clamp(32px, 4vw, 52px)',
+                      fontWeight: 700,
+                      color: '#C9A84C',
+                      lineHeight: 1,
+                      marginBottom: 6,
+                    }}
+                  >
+                    0
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: 10,
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
+                      color: '#4A4A4A',
+                    }}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/about"
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: '#C9A84C',
+                textDecoration: 'none',
+              }}
+            >
+              Full Story →
+            </Link>
+          </div>
         </div>
       </div>
     </section>

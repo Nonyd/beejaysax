@@ -4,10 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import type { Release } from '@prisma/client'
-import SectionLabel from '@/components/ui/SectionLabel'
-import { registerGSAP, scaleInOnScroll } from '@/lib/animations'
 import { format } from 'date-fns'
-import { bodyTextStyle, goldRuleStyle, h2TextStyle, sectionLabelStyle } from '@/lib/typography-styles'
+import { registerGSAP, scaleInOnScroll } from '@/lib/animations'
 
 export default function FeaturedRelease({ release }: { release: Release | null }) {
   const coverRef = useRef<HTMLDivElement>(null)
@@ -21,85 +19,229 @@ export default function FeaturedRelease({ release }: { release: Release | null }
   if (!release) return null
 
   return (
-    <section className="border-y border-bjs-border bg-bjs-surface py-20 md:py-32">
-      <div className="mx-auto max-w-6xl px-6 md:px-12">
-        <SectionLabel>Latest Release</SectionLabel>
+    <section
+      style={{
+        background: '#0F0F0F',
+        borderTop: '1px solid #1E1E1E',
+        borderBottom: '1px solid #1E1E1E',
+        paddingTop: 140,
+        paddingBottom: 140,
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-6 md:px-16">
+        <p
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 10,
+            fontWeight: 500,
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+            marginBottom: 56,
+          }}
+        >
+          LATEST RELEASE
+        </p>
 
-        <div className="mt-12 grid grid-cols-1 gap-0 lg:grid-cols-5">
-          <div ref={coverRef} className="relative aspect-square overflow-hidden lg:col-span-2">
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '2fr 3fr',
+            gap: 80,
+            alignItems: 'center',
+          }}
+          className="grid-cols-1 md:grid-cols-[2fr_3fr]"
+        >
+          <div
+            ref={coverRef}
+            style={{ aspectRatio: '1/1', position: 'relative', overflow: 'hidden', flexShrink: 0 }}
+          >
             {release.coverImage ? (
               <Image
                 src={release.coverImage}
                 alt={`${release.title} — album cover`}
                 fill
-                className="object-cover transition-transform duration-[600ms] ease-out hover:scale-[1.03]"
-                sizes="(max-width:1024px) 100vw, 40vw"
+                style={{ objectFit: 'cover' }}
+                sizes="(max-width:768px) 100vw, 40vw"
               />
             ) : (
               <div
-                className="flex h-full w-full items-center justify-center px-6"
                 style={{
+                  width: '100%',
+                  height: '100%',
                   background: 'linear-gradient(135deg, #1a1204 0%, #2d1f06 50%, #0d0a02 100%)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <p
-                  className="text-center text-lg font-semibold tracking-[0.12em] text-bjs-gold md:text-2xl"
-                  style={{ fontFamily: 'var(--font-serif)' }}
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 9,
+                    letterSpacing: '0.3em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(201,168,76,0.4)',
+                    marginBottom: 12,
+                  }}
                 >
-                  PRAISE SESSION 1
+                  ALBUM
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: 'clamp(18px, 3vw, 28px)',
+                    fontStyle: 'italic',
+                    color: '#C9A84C',
+                    textAlign: 'center',
+                    padding: '0 24px',
+                  }}
+                >
+                  {release.title}
                 </p>
               </div>
             )}
           </div>
 
-          <div className="flex flex-col justify-center px-0 py-8 lg:col-span-3 lg:px-14 lg:py-0">
-            <span className="inline-block w-fit border border-[rgba(201,168,76,0.3)] px-3 py-1 font-sans text-[9px] uppercase tracking-[0.2em] text-bjs-gold">
+          <div>
+            <span
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 9,
+                fontWeight: 600,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: '#C9A84C',
+                border: '1px solid rgba(201,168,76,0.3)',
+                padding: '6px 12px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                marginBottom: 20,
+                minHeight: 28,
+              }}
+            >
               {release.releaseType}
             </span>
-            <h2 className="mt-4 text-bjs-white" style={h2TextStyle}>
+
+            <h2
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 'clamp(28px, 4vw, 52px)',
+                fontWeight: 600,
+                lineHeight: 1.05,
+                letterSpacing: '-0.01em',
+                color: '#F5F0E8',
+                marginBottom: 20,
+              }}
+            >
               {release.title}
             </h2>
-            <span className="my-5 block" style={goldRuleStyle} />
-            <p className="line-clamp-3" style={bodyTextStyle}>
-              {release.description}
-            </p>
-            {release.releaseDate && (
-              <p className="mt-4 font-sans text-[13px] text-bjs-muted">{format(release.releaseDate, 'MMMM d, yyyy')}</p>
+
+            <div style={{ width: 40, height: 1, background: '#C9A84C', marginBottom: 20 }} />
+
+            {release.description && (
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 15,
+                  lineHeight: 1.8,
+                  color: 'rgba(245,240,232,0.6)',
+                  marginBottom: 32,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}
+              >
+                {release.description}
+              </p>
             )}
 
-            <p className="mb-3 mt-8" style={sectionLabelStyle}>
-              Stream Now
+            {release.releaseDate && (
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 13,
+                  color: '#4A4A4A',
+                  marginBottom: release.description ? 24 : 32,
+                }}
+              >
+                {format(release.releaseDate, 'MMMM d, yyyy')}
+              </p>
+            )}
+
+            <p
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 9,
+                fontWeight: 500,
+                letterSpacing: '0.3em',
+                textTransform: 'uppercase',
+                color: '#C9A84C',
+                marginBottom: 16,
+              }}
+            >
+              STREAM NOW
             </p>
-            <div className="flex flex-wrap gap-3">
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 32 }}>
               {[
-                { url: release.spotifyUrl, label: 'Spotify' },
-                { url: release.appleMusicUrl, label: 'Apple Music' },
-                { url: release.audiomackUrl, label: 'Audiomack' },
-                { url: release.youtubeUrl, label: 'YouTube' },
-                { url: release.boomplayUrl, label: 'Boomplay' },
+                { label: 'Spotify', url: release.spotifyUrl },
+                { label: 'Apple Music', url: release.appleMusicUrl },
+                { label: 'Audiomack', url: release.audiomackUrl },
+                { label: 'YouTube', url: release.youtubeUrl },
+                { label: 'Boomplay', url: release.boomplayUrl },
               ]
-                .filter((p): p is { url: string; label: string } => !!p.url)
-                .map((p) => (
+                .filter((p): p is { label: string; url: string } => !!p.url)
+                .map((platform) => (
                   <a
-                    key={p.label}
-                    href={p.url}
+                    key={platform.label}
+                    href={platform.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 border border-bjs-border px-4 py-2.5 font-sans text-[11px] text-bjs-white transition-all duration-200 hover:border-bjs-gold hover:bg-bjs-gold/5"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: 11,
+                      fontWeight: 500,
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      color: '#F5F0E8',
+                      textDecoration: 'none',
+                      border: '1px solid #2A2A2A',
+                      padding: '10px 18px',
+                      minHeight: 44,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      transition: 'all 200ms',
+                    }}
+                    onMouseEnter={(e) => {
+                      ;(e.currentTarget as HTMLAnchorElement).style.borderColor = '#C9A84C'
+                      ;(e.currentTarget as HTMLAnchorElement).style.color = '#C9A84C'
+                    }}
+                    onMouseLeave={(e) => {
+                      ;(e.currentTarget as HTMLAnchorElement).style.borderColor = '#2A2A2A'
+                      ;(e.currentTarget as HTMLAnchorElement).style.color = '#F5F0E8'
+                    }}
                   >
-                    {p.label}
+                    {platform.label}
                   </a>
                 ))}
             </div>
 
             <Link
               href={`/releases/${release.slug}`}
-              className="group/fr mt-6 inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.15em] text-bjs-gold transition-colors hover:text-bjs-gold-lt"
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: '#C9A84C',
+                textDecoration: 'none',
+              }}
             >
-              More About This Release{' '}
-              <span className="transition-transform duration-300 group-hover/fr:translate-x-1" aria-hidden>
-                →
-              </span>
+              More About This Release →
             </Link>
           </div>
         </div>
