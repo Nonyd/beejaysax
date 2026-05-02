@@ -1,62 +1,14 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
-import {
-  registerGSAP,
-  animateCounter,
-  slideInFromLeft,
-  slideInFromRight,
-  fadeUpOnScroll,
-} from '@/lib/animations'
-import { HOMEPAGE_ABOUT_STATS } from '@/lib/homepage-stats'
 
-const PORTRAIT =
-  'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80'
+const DEMO_PORTRAIT = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80'
 
 export default function AboutTeaser() {
-  const imageRef = useRef<HTMLDivElement>(null)
-  const headingRef = useRef<HTMLHeadingElement>(null)
-  const textRef = useRef<HTMLDivElement>(null)
-  const s1 = useRef<HTMLParagraphElement>(null)
-  const s2 = useRef<HTMLParagraphElement>(null)
-  const s3 = useRef<HTMLParagraphElement>(null)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    registerGSAP()
-    const img = imageRef.current
-    const heading = headingRef.current
-    const textBlock = textRef.current
-    if (img) slideInFromLeft(img)
-    if (textBlock) slideInFromRight(textBlock)
-    if (heading) fadeUpOnScroll(heading)
-    const { albums, yearsMinistry, yearsMinistrySuffix, continents } = HOMEPAGE_ABOUT_STATS
-    if (s1.current) animateCounter(s1.current, albums, 2)
-    if (s2.current) animateCounter(s2.current, yearsMinistry, 2, { suffix: yearsMinistrySuffix })
-    if (s3.current) animateCounter(s3.current, continents, 2)
-  }, [])
-
-  const stats = [
-    { ref: s1, num: String(HOMEPAGE_ABOUT_STATS.albums), label: 'Albums' },
-    { ref: s2, num: `${HOMEPAGE_ABOUT_STATS.yearsMinistry}${HOMEPAGE_ABOUT_STATS.yearsMinistrySuffix}`, label: 'Years in Ministry' },
-    { ref: s3, num: String(HOMEPAGE_ABOUT_STATS.continents), label: 'Continents' },
-  ] as const
-
   return (
-    <section style={{ background: '#080808', paddingTop: 140, paddingBottom: 140 }}>
-      <div className="max-w-6xl mx-auto px-6 md:px-16">
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 80,
-            alignItems: 'center',
-          }}
-          className="grid-cols-1 md:grid-cols-2"
-        >
-          <div ref={imageRef} style={{ position: 'relative' }}>
+    <section style={{ background: '#080808', paddingTop: 120, paddingBottom: 120 }}>
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 80, alignItems: 'center' }}>
+          <div style={{ position: 'relative' }}>
             <div
               style={{
                 position: 'absolute',
@@ -68,26 +20,12 @@ export default function AboutTeaser() {
                 zIndex: 1,
               }}
             />
-
-            <div
-              style={{
-                paddingLeft: 16,
-                aspectRatio: '3/4',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <Image
-                src={PORTRAIT}
-                alt="BeeJay Sax performing saxophone on stage"
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="(max-width:768px) 100vw, 50vw"
-              />
+            <div style={{ marginLeft: 20, position: 'relative', overflow: 'hidden', aspectRatio: '3/4' }}>
+              <Image src={DEMO_PORTRAIT} alt="BeeJay Sax portrait" fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 50vw" />
             </div>
           </div>
 
-          <div ref={textRef}>
+          <div>
             <p
               style={{
                 fontFamily: 'var(--font-sans)',
@@ -99,27 +37,21 @@ export default function AboutTeaser() {
                 marginBottom: 20,
               }}
             >
-              THE ARTIST
+              The Artist
             </p>
 
             <h2
-              ref={headingRef}
               style={{
                 fontFamily: 'var(--font-serif)',
+                fontSize: 'clamp(32px,4vw,52px)',
                 fontWeight: 600,
-                fontSize: 'clamp(32px, 4vw, 52px)',
                 lineHeight: 1.05,
-                letterSpacing: '-0.01em',
                 color: '#F5F0E8',
-                marginBottom: 24,
+                margin: '0 0 24px',
               }}
             >
-              <span style={{ display: 'block', wordBreak: 'keep-all', overflowWrap: 'normal' }}>
-                A Sound That
-              </span>
-              <span style={{ display: 'block', wordBreak: 'keep-all', overflowWrap: 'normal' }}>
-                Moves Heaven.
-              </span>
+              <span style={{ display: 'block' }}>A Sound That</span>
+              <span style={{ display: 'block' }}>Moves Heaven.</span>
             </h2>
 
             <div style={{ width: 40, height: 1, background: '#C9A84C', marginBottom: 24 }} />
@@ -133,9 +65,8 @@ export default function AboutTeaser() {
                 marginBottom: 16,
               }}
             >
-              Abolaji David Banjoko — known to the world as BeeJay Sax — is one of Nigeria&apos;s most
-              distinctive gospel saxophonists. His spirit-filled tone doesn&apos;t just fill rooms; it
-              moves hearts.
+              Abolaji David Banjoko — known as BeeJay Sax — is one of Nigeria&apos;s most distinctive gospel
+              saxophonists. His spirit-filled tone doesn&apos;t just fill rooms; it moves hearts.
             </p>
             <p
               style={{
@@ -146,9 +77,8 @@ export default function AboutTeaser() {
                 marginBottom: 40,
               }}
             >
-              A Mechanical Engineering graduate who traded blueprints for ministry, BeeJay has graced
-              the stages of The Experience and Night of Worship alongside Donnie McClurkin, Nathaniel
-              Bassey, and Travis Greene.
+              A Mechanical Engineering graduate who traded blueprints for full-time ministry, BeeJay has graced stages
+              alongside Donnie McClurkin, Nathaniel Bassey, and Travis Greene.
             </p>
 
             <div
@@ -160,27 +90,30 @@ export default function AboutTeaser() {
                 marginBottom: 40,
               }}
             >
-              {stats.map((stat, i) => (
+              {[
+                { num: '2', label: 'Albums' },
+                { num: '20+', label: 'Years Ministry' },
+                { num: '3', label: 'Continents' },
+              ].map((s, i) => (
                 <div
-                  key={stat.label}
+                  key={s.label}
                   style={{
-                    paddingRight: 24,
-                    borderRight: i < 2 ? '1px solid #1E1E1E' : 'none',
                     paddingLeft: i > 0 ? 24 : 0,
+                    paddingRight: i < 2 ? 24 : 0,
+                    borderRight: i < 2 ? '1px solid #1E1E1E' : 'none',
                   }}
                 >
                   <p
-                    ref={stat.ref}
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: 'clamp(32px, 4vw, 52px)',
+                      fontSize: 'clamp(36px,4vw,52px)',
                       fontWeight: 700,
                       color: '#C9A84C',
                       lineHeight: 1,
-                      marginBottom: 6,
+                      margin: '0 0 6px',
                     }}
                   >
-                    0
+                    {s.num}
                   </p>
                   <p
                     style={{
@@ -188,10 +121,11 @@ export default function AboutTeaser() {
                       fontSize: 10,
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
-                      color: '#4A4A4A',
+                      color: '#444',
+                      margin: 0,
                     }}
                   >
-                    {stat.label}
+                    {s.label}
                   </p>
                 </div>
               ))}

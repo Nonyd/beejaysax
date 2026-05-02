@@ -1,64 +1,25 @@
-'use client'
-
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { registerGSAP } from '@/lib/animations'
-
 const QUOTES = [
   {
     quote: 'BeeJay Sax carries a rare gift — when he plays, heaven draws near.',
-    name: 'PASTOR',
+    name: 'Pastor',
     role: 'Night of Worship',
   },
   {
-    quote: 'One of the most spirit-led saxophonists we’ve hosted at The Experience.',
-    name: 'EVENT ORGANISER',
+    quote: "One of the most spirit-led saxophonists we've hosted at The Experience.",
+    name: 'Event Organiser',
     role: 'The Experience',
   },
   {
-    quote: 'His Online Praise Party became our family’s weekly sanctuary during lockdown.',
-    name: 'AUDIENCE MEMBER',
+    quote: "His Online Praise Party became our family's weekly sanctuary during lockdown.",
+    name: 'Audience Member',
     role: 'United Kingdom',
   },
 ]
 
 export default function TestimonialsSection() {
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    registerGSAP()
-    gsap.registerPlugin(ScrollTrigger)
-    const cards = sectionRef.current?.querySelectorAll('[data-quote-card]')
-    if (!cards?.length) return
-    const ctx = gsap.context(() => {
-      gsap.from(cards, {
-        y: 30,
-        opacity: 0,
-        stagger: 0.12,
-        duration: 0.75,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 78%',
-        },
-      })
-    }, sectionRef)
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <section
-      ref={sectionRef}
-      style={{
-        background: '#0F0F0F',
-        borderTop: '1px solid #1E1E1E',
-        paddingTop: 140,
-        paddingBottom: 140,
-      }}
-    >
-      <div className="max-w-6xl mx-auto px-6 md:px-16">
+    <section style={{ background: '#0F0F0F', borderTop: '1px solid #1E1E1E', paddingTop: 120, paddingBottom: 120 }}>
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
         <p
           style={{
             fontFamily: 'var(--font-sans)',
@@ -70,93 +31,76 @@ export default function TestimonialsSection() {
             marginBottom: 16,
           }}
         >
-          THEY SAY
+          They Say
         </p>
         <h2
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(28px, 4vw, 52px)',
+            fontSize: 'clamp(28px,4vw,52px)',
             fontWeight: 600,
             lineHeight: 1.05,
             color: '#F5F0E8',
-            marginBottom: 64,
+            margin: '0 0 64px',
           }}
         >
           The Sound Speaks
         </h2>
 
-        <div
-          className="grid grid-cols-1 md:grid-cols-3"
-          style={{ gap: 1, background: '#1E1E1E' }}
-        >
-          {QUOTES.map((item, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-3" style={{ border: '1px solid #1E1E1E' }}>
+          {QUOTES.map((q, i) => (
             <div
-              key={i}
-              data-quote-card
+              key={q.name}
               style={{
-                background: '#0F0F0F',
-                padding: '48px 40px',
+                padding: '48px 36px',
                 position: 'relative',
-                minHeight: 280,
+                borderRight: i < 2 ? '1px solid #1E1E1E' : 'none',
               }}
+              className={i < 2 ? 'border-b border-[#1E1E1E] md:border-b-0' : ''}
             >
               <span
                 style={{
                   position: 'absolute',
-                  top: 24,
-                  right: 28,
+                  top: 20,
+                  right: 24,
                   fontFamily: 'var(--font-serif)',
-                  fontSize: 80,
-                  color: 'rgba(201,168,76,0.06)',
+                  fontSize: 72,
+                  color: 'rgba(201,168,76,0.05)',
                   lineHeight: 1,
-                  pointerEvents: 'none',
                   userSelect: 'none',
+                  pointerEvents: 'none',
                 }}
-                aria-hidden
               >
-                &ldquo;
+                &quot;
               </span>
-
               <p
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: 18,
+                  fontSize: 17,
                   fontStyle: 'italic',
                   lineHeight: 1.7,
                   color: 'rgba(245,240,232,0.8)',
                   marginBottom: 32,
                   position: 'relative',
-                  zIndex: 1,
                 }}
               >
-                &ldquo;{item.quote}&rdquo;
+                &ldquo;{q.quote}&rdquo;
               </p>
-
               <div style={{ borderTop: '1px solid #1E1E1E', paddingTop: 24 }}>
-                <div style={{ width: 24, height: 1, background: '#C9A84C', marginBottom: 12 }} />
+                <div style={{ width: 24, height: 1, background: '#C9A84C', marginBottom: 10 }} />
                 <p
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: 600,
                     letterSpacing: '0.2em',
                     textTransform: 'uppercase',
                     color: '#C9A84C',
-                    margin: 0,
+                    margin: '0 0 4px',
                   }}
                 >
-                  {item.name}
+                  {q.name}
                 </p>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 11,
-                    color: '#4A4A4A',
-                    marginTop: 4,
-                  }}
-                >
-                  {item.role}
-                </p>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#444', margin: 0 }}>{q.role}</p>
               </div>
             </div>
           ))}

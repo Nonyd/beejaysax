@@ -18,8 +18,7 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
   const [filter, setFilter] = useState<'ALL' | GalleryCategory>('ALL')
   const [lightbox, setLightbox] = useState<number | null>(null)
 
-  const filtered =
-    filter === 'ALL' ? images : images.filter((img) => img.category === filter)
+  const filtered = filter === 'ALL' ? images : images.filter((img) => img.category === filter)
 
   const openAt = useCallback((index: number) => setLightbox(index), [])
   const close = useCallback(() => setLightbox(null), [])
@@ -53,8 +52,11 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
 
   return (
     <>
-      <div className="sticky top-16 z-30 border-b border-bjs-border bg-bjs-black">
-        <div className="mx-auto flex max-w-6xl flex-wrap gap-0 px-6 md:px-8 lg:px-12">
+      <div
+        className="sticky z-30 border-b"
+        style={{ top: 72, background: '#080808', borderColor: '#1E1E1E' }}
+      >
+        <div className="mx-auto flex max-w-[1200px] flex-wrap px-6 md:px-12">
           {FILTERS.map((f) => (
             <button
               key={f.label}
@@ -63,11 +65,18 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
                 setFilter(f.value)
                 setLightbox(null)
               }}
-              className={`border-b-2 px-4 py-4 font-sans text-[10px] uppercase tracking-[0.2em] transition-colors duration-200 md:px-6 ${
-                filter === f.value
-                  ? 'border-bjs-gold text-bjs-gold'
-                  : 'border-transparent text-bjs-muted hover:text-bjs-white'
-              }`}
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 10,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                padding: '16px 16px',
+                border: 'none',
+                borderBottom: filter === f.value ? '2px solid #C9A84C' : '2px solid transparent',
+                background: 'transparent',
+                color: filter === f.value ? '#C9A84C' : '#555',
+                cursor: 'pointer',
+              }}
             >
               {f.label}
             </button>
@@ -75,75 +84,126 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
         </div>
       </div>
 
-      <section className="mx-auto max-w-6xl px-6 py-16 md:px-8 lg:px-12">
-        <div className="columns-2 gap-3 md:columns-3 lg:columns-4 lg:gap-3">
+      <section className="mx-auto max-w-[1200px] px-6 py-16 md:px-12">
+        <div className="columns-2 gap-3 md:columns-3 lg:columns-4">
           {filtered.map((img, i) => (
             <button
               key={img.id}
               type="button"
               onClick={() => openAt(i)}
-              className="mb-3 block w-full cursor-zoom-in break-inside-avoid overflow-hidden border-0 bg-transparent p-0 text-left"
+              className="mb-3 block w-full cursor-zoom-in break-inside-avoid border-0 bg-transparent p-0 text-left"
             >
-              <div className="relative overflow-hidden">
+              <div
+                style={{ position: 'relative', overflow: 'hidden' }}
+                className="transition-transform duration-300 hover:scale-[1.03] hover:brightness-110"
+              >
                 <Image
                   src={img.imagePath}
                   alt={img.caption ?? 'BeeJay Sax — gallery photo'}
                   width={800}
                   height={1000}
-                  className="h-auto w-full object-cover transition-all duration-300 ease-out hover:scale-[1.03] hover:brightness-110"
+                  style={{ width: '100%', height: 'auto', objectFit: 'cover', display: 'block' }}
                   sizes="25vw"
                 />
               </div>
-              {img.caption && <p className="mt-2 font-sans text-xs text-bjs-muted">{img.caption}</p>}
+              {img.caption && (
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', marginTop: 8 }}>{img.caption}</p>
+              )}
             </button>
           ))}
         </div>
-        {filtered.length === 0 && <p className="font-sans text-bjs-muted">No images in this category.</p>}
+        {filtered.length === 0 && (
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555' }}>No images in this category.</p>
+        )}
       </section>
 
       {current && lightbox !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(8,8,8,0.95)] backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: 'rgba(8,8,8,0.95)', backdropFilter: 'blur(8px)' }}
           role="dialog"
           aria-modal
           aria-label="Image preview"
         >
           <button
             type="button"
-            className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center border border-bjs-border-lt text-bjs-white transition-colors hover:border-bjs-gold"
+            style={{
+              position: 'absolute',
+              right: 24,
+              top: 24,
+              width: 44,
+              height: 44,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #2A2A2A',
+              background: 'transparent',
+              color: '#F5F0E8',
+              cursor: 'pointer',
+            }}
             onClick={close}
             aria-label="Close"
           >
-            <X className="h-5 w-5" />
+            <X style={{ width: 20, height: 20 }} />
           </button>
           <button
             type="button"
-            className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center border border-bjs-border-lt text-bjs-white transition-colors hover:border-bjs-gold md:left-8"
+            style={{
+              position: 'absolute',
+              left: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 44,
+              height: 44,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #2A2A2A',
+              background: 'transparent',
+              color: '#F5F0E8',
+              cursor: 'pointer',
+            }}
             onClick={goPrev}
             aria-label="Previous"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft style={{ width: 24, height: 24 }} />
           </button>
           <button
             type="button"
-            className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center border border-bjs-border-lt text-bjs-white transition-colors hover:border-bjs-gold md:right-8"
+            style={{
+              position: 'absolute',
+              right: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 44,
+              height: 44,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #2A2A2A',
+              background: 'transparent',
+              color: '#F5F0E8',
+              cursor: 'pointer',
+            }}
             onClick={goNext}
             aria-label="Next"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight style={{ width: 24, height: 24 }} />
           </button>
-          <div className="flex max-h-[85vh] max-w-[90vw] flex-col items-center px-16">
-            <div className="relative max-h-[80vh] w-full max-w-[90vw]">
+          <div style={{ display: 'flex', maxHeight: '85vh', maxWidth: '90vw', flexDirection: 'column', alignItems: 'center', padding: '0 64px' }}>
+            <div style={{ position: 'relative', maxHeight: '80vh', width: '100%', maxWidth: '90vw' }}>
               <Image
                 src={current.imagePath}
                 alt={current.caption ?? ''}
                 width={1600}
                 height={1200}
-                className="max-h-[80vh] w-auto max-w-full object-contain"
+                style={{ maxHeight: '80vh', width: 'auto', maxWidth: '100%', objectFit: 'contain', margin: '0 auto', display: 'block' }}
               />
             </div>
             {current.caption && (
-              <p className="mt-4 text-center font-sans text-[13px] text-bjs-muted">{current.caption}</p>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#555', marginTop: 16, textAlign: 'center' }}>
+                {current.caption}
+              </p>
             )}
           </div>
         </div>

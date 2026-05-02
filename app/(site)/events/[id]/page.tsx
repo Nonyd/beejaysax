@@ -47,13 +47,10 @@ export default async function EventDetailPage({ params }: Props) {
       }),
     0
   )
-  const available =
-    event.totalTickets != null ? Math.max(0, event.totalTickets - ticketCount) : null
+  const available = event.totalTickets != null ? Math.max(0, event.totalTickets - ticketCount) : null
 
   const mapsQuery = [event.address, event.city, event.country].filter(Boolean).join(', ')
-  const mapsSrc = mapsQuery
-    ? `https://www.google.com/maps?q=${encodeURIComponent(mapsQuery)}&output=embed`
-    : null
+  const mapsSrc = mapsQuery ? `https://www.google.com/maps?q=${encodeURIComponent(mapsQuery)}&output=embed` : null
 
   const siteBase = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://beejaysax.com'
   const eventUrl = `${siteBase.replace(/\/$/, '')}/events/${event.id}`
@@ -61,115 +58,180 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <>
-      <section className="relative flex min-h-[60vh] flex-col justify-end px-8 pb-16 pt-32">
-        <div className="absolute inset-0">
+      <section style={{ position: 'relative', minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '0 24px 64px', overflow: 'hidden' }} className="md:px-12">
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
           {event.posterImage ? (
-            <Image
-              src={event.posterImage}
-              alt={`${event.title} — event poster`}
-              fill
-              className="object-cover"
-              priority
-              sizes="100vw"
-            />
+            <Image src={event.posterImage} alt={`${event.title} — event poster`} fill style={{ objectFit: 'cover' }} priority sizes="100vw" />
           ) : (
-            <div
-              className="h-full w-full"
-              style={{ background: 'linear-gradient(135deg, #0d0a02 0%, #1a1204 100%)' }}
-            />
+            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #0d0a02 0%, #1a1204 100%)' }} />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-bjs-black via-bjs-black/70 to-transparent" />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to top, #080808 0%, rgba(8,8,8,0.75) 45%, transparent 100%)',
+            }}
+          />
         </div>
-        <div className="relative z-10 mx-auto max-w-7xl">
-          <p className="font-sans text-[11px] uppercase tracking-[0.28em] text-bjs-gold">
+        <div className="relative z-10 mx-auto w-full max-w-[1200px]">
+          <p
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 11,
+              letterSpacing: '0.28em',
+              textTransform: 'uppercase',
+              color: '#C9A84C',
+              margin: 0,
+            }}
+          >
             {format(event.eventDate, 'EEEE, MMMM d, yyyy')}
           </p>
-          <h1 className="mt-4 max-w-4xl font-serif text-[clamp(38px,6vw,80px)] font-semibold text-bjs-white">
+          <h1
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(38px,6vw,80px)',
+              fontWeight: 600,
+              color: '#F5F0E8',
+              margin: '16px 0 0',
+              maxWidth: '56rem',
+            }}
+          >
             {event.title}
           </h1>
-          <p className="mt-4 font-sans text-bjs-muted">
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', marginTop: 16 }}>
             {event.venue} · {event.city}, {event.country}
           </p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-8 py-16 lg:grid-cols-5">
-        <div className="space-y-8 lg:col-span-3">
+      <section className="mx-auto grid max-w-[1200px] gap-12 px-6 py-16 md:grid-cols-5 md:px-12">
+        <div className="space-y-8 md:col-span-3">
           {event.description && (
-            <div className="prose prose-invert max-w-none font-sans text-base leading-relaxed text-bjs-white/85">
+            <div>
               {event.description.split('\n').map((p) => (
-                <p key={p.slice(0, 40)} className="mb-4">
+                <p
+                  key={p.slice(0, 48)}
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 15,
+                    lineHeight: 1.75,
+                    color: 'rgba(245,240,232,0.85)',
+                    marginBottom: 16,
+                  }}
+                >
                   {p}
                 </p>
               ))}
             </div>
           )}
-          <span className="inline-flex rounded border border-bjs-gold bg-bjs-gold-dim px-4 py-2 font-sans text-[11px] uppercase tracking-wide text-bjs-gold">
+          <span
+            style={{
+              display: 'inline-flex',
+              border: '1px solid #C9A84C',
+              background: 'rgba(201,168,76,0.08)',
+              padding: '8px 16px',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 11,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: '#C9A84C',
+            }}
+          >
             Featuring BeeJay Sax Live
           </span>
           {mapsSrc && (
-            <div className="aspect-video overflow-hidden border border-bjs-border">
-              <iframe title="Map" src={mapsSrc} className="h-full w-full" loading="lazy" />
+            <div style={{ position: 'relative', aspectRatio: '16/9', overflow: 'hidden', border: '1px solid #1E1E1E' }}>
+              <iframe title="Map" src={mapsSrc} style={{ width: '100%', height: '100%', border: 'none' }} loading="lazy" />
             </div>
           )}
         </div>
 
-        <aside className="lg:col-span-2">
-          <div className="sticky top-28 border border-bjs-gold bg-bjs-surface p-8">
-            <SectionLabel className="border-none pl-0">Secure Your Seat</SectionLabel>
-            <p className="mt-4 font-serif text-xl text-bjs-white">{event.title}</p>
-            <p className="mt-2 font-sans text-sm text-bjs-muted">
+        <aside className="md:col-span-2">
+          <div
+            className="sticky"
+            style={{
+              top: 96,
+              border: '1px solid #C9A84C',
+              background: '#0F0F0F',
+              padding: 32,
+            }}
+          >
+            <SectionLabel style={{ marginBottom: 8 }}>Secure Your Seat</SectionLabel>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 20, color: '#F5F0E8', margin: '12px 0 0' }}>{event.title}</p>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', margin: '8px 0 0' }}>
               {format(event.eventDate, 'MMM d, yyyy')}
               {event.eventTime ? ` · ${event.eventTime}` : ''}
             </p>
-            <p className="mt-2 font-sans text-sm text-bjs-muted">{event.venue}</p>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', margin: '4px 0 0' }}>{event.venue}</p>
 
-            <div className="mt-6 border-t border-bjs-border pt-6">
+            <div style={{ marginTop: 24, borderTop: '1px solid #1E1E1E', paddingTop: 24 }}>
               {event.isFree ? (
-                <p className="font-serif text-2xl text-bjs-gold">FREE ENTRY</p>
+                <p style={{ fontFamily: 'var(--font-serif)', fontSize: 28, color: '#C9A84C', margin: 0 }}>FREE ENTRY</p>
               ) : (
-                <p className="font-serif text-2xl text-bjs-gold">
+                <p style={{ fontFamily: 'var(--font-serif)', fontSize: 28, color: '#C9A84C', margin: 0 }}>
                   ₦{event.ticketPrice?.toLocaleString() ?? '—'}
                 </p>
               )}
-              <p className="mt-3 font-sans text-[13px] text-bjs-muted">
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#555', margin: '12px 0 0' }}>
                 {available === null ? 'Open registration' : `${available} spots left`}
               </p>
             </div>
 
             {event.status === 'UPCOMING' && (available === null || available > 0) ? (
               <>
-                <GoldButton href={`/events/${event.id}/purchase`} className="mt-6 w-full justify-center">
-                  {event.isFree ? 'Register free' : 'Get tickets'}
-                </GoldButton>
+                <div style={{ marginTop: 24, width: '100%' }}>
+                  <GoldButton href={`/events/${event.id}/purchase`} className="w-full justify-center">
+                    {event.isFree ? 'Register free' : 'Get tickets'}
+                  </GoldButton>
+                </div>
                 <Link
                   href="/contact?inquiry=booking"
-                  className="mt-4 block text-center font-sans text-[11px] uppercase tracking-wide text-bjs-muted transition-colors hover:text-bjs-gold"
+                  style={{
+                    display: 'block',
+                    textAlign: 'center',
+                    marginTop: 16,
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 11,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: '#555',
+                    textDecoration: 'none',
+                  }}
                 >
                   Book / Enquire
                 </Link>
               </>
             ) : event.status === 'UPCOMING' && available === 0 ? (
-              <p className="mt-6 text-center font-sans text-sm text-bjs-muted">Sold out</p>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', textAlign: 'center', marginTop: 24 }}>
+                Sold out
+              </p>
             ) : (
-              <GoldButton href="/contact?inquiry=booking" className="mt-6 w-full justify-center">
-                Book / Enquire
-              </GoldButton>
+              <div style={{ marginTop: 24 }}>
+                <GoldButton href="/contact?inquiry=booking" className="w-full justify-center">
+                  Book / Enquire
+                </GoldButton>
+              </div>
             )}
 
-            <div className="mt-8 flex flex-wrap gap-3 border-t border-bjs-border pt-6 font-sans text-[11px]">
-              <Link
-                href={`https://wa.me/?text=${waText}`}
-                className="text-bjs-gold hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            <div
+              style={{
+                marginTop: 32,
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 12,
+                borderTop: '1px solid #1E1E1E',
+                paddingTop: 24,
+                fontFamily: 'var(--font-sans)',
+                fontSize: 11,
+              }}
+            >
+              <Link href={`https://wa.me/?text=${waText}`} style={{ color: '#C9A84C' }} target="_blank" rel="noopener noreferrer">
                 WhatsApp
               </Link>
-              <span className="text-bjs-border">|</span>
+              <span style={{ color: '#1E1E1E' }}>|</span>
               <Link
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${event.title} ${eventUrl}`)}`}
-                className="text-bjs-gold hover:underline"
+                style={{ color: '#C9A84C' }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -180,8 +242,8 @@ export default async function EventDetailPage({ params }: Props) {
         </aside>
       </section>
 
-      <div className="mx-auto max-w-7xl px-8 pb-16">
-        <Link href="/events" className="font-sans text-sm text-bjs-gold hover:underline">
+      <div className="mx-auto max-w-[1200px] px-6 pb-16 md:px-12">
+        <Link href="/events" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#C9A84C', textDecoration: 'none' }}>
           ← All events
         </Link>
       </div>

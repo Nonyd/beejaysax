@@ -1,105 +1,53 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Marquee from '@/components/ui/Marquee'
-import { registerGSAP } from '@/lib/animations'
 
-const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80'
+const DEMO_HERO = 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80'
+const TICKER =
+  "BLESSED & HIGHLY FAVOURED · GOSPEL SAXOPHONIST · MUSIC MINISTER · BEEJAY SAX LIVE CONCERT · SPIRIT-FILLED SOUND · NIGERIA'S FINEST · "
 
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const line1Ref = useRef<HTMLHeadingElement>(null)
-  const line2Ref = useRef<HTMLHeadingElement>(null)
-  const labelRef = useRef<HTMLParagraphElement>(null)
-  const tagRef = useRef<HTMLParagraphElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const scrollRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    registerGSAP()
-    gsap.registerPlugin(ScrollTrigger)
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
-      if (labelRef.current) {
-        tl.from(labelRef.current, { y: 20, opacity: 0, duration: 0.6 }, 0.1)
-      }
-      if (line1Ref.current) {
-        tl.from(line1Ref.current, { y: '100%', opacity: 0, duration: 1 }, 0.35)
-      }
-      if (line2Ref.current) {
-        tl.from(line2Ref.current, { y: '100%', opacity: 0, duration: 1 }, 0.4)
-      }
-      if (tagRef.current) tl.from(tagRef.current, { opacity: 0, duration: 0.6 }, 0.8)
-      if (ctaRef.current)
-        tl.from(ctaRef.current.children, { y: 20, opacity: 0, stagger: 0.1, duration: 0.55 }, 1.0)
-      if (scrollRef.current) tl.from(scrollRef.current, { opacity: 0, duration: 0.5 }, 1.4)
-
-      if (sectionRef.current) {
-        const bg = sectionRef.current.querySelector('[data-hero-bg]')
-        if (bg) {
-          gsap.to(bg, {
-            y: '8%',
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top top',
-              end: 'bottom top',
-              scrub: true,
-            },
-          })
-        }
-      }
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="relative h-[100svh] overflow-hidden">
-      <div data-hero-bg className="absolute inset-0 overflow-hidden">
+    <section
+      style={{
+        position: 'relative',
+        height: '100svh',
+        minHeight: 600,
+        overflow: 'hidden',
+        marginTop: -72,
+      }}
+    >
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         <Image
-          src={HERO_IMAGE}
-          alt="BeeJay Sax — performance"
+          src={DEMO_HERO}
+          alt="BeeJay Sax performing"
           fill
+          style={{ objectFit: 'cover', objectPosition: 'center top' }}
           priority
-          className="object-cover"
-          style={{ objectPosition: 'center top' }}
           sizes="100vw"
         />
       </div>
 
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,8,0.45)' }} />
       <div
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{ background: 'rgba(8,8,8,0.35)' }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
-          background:
-            'linear-gradient(to bottom, transparent 30%, rgba(8,8,8,0.8) 70%, #080808 100%)',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to bottom, transparent 20%, rgba(8,8,8,0.7) 65%, #080808 100%)',
         }}
       />
       <div
-        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
-          background: 'linear-gradient(to right, rgba(8,8,8,0.6) 0%, transparent 60%)',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to right, rgba(8,8,8,0.55) 0%, transparent 55%)',
         }}
       />
 
-      <div
-        className="absolute bottom-[100px] left-0 right-0 z-10"
-        style={{ paddingLeft: 0, paddingRight: 0 }}
-      >
-        <div className="max-w-6xl mx-auto px-6 md:px-16">
+      <div style={{ position: 'absolute', bottom: 100, left: 0, right: 0 }}>
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12">
           <p
-            ref={labelRef}
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: 10,
@@ -107,45 +55,38 @@ export default function Hero() {
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
               color: '#C9A84C',
-              marginBottom: 20,
+              marginBottom: 24,
             }}
           >
-            GOSPEL SAXOPHONIST · MUSIC MINISTER
+            Gospel Saxophonist · Music Minister
           </p>
 
-          <div style={{ overflow: 'hidden', marginBottom: 8 }}>
+          <div style={{ marginBottom: 24 }}>
             <h1
-              ref={line1Ref}
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(64px, 11vw, 150px)',
+                fontSize: 'clamp(72px, 12vw, 160px)',
                 fontWeight: 700,
-                fontStyle: 'normal',
-                fontSynthesis: 'none',
                 lineHeight: 0.88,
                 letterSpacing: '-0.02em',
                 color: '#F5F0E8',
-                whiteSpace: 'nowrap',
                 margin: 0,
+                display: 'block',
               }}
             >
               BeeJay
             </h1>
-          </div>
-          <div style={{ overflow: 'hidden' }}>
             <h1
-              ref={line2Ref}
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(64px, 11vw, 150px)',
+                fontSize: 'clamp(72px, 12vw, 160px)',
                 fontWeight: 700,
                 fontStyle: 'italic',
-                fontSynthesis: 'none',
                 lineHeight: 0.88,
                 letterSpacing: '-0.02em',
                 color: '#C9A84C',
-                whiteSpace: 'nowrap',
                 margin: 0,
+                display: 'block',
               }}
             >
               Sax.
@@ -153,20 +94,18 @@ export default function Hero() {
           </div>
 
           <p
-            ref={tagRef}
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 18,
+              fontSize: 17,
               fontStyle: 'italic',
               color: 'rgba(245,240,232,0.5)',
-              marginTop: 24,
               marginBottom: 40,
             }}
           >
             Blessed & Highly Favoured.
           </p>
 
-          <div ref={ctaRef} style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
             <Link
               href="/events"
               style={{
@@ -175,16 +114,11 @@ export default function Hero() {
                 fontWeight: 600,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
-                background: '#C9A84C',
                 color: '#080808',
+                background: '#C9A84C',
                 padding: '14px 32px',
-                minHeight: 44,
                 textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'none',
-                cursor: 'pointer',
+                display: 'inline-block',
               }}
             >
               Upcoming Events
@@ -197,16 +131,12 @@ export default function Hero() {
                 fontWeight: 600,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
-                background: 'transparent',
                 color: '#F5F0E8',
-                padding: '14px 32px',
-                minHeight: 44,
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                background: 'transparent',
                 border: '1px solid rgba(245,240,232,0.3)',
-                cursor: 'pointer',
+                padding: '14px 32px',
+                textDecoration: 'none',
+                display: 'inline-block',
               }}
             >
               Listen Now
@@ -216,47 +146,71 @@ export default function Hero() {
       </div>
 
       <div
-        ref={scrollRef}
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
-        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
+        style={{
+          position: 'absolute',
+          bottom: 32,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 8,
+        }}
       >
+        <div
+          style={{
+            width: 1,
+            height: 48,
+            background: 'rgba(201,168,76,0.4)',
+            animation: 'pulse 2s ease-in-out infinite',
+          }}
+        />
         <p
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 9,
-            letterSpacing: '0.3em',
+            letterSpacing: '0.25em',
             textTransform: 'uppercase',
-            color: 'rgba(201,168,76,0.6)',
+            color: 'rgba(201,168,76,0.4)',
           }}
         >
-          SCROLL
+          Scroll
         </p>
-        <div
-          style={{
-            width: 1,
-            height: 40,
-            background: 'rgba(201,168,76,0.4)',
-            transformOrigin: 'center bottom',
-            animation: 'hero-scroll-pulse 2s ease-in-out infinite',
-          }}
-        />
       </div>
 
       <div
-        className="absolute bottom-0 left-0 right-0 z-10 overflow-hidden"
         style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
           height: 36,
-          background: 'rgba(8,8,8,0.7)',
-          backdropFilter: 'blur(10px)',
+          background: 'rgba(8,8,8,0.8)',
           borderTop: '1px solid #1E1E1E',
+          overflow: 'hidden',
           display: 'flex',
           alignItems: 'center',
         }}
       >
-        <Marquee
-          speed="slow"
-          text="BLESSED & HIGHLY FAVOURED · GOSPEL SAXOPHONIST · MUSIC MINISTER · BEEJAY SAX LIVE CONCERT · SPIRIT-FILLED SOUND · NIGERIA'S FINEST · "
-        />
+        <div
+          style={{ display: 'flex', whiteSpace: 'nowrap', animation: 'marquee 60s linear infinite' }}
+        >
+          {[...Array(4)].map((_, i) => (
+            <span
+              key={i}
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 9,
+                letterSpacing: '0.25em',
+                textTransform: 'uppercase',
+                color: '#333',
+                paddingRight: 48,
+              }}
+            >
+              {TICKER}
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   )

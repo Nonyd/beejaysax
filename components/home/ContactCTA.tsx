@@ -2,15 +2,8 @@ import Link from 'next/link'
 
 export default function ContactCTA() {
   return (
-    <section
-      style={{
-        background: '#080808',
-        borderTop: '1px solid #1E1E1E',
-        paddingTop: 140,
-        paddingBottom: 140,
-      }}
-    >
-      <div className="max-w-6xl mx-auto px-6 md:px-16" style={{ textAlign: 'center' }}>
+    <section style={{ background: '#080808', borderTop: '1px solid #1E1E1E', paddingTop: 120, paddingBottom: 120 }}>
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12" style={{ textAlign: 'center' }}>
         <p
           style={{
             fontFamily: 'var(--font-sans)',
@@ -22,42 +15,24 @@ export default function ContactCTA() {
             marginBottom: 20,
           }}
         >
-          GET IN TOUCH
+          Get In Touch
         </p>
 
         <h2
           style={{
             fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(40px,7vw,96px)',
             fontWeight: 700,
-            fontSize: 'clamp(40px, 7vw, 96px)',
             lineHeight: 0.92,
             letterSpacing: '-0.02em',
-            color: '#F5F0E8',
-            whiteSpace: 'nowrap',
-            display: 'block',
-            margin: 0,
+            margin: '0 0 12px',
           }}
         >
-          Let&apos;s Create
-        </h2>
-        <h2
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontWeight: 700,
-            fontStyle: 'italic',
-            fontSize: 'clamp(40px, 7vw, 96px)',
-            lineHeight: 0.92,
-            letterSpacing: '-0.02em',
-            color: '#C9A84C',
-            whiteSpace: 'nowrap',
-            display: 'block',
-            margin: '0 0 32px',
-          }}
-        >
-          Something Sacred.
+          <span style={{ display: 'block', color: '#F5F0E8' }}>Let&apos;s Create</span>
+          <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Something Sacred.</span>
         </h2>
 
-        <div style={{ width: 40, height: 1, background: '#C9A84C', margin: '0 auto 32px' }} />
+        <div style={{ width: 40, height: 1, background: '#C9A84C', margin: '32px auto' }} />
 
         <p
           style={{
@@ -69,19 +44,11 @@ export default function ContactCTA() {
             margin: '0 auto 48px',
           }}
         >
-          Available for concerts, corporate events, gospel conferences, and collaborations — within
-          Nigeria and internationally.
+          Available for concerts, corporate events, gospel conferences, and collaborations — within Nigeria and
+          internationally.
         </p>
 
-        <div
-          style={{
-            display: 'flex',
-            gap: 16,
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            marginBottom: 48,
-          }}
-        >
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
           <Link
             href="/contact?inquiry=booking"
             style={{
@@ -90,14 +57,11 @@ export default function ContactCTA() {
               fontWeight: 600,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              background: '#C9A84C',
               color: '#080808',
+              background: '#C9A84C',
               padding: '14px 36px',
-              minHeight: 44,
               textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: 'inline-block',
             }}
           >
             Book BeeJay
@@ -110,15 +74,12 @@ export default function ContactCTA() {
               fontWeight: 600,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              background: 'transparent',
               color: '#F5F0E8',
+              background: 'transparent',
               border: '1px solid rgba(245,240,232,0.25)',
               padding: '14px 36px',
-              minHeight: 44,
               textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: 'inline-block',
             }}
           >
             Send a Message
@@ -132,10 +93,8 @@ export default function ContactCTA() {
             { icon: '✉️', text: 'booking@beejaysax.com' },
           ].map((item) => (
             <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 14, opacity: 0.6 }}>{item.icon}</span>
-              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#4A4A4A' }}>
-                {item.text}
-              </span>
+              <span style={{ fontSize: 13 }}>{item.icon}</span>
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#444' }}>{item.text}</span>
             </div>
           ))}
         </div>

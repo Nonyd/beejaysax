@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
-import { sectionLabelStyle } from '@/lib/typography-styles'
 
 export default function GlobalError({
   error,
@@ -15,12 +15,20 @@ export default function GlobalError({
     console.error('[Global Error]', error)
   }, [error])
 
+  const labelStyle: CSSProperties = {
+    fontFamily: 'var(--font-sans)',
+    fontSize: 10,
+    fontWeight: 500,
+    letterSpacing: '0.3em',
+    textTransform: 'uppercase',
+    color: '#C9A84C',
+    marginBottom: 24,
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#080808] px-4">
       <div className="max-w-md text-center">
-        <p className="mb-6" style={sectionLabelStyle}>
-          Something went wrong
-        </p>
+        <p style={labelStyle}>Something went wrong</p>
         <h1
           style={{
             fontFamily: 'var(--font-serif)',

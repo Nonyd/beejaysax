@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils'
-import { sectionLabelStyle } from '@/lib/typography-styles'
 
 export default function SectionLabel({
   children,
@@ -11,7 +10,19 @@ export default function SectionLabel({
   style?: React.CSSProperties
 }) {
   return (
-    <p className={cn(className)} style={{ ...sectionLabelStyle, ...style }}>
+    <p
+      className={cn(className)}
+      style={{
+        fontFamily: 'var(--font-sans)',
+        fontSize: 10,
+        fontWeight: 500,
+        letterSpacing: '0.3em',
+        textTransform: 'uppercase',
+        color: '#C9A84C',
+        marginBottom: 12,
+        ...style,
+      }}
+    >
       {children}
     </p>
   )

@@ -1,83 +1,121 @@
-'use client'
-
-import { useEffect, useRef } from 'react'
-import type { Event } from '@prisma/client'
-import SectionLabel from '@/components/ui/SectionLabel'
-import OutlineButton from '@/components/ui/OutlineButton'
+import Link from 'next/link'
 import EventCard from '@/components/events/EventCard'
-import { registerGSAP, fadeUpOnScroll } from '@/lib/animations'
-import { bodyTextStyle, h1DisplaySplitStyle, h2TextStyle } from '@/lib/typography-styles'
+import { prisma } from '@/lib/prisma'
+import { safeDb } from '@/lib/db-safe'
 
-export default function UpcomingEvents({ events }: { events: Event[] }) {
-  const headRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    registerGSAP()
-    if (headRef.current) fadeUpOnScroll(headRef.current)
-  }, [])
+export default async function UpcomingEvents() {
+  const events = await safeDb(
+    () =>
+      prisma.event.findMany({
+        where: { status: 'UPCOMING' },
+        orderBy: { eventDate: 'asc' },
+        take: 3,
+      }),
+    []
+  )
 
   return (
-    <section className="bg-bjs-black py-20 md:py-32">
-      <div className="mx-auto max-w-6xl px-6 md:px-12">
-        <div ref={headRef} className="mb-16 flex min-w-0 flex-col justify-between gap-8 md:flex-row md:items-end">
-          <div className="min-w-0 max-w-full">
-            <SectionLabel>On Stage</SectionLabel>
-            <div className="mt-3">
-              <h2
-                style={{
-                  ...h1DisplaySplitStyle,
-                  color: '#F5F0E8',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Catch BeeJay
-              </h2>
-              <h2
-                style={{
-                  ...h1DisplaySplitStyle,
-                  fontStyle: 'italic',
-                  color: '#C9A84C',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Live.
-              </h2>
-            </div>
+    <section style={{ background: '#080808', paddingTop: 120, paddingBottom: 120 }}>
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            marginBottom: 56,
+            flexWrap: 'wrap',
+            gap: 24,
+          }}
+        >
+          <div>
+            <p
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: '0.3em',
+                textTransform: 'uppercase',
+                color: '#C9A84C',
+                marginBottom: 16,
+              }}
+            >
+              On Stage
+            </p>
+            <h2
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 'clamp(40px,7vw,88px)',
+                fontWeight: 700,
+                lineHeight: 0.92,
+                margin: 0,
+              }}
+            >
+              <span style={{ display: 'block', color: '#F5F0E8' }}>Catch BeeJay</span>
+              <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Live.</span>
+            </h2>
           </div>
-          <div className="hidden shrink-0 md:block">
-            <OutlineButton href="/events">View All Events →</OutlineButton>
-          </div>
-        </div>
-
-        {events.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-6 py-20 text-center">
-            <span className="text-7xl opacity-20" aria-hidden>
-              🎷
-            </span>
-            <p style={{ ...h2TextStyle, opacity: 0.3 }}>No upcoming events.</p>
-            <p style={bodyTextStyle}>New dates coming soon.</p>
-            <OutlineButton href="/contact">Get Notified</OutlineButton>
-          </div>
-        ) : (
-          <div
+          <Link
+            href="/events"
+            className="hidden md:block"
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              gap: 20,
-              marginTop: 48,
+              fontFamily: 'var(--font-sans)',
+              fontSize: 10,
+              fontWeight: 600,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: '#C9A84C',
+              textDecoration: 'none',
+              border: '1px solid rgba(201,168,76,0.3)',
+              padding: '12px 24px',
             }}
           >
+            View All Events →
+          </Link>
+        </div>
+
+        {events.length > 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
             {events.map((e) => (
-              <div key={e.id} className="min-w-0 w-full">
-                <EventCard event={e} />
-              </div>
+              <EventCard key={e.id} event={e} />
             ))}
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '80px 0' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 24,
+                fontStyle: 'italic',
+                color: 'rgba(245,240,232,0.2)',
+                marginBottom: 16,
+              }}
+            >
+              No upcoming events
+            </p>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#333' }}>
+              New dates coming soon. Stay tuned.
+            </p>
           </div>
         )}
 
-        <div className="mt-8 text-center md:hidden">
-          <OutlineButton href="/events">View All Events →</OutlineButton>
+        <div className="md:hidden" style={{ textAlign: 'center', marginTop: 40 }}>
+          <Link
+            href="/events"
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: '#C9A84C',
+              textDecoration: 'none',
+              border: '1px solid rgba(201,168,76,0.3)',
+              padding: '12px 28px',
+              display: 'inline-block',
+            }}
+          >
+            View All Events →
+          </Link>
         </div>
       </div>
     </section>

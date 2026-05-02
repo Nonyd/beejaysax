@@ -2,16 +2,35 @@
 
 import { useSearchParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import SectionLabel from '@/components/ui/SectionLabel'
-import GoldButton from '@/components/ui/GoldButton'
+import type { CSSProperties } from 'react'
 import { Loader2, Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
-import { goldRuleStyle, h1TextStyle, sectionLabelStyle } from '@/lib/typography-styles'
 
 const INQUIRY = ['BOOKING', 'COLLABORATION', 'MEDIA', 'GENERAL'] as const
 
-const inputClass =
-  'w-full border border-bjs-border bg-bjs-surface px-4 py-3.5 font-sans text-sm text-bjs-white outline-none transition-colors duration-200 placeholder:text-[#2A2A2A] focus:border-bjs-gold'
+const labelStyle: CSSProperties = {
+  fontFamily: 'var(--font-sans)',
+  fontSize: 10,
+  fontWeight: 500,
+  letterSpacing: '0.25em',
+  textTransform: 'uppercase',
+  color: '#C9A84C',
+  marginBottom: 8,
+  display: 'block',
+}
+
+const inputStyle: CSSProperties = {
+  width: '100%',
+  fontFamily: 'var(--font-sans)',
+  fontSize: 14,
+  lineHeight: 1.5,
+  color: '#F5F0E8',
+  background: '#0F0F0F',
+  border: '1px solid #1E1E1E',
+  padding: '14px 16px',
+  outline: 'none',
+  boxSizing: 'border-box',
+}
 
 export default function ContactForm() {
   const searchParams = useSearchParams()
@@ -64,110 +83,185 @@ export default function ContactForm() {
     }
   }
 
+  const focusGold = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = '#C9A84C'
+  }
+  const blurBorder = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = '#1E1E1E'
+  }
+
   return (
     <div
-      className="mx-auto grid max-w-6xl gap-16 px-6 py-32 md:grid-cols-2 md:gap-24 md:px-12"
+      className="mx-auto grid max-w-[1200px] grid-cols-1 gap-16 px-6 py-24 lg:grid-cols-2 lg:gap-16 md:px-12"
       style={{ paddingTop: 80 }}
     >
       <div>
-        <SectionLabel>Reach Out</SectionLabel>
-        <h1 className="mt-3 text-bjs-white" style={h1TextStyle}>
-          Let&apos;s Talk.
+        <p style={labelStyle}>Reach Out</p>
+        <h1
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(48px,7vw,88px)',
+            fontWeight: 700,
+            lineHeight: 0.92,
+            color: '#F5F0E8',
+            margin: '0 0 24px',
+          }}
+        >
+          <span style={{ display: 'block' }}>Let&apos;s Talk.</span>
         </h1>
-        <span className="my-8 block" style={goldRuleStyle} />
+        <div style={{ width: 40, height: 1, background: '#C9A84C', marginBottom: 32 }} />
 
-        <ul className="space-y-5">
-          <li className="flex items-center gap-4">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-bjs-border">
-              <MapPin className="h-3.5 w-3.5 text-bjs-gold" aria-hidden />
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <li style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span
+              style={{
+                display: 'flex',
+                width: 36,
+                height: 36,
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid #1E1E1E',
+                flexShrink: 0,
+              }}
+            >
+              <MapPin style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
             </span>
-            <span className="font-sans text-sm text-bjs-white">Lagos, Nigeria</span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#F5F0E8' }}>Lagos, Nigeria</span>
           </li>
-          <li className="flex items-center gap-4">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-bjs-border">
-              <Phone className="h-3.5 w-3.5 text-bjs-gold" aria-hidden />
+          <li style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span
+              style={{
+                display: 'flex',
+                width: 36,
+                height: 36,
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid #1E1E1E',
+                flexShrink: 0,
+              }}
+            >
+              <Phone style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
             </span>
-            <span className="font-sans text-sm text-bjs-white">+234 80 5898 2828</span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#F5F0E8' }}>+234 80 5898 2828</span>
           </li>
-          <li className="flex items-center gap-4">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-bjs-border">
-              <Mail className="h-3.5 w-3.5 text-bjs-gold" aria-hidden />
+          <li style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span
+              style={{
+                display: 'flex',
+                width: 36,
+                height: 36,
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid #1E1E1E',
+                flexShrink: 0,
+              }}
+            >
+              <Mail style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
             </span>
-            <span className="font-sans text-sm text-bjs-white">booking@beejaysax.com</span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#F5F0E8' }}>booking@beejaysax.com</span>
           </li>
         </ul>
 
-        <div className="mt-10 flex flex-wrap gap-3">
+        <div style={{ marginTop: 32, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
           <Link
             href="https://www.instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-10 w-10 items-center justify-center border border-bjs-border text-bjs-muted transition-colors hover:border-bjs-gold hover:text-bjs-gold"
-            aria-label="Instagram"
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 10,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: '#444',
+              textDecoration: 'none',
+              border: '1px solid #1E1E1E',
+              padding: '10px 16px',
+            }}
           >
-            IG
+            Instagram
           </Link>
           <Link
             href="https://www.youtube.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-10 w-10 items-center justify-center border border-bjs-border text-bjs-muted transition-colors hover:border-bjs-gold hover:text-bjs-gold"
-            aria-label="YouTube"
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 10,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: '#444',
+              textDecoration: 'none',
+              border: '1px solid #1E1E1E',
+              padding: '10px 16px',
+            }}
           >
-            YT
+            YouTube
           </Link>
         </div>
 
-        <div className="mt-12 border-l-2 border-bjs-gold bg-[rgba(201,168,76,0.03)] px-5 py-4">
-          <p className="font-sans text-[13px] leading-[1.7] text-[rgba(245,240,232,0.5)]">
+        <div
+          style={{
+            marginTop: 40,
+            borderLeft: '2px solid #C9A84C',
+            background: 'rgba(201,168,76,0.03)',
+            padding: '16px 20px',
+          }}
+        >
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, lineHeight: 1.7, color: 'rgba(245,240,232,0.5)', margin: 0 }}>
             For international bookings, include your country, event type, and preferred dates.
           </p>
         </div>
       </div>
 
-      <div className="space-y-5">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <label className="block">
-            <span className="mb-2 block" style={sectionLabelStyle}>
-              First name
-            </span>
-            <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputClass} placeholder="" />
+          <label style={{ display: 'block' }}>
+            <span style={labelStyle}>First name</span>
+            <input
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              style={inputStyle}
+              onFocus={focusGold}
+              onBlur={blurBorder}
+            />
           </label>
-          <label className="block">
-            <span className="mb-2 block" style={sectionLabelStyle}>
-              Last name
-            </span>
-            <input value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputClass} placeholder="" />
+          <label style={{ display: 'block' }}>
+            <span style={labelStyle}>Last name</span>
+            <input
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              style={inputStyle}
+              onFocus={focusGold}
+              onBlur={blurBorder}
+            />
           </label>
         </div>
 
-        <label className="block">
-          <span className="mb-2 block" style={sectionLabelStyle}>
-            Email
-          </span>
+        <label style={{ display: 'block' }}>
+          <span style={labelStyle}>Email</span>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={inputClass}
+            style={inputStyle}
+            onFocus={focusGold}
+            onBlur={blurBorder}
           />
         </label>
 
-        <label className="block">
-          <span className="mb-2 block" style={sectionLabelStyle}>
-            Phone (optional)
-          </span>
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} />
+        <label style={{ display: 'block' }}>
+          <span style={labelStyle}>Phone (optional)</span>
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} style={inputStyle} onFocus={focusGold} onBlur={blurBorder} />
         </label>
 
-        <label className="block">
-          <span className="mb-2 block" style={sectionLabelStyle}>
-            Inquiry type
-          </span>
+        <label style={{ display: 'block' }}>
+          <span style={labelStyle}>Inquiry type</span>
           <select
             value={inquiryType}
             onChange={(e) => setInquiryType(e.target.value)}
-            className={inputClass}
+            style={{ ...inputStyle, cursor: 'pointer' }}
+            onFocus={focusGold}
+            onBlur={blurBorder}
           >
             {INQUIRY.map((t) => (
               <option key={t} value={t}>
@@ -177,38 +271,57 @@ export default function ContactForm() {
           </select>
         </label>
 
-        <label className="block">
-          <span className="mb-2 block" style={sectionLabelStyle}>
-            Subject
-          </span>
-          <input value={subject} onChange={(e) => setSubject(e.target.value)} className={inputClass} />
+        <label style={{ display: 'block' }}>
+          <span style={labelStyle}>Subject</span>
+          <input value={subject} onChange={(e) => setSubject(e.target.value)} style={inputStyle} onFocus={focusGold} onBlur={blurBorder} />
         </label>
 
-        <label className="block">
-          <span className="mb-2 block" style={sectionLabelStyle}>
-            Message
-          </span>
+        <label style={{ display: 'block' }}>
+          <span style={labelStyle}>Message</span>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             rows={6}
-            className={`min-h-[160px] resize-none ${inputClass}`}
+            style={{ ...inputStyle, minHeight: 160, resize: 'none' }}
+            onFocus={focusGold}
+            onBlur={blurBorder}
           />
         </label>
 
-        <GoldButton type="button" disabled={loading} onClick={submit} className="mt-2 w-full justify-center">
+        <button
+          type="button"
+          disabled={loading}
+          onClick={submit}
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            width: '100%',
+            padding: '16px 24px',
+            background: '#C9A84C',
+            color: '#080808',
+            border: 'none',
+            cursor: loading ? 'wait' : 'pointer',
+            opacity: loading ? 0.7 : 1,
+            marginTop: 8,
+          }}
+        >
           {loading ? (
-            <span className="inline-flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <Loader2 style={{ width: 16, height: 16, animation: 'spin 0.8s linear infinite', display: 'inline-block' }} aria-hidden />
               Sending…
             </span>
           ) : (
             'Send Message'
           )}
-        </GoldButton>
+        </button>
 
         {toast && (
-          <p className={`font-sans text-sm ${toast.ok ? 'text-green-400' : 'text-red-400'}`}>{toast.text}</p>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: toast.ok ? '#4ade80' : '#f87171', margin: 0 }}>
+            {toast.text}
+          </p>
         )}
       </div>
     </div>

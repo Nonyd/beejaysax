@@ -1,7 +1,17 @@
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
-import { sectionLabelStyle } from '@/lib/typography-styles'
 
 export default function NotFound() {
+  const labelStyle: CSSProperties = {
+    fontFamily: 'var(--font-sans)',
+    fontSize: 10,
+    fontWeight: 500,
+    letterSpacing: '0.3em',
+    textTransform: 'uppercase',
+    color: '#C9A84C',
+    marginBottom: 24,
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#080808] px-4">
       <div className="max-w-lg text-center">
@@ -19,9 +29,7 @@ export default function NotFound() {
           404
         </p>
 
-        <p className="mb-6" style={sectionLabelStyle}>
-          Page not found
-        </p>
+        <p style={labelStyle}>Page not found</p>
 
         <h1
           style={{

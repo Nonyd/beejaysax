@@ -1,118 +1,156 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import type { Video } from '@prisma/client'
-import SectionLabel from '@/components/ui/SectionLabel'
+import { useState } from 'react'
 import Image from 'next/image'
-import OutlineButton from '@/components/ui/OutlineButton'
-import { Play } from 'lucide-react'
-import { registerGSAP, scaleInOnScroll, fadeUpOnScroll } from '@/lib/animations'
-import { h2TextStyle } from '@/lib/typography-styles'
+import Link from 'next/link'
 
-export default function VideoSection({ videos }: { videos: Video[] }) {
-  const featuredRef = useRef<HTMLDivElement>(null)
-  const rowRef = useRef<HTMLDivElement>(null)
-  const [playMain, setPlayMain] = useState(false)
-  const [playIdx, setPlayIdx] = useState<number | null>(null)
+const VIDEOS = [
+  { id: '0jxRD456j_w', title: 'BeeJay Sax Live in London, Indigo O2' },
+  { id: 'z4saapf2BrA', title: 'BeeJay Sax at House on the Rock (TAPE 2022)' },
+]
 
-  const main = videos[0]
-  const rest = videos.slice(1, 3)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    registerGSAP()
-    if (featuredRef.current) scaleInOnScroll(featuredRef.current)
-    if (rowRef.current)
-      fadeUpOnScroll(Array.from(rowRef.current.querySelectorAll<HTMLElement>('[data-video-tile]')))
-  }, [videos.length])
-
-  if (!main) return null
-
-  const thumb = (id: string) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
+function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?: boolean }) {
+  const [playing, setPlaying] = useState(false)
+  const thumb = `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`
 
   return (
-    <section className="border-y border-bjs-border bg-bjs-surface py-20 md:py-32">
-      <div className="mx-auto max-w-6xl px-6 md:px-12">
-        <SectionLabel>Watch</SectionLabel>
-        <h2 className="mt-3" style={{ marginBottom: 48 }}>
-          <span className="block text-bjs-white" style={h2TextStyle}>
-            Experience The
-          </span>
-          <span className="block text-bjs-gold" style={h2TextStyle}>
-            Performance.
-          </span>
+    <div
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        aspectRatio: '16/9',
+        background: '#0F0F0F',
+        cursor: 'pointer',
+      }}
+      onClick={() => setPlaying(true)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') setPlaying(true)
+      }}
+      role="button"
+      tabIndex={0}
+    >
+      {playing ? (
+        <iframe
+          title={video.title}
+          src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+        />
+      ) : (
+        <>
+          <Image src={thumb} alt={video.title} fill style={{ objectFit: 'cover' }} sizes="(max-width:1200px) 100vw, 1200px" />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,8,0.4)' }} />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div
+              style={{
+                width: large ? 64 : 44,
+                height: large ? 64 : 44,
+                borderRadius: '50%',
+                background: '#C9A84C',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform 200ms',
+              }}
+            >
+              <svg width={large ? 20 : 14} height={large ? 20 : 14} viewBox="0 0 24 24" fill="#080808">
+                <polygon points="5,3 19,12 5,21" />
+              </svg>
+            </div>
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: 'linear-gradient(to top, rgba(8,8,8,0.8) 0%, transparent 100%)',
+              padding: '24px 16px 16px',
+            }}
+          >
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#F5F0E8', margin: 0 }}>{video.title}</p>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+export default function VideoSection() {
+  return (
+    <section style={{ background: '#080808', borderTop: '1px solid #1E1E1E', paddingTop: 120, paddingBottom: 120 }}>
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <p
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 10,
+            fontWeight: 500,
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+            marginBottom: 16,
+          }}
+        >
+          Watch
+        </p>
+        <h2
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(28px,4vw,52px)',
+            fontWeight: 600,
+            lineHeight: 1.05,
+            color: '#F5F0E8',
+            margin: '0 0 48px',
+          }}
+        >
+          <span style={{ display: 'block' }}>Experience The</span>
+          <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Performance.</span>
         </h2>
 
-        <div ref={featuredRef} className="relative aspect-video w-full overflow-hidden bg-bjs-black">
-          {!playMain ? (
-            <>
-              <button
-                type="button"
-                className="group absolute inset-0 z-10 flex flex-col items-center justify-center"
-                onClick={() => setPlayMain(true)}
-                aria-label={`Play video: ${main.title}`}
-              >
-                <span className="absolute inset-0 bg-[rgba(8,8,8,0.5)]" />
-                <span className="relative z-[1] flex h-[60px] w-[60px] items-center justify-center rounded-full bg-bjs-gold text-bjs-black transition-all duration-200 hover:scale-110 hover:bg-bjs-gold-lt">
-                  <Play className="ml-1 h-7 w-7 fill-current" />
-                </span>
-              </button>
-              <Image src={thumb(main.youtubeId)} alt="" fill className="object-cover" sizes="100vw" />
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[rgba(8,8,8,0.8)] to-transparent px-6 py-4">
-                <p className="relative z-[1] font-sans text-[13px] text-bjs-white">{main.title}</p>
-              </div>
-            </>
-          ) : (
-            <iframe
-              title={main.title}
-              src={`https://www.youtube.com/embed/${main.youtubeId}?autoplay=1`}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
-              allowFullScreen
-            />
-          )}
-        </div>
+        {VIDEOS[0] && (
+          <div style={{ marginBottom: 12 }}>
+            <VideoCard video={VIDEOS[0]} large />
+          </div>
+        )}
 
-        {rest.length > 0 && (
-          <div ref={rowRef} className="mt-4 grid grid-cols-2 gap-4">
-            {rest.map((v, i) => (
-              <div key={v.id} data-video-tile className="relative aspect-video overflow-hidden bg-bjs-black">
-                {playIdx === i ? (
-                  <iframe
-                    title={v.title}
-                    src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=1`}
-                    className="h-full w-full"
-                    allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
-                    allowFullScreen
-                  />
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      className="group absolute inset-0 z-10 flex items-center justify-center bg-[rgba(8,8,8,0.5)]"
-                      onClick={() => setPlayIdx(i)}
-                      aria-label={`Play video: ${v.title}`}
-                    >
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-bjs-gold text-bjs-black transition-all duration-200 hover:scale-110 hover:bg-bjs-gold-lt">
-                        <Play className="ml-0.5 h-5 w-5 fill-current" />
-                      </span>
-                    </button>
-                    <Image src={thumb(v.youtubeId)} alt="" fill className="object-cover" sizes="50vw" />
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[rgba(8,8,8,0.8)] to-transparent px-4 py-3">
-                      <p className="font-sans text-[13px] text-bjs-white">{v.title}</p>
-                    </div>
-                  </>
-                )}
-              </div>
+        {VIDEOS.length > 1 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 12 }}>
+            {VIDEOS.slice(1).map((v) => (
+              <VideoCard key={v.id} video={v} />
             ))}
           </div>
         )}
 
-        <p className="mt-8 text-center">
-          <OutlineButton href="https://www.youtube.com/@beejaysax" target="_blank" rel="noopener noreferrer">
-            View All Videos
-          </OutlineButton>
-        </p>
+        <div style={{ textAlign: 'center', marginTop: 40 }}>
+          <Link
+            href="https://youtube.com/@beejaysax"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: '#C9A84C',
+              textDecoration: 'none',
+              border: '1px solid rgba(201,168,76,0.3)',
+              padding: '12px 28px',
+              display: 'inline-block',
+            }}
+          >
+            View All Videos →
+          </Link>
+        </div>
       </div>
     </section>
   )

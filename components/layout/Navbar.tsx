@@ -1,10 +1,10 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
 
-const links = [
+const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/releases', label: 'Releases' },
   { href: '/events', label: 'Events' },
@@ -16,53 +16,50 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    const fn = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   useEffect(() => {
-    if (!menuOpen) return
-    document.body.style.overflow = 'hidden'
+    document.body.style.overflow = open ? 'hidden' : ''
     return () => {
       document.body.style.overflow = ''
     }
-  }, [menuOpen])
+  }, [open])
+
+  const navStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 72,
+    zIndex: 100,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    background: scrolled ? 'rgba(8,8,8,0.96)' : 'transparent',
+    backdropFilter: scrolled ? 'blur(16px)' : 'none',
+    borderBottom: scrolled ? '1px solid #1E1E1E' : 'none',
+    transition: 'all 400ms ease',
+  }
 
   return (
     <>
-      <nav
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 50,
-          height: 72,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 48px',
-          background: scrolled ? 'rgba(8,8,8,0.95)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid #1E1E1E' : 'none',
-          transition: 'all 400ms ease',
-        }}
-      >
+      <nav style={navStyle} className="px-6 md:px-12">
         <Link
           href="/"
-          style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 2 }}
+          style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 3 }}
         >
           <span
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 700,
-              letterSpacing: '0.22em',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#F5F0E8',
             }}
@@ -72,21 +69,20 @@ export default function Navbar() {
           <span
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 13,
+              fontSize: 12,
               fontStyle: 'italic',
               color: '#C9A84C',
             }}
           >
-            {' '}
             SAX
           </span>
         </Link>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 36 }} className="hidden lg:flex">
-          {links.map((link) => (
+        <div style={{ display: 'flex', gap: 32, alignItems: 'center' }} className="hidden lg:flex">
+          {NAV_LINKS.map((l) => (
             <Link
-              key={link.href}
-              href={link.href}
+              key={l.href}
+              href={l.href}
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: 10,
@@ -94,25 +90,18 @@ export default function Navbar() {
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 textDecoration: 'none',
-                color: pathname === link.href ? '#C9A84C' : 'rgba(245,240,232,0.5)',
+                color: pathname === l.href ? '#C9A84C' : 'rgba(245,240,232,0.45)',
                 transition: 'color 200ms',
               }}
-              onMouseEnter={(e) => {
-                if (pathname !== link.href) (e.target as HTMLAnchorElement).style.color = '#F5F0E8'
-              }}
-              onMouseLeave={(e) => {
-                if (pathname !== link.href)
-                  (e.target as HTMLAnchorElement).style.color = 'rgba(245,240,232,0.5)'
-              }}
             >
-              {link.label}
+              {l.label}
             </Link>
           ))}
         </div>
 
         <Link
-          href="/contact?inquiry=booking"
-          className="hidden lg:block"
+          href="/contact"
+          className="hidden lg:flex"
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 10,
@@ -121,21 +110,10 @@ export default function Navbar() {
             textTransform: 'uppercase',
             textDecoration: 'none',
             color: '#C9A84C',
-            border: '1px solid rgba(201,168,76,0.5)',
-            padding: '12px 22px',
-            minHeight: 44,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            border: '1px solid rgba(201,168,76,0.4)',
+            padding: '10px 24px',
             transition: 'all 200ms',
-          }}
-          onMouseEnter={(e) => {
-            ;(e.currentTarget as HTMLAnchorElement).style.background = '#C9A84C'
-            ;(e.currentTarget as HTMLAnchorElement).style.color = '#080808'
-          }}
-          onMouseLeave={(e) => {
-            ;(e.currentTarget as HTMLAnchorElement).style.background = 'transparent'
-            ;(e.currentTarget as HTMLAnchorElement).style.color = '#C9A84C'
+            alignItems: 'center',
           }}
         >
           Book BeeJay
@@ -143,9 +121,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => setOpen(!open)}
           className="lg:hidden"
           style={{
             background: 'none',
@@ -155,71 +131,81 @@ export default function Navbar() {
             display: 'flex',
             flexDirection: 'column',
             gap: 5,
-            minWidth: 44,
-            minHeight: 44,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: 'flex-end',
           }}
+          aria-label="Menu"
         >
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              style={{
-                display: 'block',
-                width: 22,
-                height: 1.5,
-                background: '#F5F0E8',
-                transition: 'all 300ms',
-                transform: menuOpen
-                  ? i === 0
-                    ? 'rotate(45deg) translateY(6.5px)'
-                    : i === 2
-                      ? 'rotate(-45deg) translateY(-6.5px)'
-                      : 'scaleX(0)'
-                  : 'none',
-              }}
-            />
-          ))}
+          <span
+            style={{
+              display: 'block',
+              width: 22,
+              height: 1,
+              background: '#F5F0E8',
+              transition: 'transform 300ms',
+              transform: open ? 'rotate(45deg) translate(4px, 4px)' : 'none',
+            }}
+          />
+          <span
+            style={{
+              display: 'block',
+              width: 16,
+              height: 1,
+              background: '#F5F0E8',
+              transition: 'opacity 300ms',
+              opacity: open ? 0 : 1,
+            }}
+          />
+          <span
+            style={{
+              display: 'block',
+              width: 22,
+              height: 1,
+              background: '#F5F0E8',
+              transition: 'transform 300ms',
+              transform: open ? 'rotate(-45deg) translate(4px, -4px)' : 'none',
+            }}
+          />
         </button>
       </nav>
 
-      {menuOpen && (
+      {open && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 49,
+            zIndex: 99,
             background: '#080808',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 40,
+            gap: 8,
           }}
         >
-          {links.map((link, i) => (
+          {NAV_LINKS.map((l, i) => (
             <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(32px, 8vw, 52px)',
+                fontSize: 'clamp(28px,7vw,48px)',
                 fontStyle: 'italic',
                 fontWeight: 600,
-                color: pathname === link.href ? '#C9A84C' : 'rgba(245,240,232,0.4)',
+                color: pathname === l.href ? '#C9A84C' : 'rgba(245,240,232,0.35)',
                 textDecoration: 'none',
-                animation: `fadeInUp 0.4s ease ${i * 0.06}s both`,
+                padding: '12px 0',
+                animation: `fadeUp 0.4s ease ${i * 0.05}s both`,
               }}
             >
-              {link.label}
+              {l.label}
             </Link>
           ))}
           <Link
-            href="/contact?inquiry=booking"
-            onClick={() => setMenuOpen(false)}
+            href="/contact"
+            onClick={() => setOpen(false)}
             style={{
-              marginTop: 16,
+              marginTop: 32,
               fontFamily: 'var(--font-sans)',
               fontSize: 11,
               fontWeight: 600,
@@ -227,11 +213,7 @@ export default function Navbar() {
               textTransform: 'uppercase',
               color: '#080808',
               background: '#C9A84C',
-              padding: '14px 32px',
-              minHeight: 44,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              padding: '14px 36px',
               textDecoration: 'none',
             }}
           >

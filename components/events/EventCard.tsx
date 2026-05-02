@@ -52,7 +52,7 @@ export default function EventCard({
         border: '1px solid #1E1E1E',
         overflow: 'hidden',
         cursor: 'pointer',
-        transition: 'all 350ms ease',
+        transition: 'all 300ms ease',
         display: 'flex',
         flexDirection: 'column',
         opacity: dimmed ? 0.6 : 1,
@@ -70,7 +70,7 @@ export default function EventCard({
         if (e.key === 'Enter') router.push(`/events/${event.id}`)
       }}
     >
-      <div style={{ aspectRatio: '16/9', position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+      <div style={{ position: 'relative', overflow: 'hidden', aspectRatio: '16/9', flexShrink: 0 }}>
         {event.posterImage ? (
           <Image
             src={event.posterImage}
@@ -84,13 +84,13 @@ export default function EventCard({
             style={{
               width: '100%',
               height: '100%',
-              background: 'linear-gradient(135deg, #0d0a02 0%, #1a1204 100%)',
+              background: 'linear-gradient(135deg, #0d0a02, #161616)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <span style={{ fontSize: 40, opacity: 0.15 }} aria-hidden>
+            <span style={{ fontSize: 36, opacity: 0.12 }} aria-hidden>
               🎷
             </span>
           </div>
@@ -103,9 +103,8 @@ export default function EventCard({
             position: 'absolute',
             bottom: 0,
             left: 0,
-            background: 'rgba(8,8,8,0.92)',
-            backdropFilter: 'blur(10px)',
-            padding: '12px 16px',
+            background: 'rgba(8,8,8,0.9)',
+            padding: '10px 16px',
             borderTop: '1px solid #2A2A2A',
             borderRight: '1px solid #2A2A2A',
           }}
@@ -113,7 +112,7 @@ export default function EventCard({
           <p
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 36,
+              fontSize: 32,
               fontWeight: 700,
               color: '#C9A84C',
               lineHeight: 1,
@@ -126,10 +125,10 @@ export default function EventCard({
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: 9,
-              letterSpacing: '0.15em',
+              letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              color: '#4A4A4A',
-              marginTop: 2,
+              color: '#555',
+              margin: '3px 0 0',
             }}
           >
             {monthYear}
@@ -137,28 +136,28 @@ export default function EventCard({
         </div>
       </div>
 
-      <div style={{ padding: '20px 20px 0' }}>
+      <div style={{ padding: '20px 20px 0', flex: 1 }}>
         <h3
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 18,
             fontWeight: 600,
-            color: '#F5F0E8',
             lineHeight: 1.3,
+            color: '#F5F0E8',
             margin: '0 0 8px',
+            overflow: 'hidden',
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
           }}
         >
           {event.title}
         </h3>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#4A4A4A', margin: 0 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', margin: 0 }}>
           {event.venue} · {event.city}
         </p>
         {event.eventTime && (
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#2A2A2A', marginTop: 4 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#333', marginTop: 4 }}>
             {event.eventTime}
           </p>
         )}
@@ -166,9 +165,9 @@ export default function EventCard({
 
       <div
         style={{
-          padding: '16px 20px 20px',
-          borderTop: '1px solid #141414',
+          padding: '16px 20px',
           marginTop: 16,
+          borderTop: '1px solid #141414',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -182,7 +181,7 @@ export default function EventCard({
             color: '#C9A84C',
           }}
         >
-          {event.isFree ? 'FREE' : `₦${event.ticketPrice?.toLocaleString() ?? '—'}`}
+          {event.isFree ? 'FREE' : `₦${(event.ticketPrice ?? 0).toLocaleString()}`}
         </span>
         <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex' }}>
           <Link
@@ -195,13 +194,8 @@ export default function EventCard({
               textTransform: 'uppercase',
               color: '#C9A84C',
               border: '1px solid rgba(201,168,76,0.3)',
-              padding: '10px 16px',
-              minHeight: 44,
-              display: 'inline-flex',
-              alignItems: 'center',
-              cursor: 'pointer',
+              padding: '8px 16px',
               textDecoration: 'none',
-              transition: 'all 200ms',
             }}
           >
             {cta}

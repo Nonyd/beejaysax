@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import SectionLabel from '@/components/ui/SectionLabel'
-import { h1TextStyle } from '@/lib/typography-styles'
 import ReleasesView from '@/components/releases/ReleasesView'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
@@ -19,28 +17,48 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function ReleasesPage() {
-  const releases = await safeDb(
-    () => prisma.release.findMany({ orderBy: { releaseDate: 'desc' } }),
-    []
-  )
+  const releases = await safeDb(() => prisma.release.findMany({ orderBy: { releaseDate: 'desc' } }), [])
 
   return (
     <>
       <section
-        className="relative flex min-h-[360px] h-[45vh] flex-col justify-end overflow-hidden"
         style={{
-          background: [
-            'linear-gradient(135deg, #080808 0%, #0F0F0F 50%, #080808 100%)',
-            'radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 60%)',
-          ].join(', '),
+          height: 320,
+          position: 'relative',
+          overflow: 'hidden',
+          background: '#0F0F0F',
+          borderBottom: '1px solid #1E1E1E',
         }}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(201,168,76,0.04)_0%,transparent_60%)]" />
-        <div className="relative mx-auto w-full max-w-6xl px-6 pb-12 pt-32 md:px-12">
-          <SectionLabel>Discography</SectionLabel>
-          <h1 className="mt-3 text-bjs-white" style={h1TextStyle}>
-            The Music.
-          </h1>
+        <div style={{ position: 'absolute', bottom: 48, left: 0, right: 0 }}>
+          <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+            <p
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 10,
+                fontWeight: 500,
+                letterSpacing: '0.3em',
+                textTransform: 'uppercase',
+                color: '#C9A84C',
+                marginBottom: 12,
+              }}
+            >
+              Discography
+            </p>
+            <h1
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 'clamp(48px,8vw,96px)',
+                fontWeight: 700,
+                lineHeight: 0.92,
+                letterSpacing: '-0.02em',
+                color: '#F5F0E8',
+                margin: 0,
+              }}
+            >
+              <span style={{ display: 'block' }}>The Music.</span>
+            </h1>
+          </div>
         </div>
       </section>
 

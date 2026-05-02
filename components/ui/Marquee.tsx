@@ -11,22 +11,34 @@ export default function Marquee({
   className?: string
   speed?: 'default' | 'slow'
 }) {
-  const animSlow = speed === 'slow' ? 'animate-marquee-slow' : 'animate-marquee'
+  const duration = speed === 'slow' ? '60s' : '50s'
   const anim =
     direction === 'left'
-      ? `${animSlow} group-hover:[animation-play-state:paused]`
-      : `${animSlow} group-hover:[animation-play-state:paused] [animation-direction:reverse]`
+      ? `marquee ${duration} linear infinite`
+      : `marquee ${duration} linear infinite reverse`
 
   const segment = (
-    <span className="inline-flex shrink-0 items-center">
-      <span className="whitespace-nowrap font-sans text-[9px] uppercase tracking-[0.25em] text-bjs-muted">{text}</span>
-      <span className="mx-6 text-bjs-gold">◆</span>
+    <span style={{ display: 'inline-flex', flexShrink: 0, alignItems: 'center' }}>
+      <span
+        style={{
+          whiteSpace: 'nowrap',
+          fontFamily: 'var(--font-sans)',
+          fontSize: 9,
+          letterSpacing: '0.25em',
+          textTransform: 'uppercase',
+          color: '#333',
+        }}
+      >
+        {text}
+      </span>
+      <span style={{ margin: '0 24px', color: '#C9A84C' }}>◆</span>
     </span>
   )
 
   return (
     <div className={cn('group w-full overflow-hidden', className)}>
-      <div className={cn('flex w-max', anim)}>
+      <div style={{ display: 'flex', width: 'max-content', animation: anim }}>
+        {segment}
         {segment}
         {segment}
         {segment}
