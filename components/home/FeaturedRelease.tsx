@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import type { Release } from '@prisma/client'
 import SectionLabel from '@/components/ui/SectionLabel'
-import { Music } from 'lucide-react'
 import { registerGSAP, scaleInOnScroll } from '@/lib/animations'
 import { format } from 'date-fns'
 import { bodyTextStyle, goldRuleStyle, h2TextStyle, sectionLabelStyle } from '@/lib/typography-styles'
@@ -37,8 +36,15 @@ export default function FeaturedRelease({ release }: { release: Release | null }
                 sizes="(max-width:1024px) 100vw, 40vw"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-bjs-surface2">
-                <Music className="h-24 w-24 text-bjs-gold/30" />
+              <div
+                className="flex h-full w-full items-center justify-center px-6"
+                style={{
+                  background: 'linear-gradient(135deg, #1a1204 0%, #2d1f06 50%, #0d0a02 100%)',
+                }}
+              >
+                <p className="text-center font-serif text-lg font-semibold tracking-[0.12em] text-bjs-gold md:text-2xl">
+                  PRAISE SESSION 1
+                </p>
               </div>
             )}
           </div>

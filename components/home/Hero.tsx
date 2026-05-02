@@ -11,7 +11,7 @@ import { registerGSAP } from '@/lib/animations'
 import { heroDisplayLineStyle, sectionLabelStyle } from '@/lib/typography-styles'
 
 const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1519892300558-c31723655541?q=80&w=1920&auto=format&fit=crop'
+  'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80'
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)

@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Event } from '@prisma/client'
-import { Music } from 'lucide-react'
 import { format } from 'date-fns'
 
 export default function EventCard({ event, showViewButton, dimmed }: { event: Event; showViewButton?: boolean; dimmed?: boolean }) {
@@ -44,8 +43,13 @@ export default function EventCard({ event, showViewButton, dimmed }: { event: Ev
             sizes="(max-width:768px) 100vw, 33vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,#0F0F0F_0%,#161616_100%)]">
-            <Music className="h-12 w-12 text-bjs-gold/15" strokeWidth={1} aria-hidden />
+          <div
+            className="flex h-full w-full items-center justify-center px-4"
+            style={{ background: 'linear-gradient(135deg, #0d0a02 0%, #1a1204 100%)' }}
+          >
+            <p className="line-clamp-3 text-center font-serif text-[clamp(16px,3.5vw,26px)] font-semibold leading-snug text-bjs-gold">
+              {event.title}
+            </p>
           </div>
         )}
         <span

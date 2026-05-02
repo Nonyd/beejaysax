@@ -43,7 +43,7 @@ export default function AboutTeaser() {
         <div ref={imageRef} className="group relative aspect-[3/4] overflow-hidden">
           <span className="absolute left-0 top-0 z-10 h-full w-[2px] bg-bjs-gold" aria-hidden />
           <Image
-            src="https://images.unsplash.com/photo-1519892300558-c31723655541?q=80&w=1200&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80"
             alt="BeeJay Sax performing saxophone on stage"
             fill
             className="object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.04]"
