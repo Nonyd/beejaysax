@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import SectionLabel from '@/components/ui/SectionLabel'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,7 +53,7 @@ export default async function AdminDashboard() {
       <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-3">
         {stats.map((stat) => (
           <div key={stat.label} className="border border-[#1E1E1E] bg-[#0F0F0F] p-6">
-            <p className="section-label mb-3">{stat.label}</p>
+            <SectionLabel className="mb-3">{stat.label}</SectionLabel>
             <p
               style={{
                 fontFamily: 'var(--font-serif)',
@@ -98,7 +99,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
           <div className="border-b border-[#1E1E1E] px-6 py-4">
-            <p className="section-label">Recent Registrations</p>
+            <SectionLabel>Recent Registrations</SectionLabel>
           </div>
           <div className="divide-y divide-[#1E1E1E]">
             {recentTickets.length === 0 && (
@@ -137,7 +138,7 @@ export default async function AdminDashboard() {
 
         <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
           <div className="border-b border-[#1E1E1E] px-6 py-4">
-            <p className="section-label">Recent Messages</p>
+            <SectionLabel>Recent Messages</SectionLabel>
           </div>
           <div className="divide-y divide-[#1E1E1E]">
             {recentMessages.length === 0 && (

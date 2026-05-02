@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import jsQR from 'jsqr'
+import SectionLabel from '@/components/ui/SectionLabel'
 
 type ScanState = 'idle' | 'scanning' | 'success' | 'used' | 'error'
 
@@ -172,7 +173,7 @@ export default function QRScanner() {
   return (
     <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
       <div className="border-b border-[#1E1E1E] px-6 py-4">
-        <p className="section-label">QR Ticket Scanner</p>
+        <SectionLabel>QR Ticket Scanner</SectionLabel>
       </div>
 
       <div className="p-8">

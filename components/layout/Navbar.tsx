@@ -60,7 +60,7 @@ export default function Navbar() {
             : 'border-b border-transparent bg-transparent'
         }`}
       >
-        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6 md:px-8 lg:px-12">
+        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6 md:px-12">
           <Link href="/" className="group flex items-baseline gap-0">
             <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-bjs-white">BEEJAY</span>
             <span className="font-serif text-[13px] italic text-bjs-gold"> SAX</span>

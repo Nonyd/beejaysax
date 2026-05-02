@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { sectionLabelStyle } from '@/lib/typography-styles'
 
 export default function GlobalError({
   error,
@@ -17,7 +18,9 @@ export default function GlobalError({
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#080808] px-4">
       <div className="max-w-md text-center">
-        <p className="section-label mb-6">Something went wrong</p>
+        <p className="mb-6" style={sectionLabelStyle}>
+          Something went wrong
+        </p>
         <h1
           style={{
             fontFamily: 'var(--font-serif)',

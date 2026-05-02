@@ -8,6 +8,7 @@ import GoldButton from '@/components/ui/GoldButton'
 import OutlineButton from '@/components/ui/OutlineButton'
 import Marquee from '@/components/ui/Marquee'
 import { registerGSAP } from '@/lib/animations'
+import { heroDisplayLineStyle, sectionLabelStyle } from '@/lib/typography-styles'
 
 const HERO_IMAGE =
   'https://images.unsplash.com/photo-1519892300558-c31723655541?q=80&w=1920&auto=format&fit=crop'
@@ -107,24 +108,40 @@ export default function Hero() {
         }}
       />
 
-      <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 md:px-12 lg:px-16">
-        <div className="max-w-5xl">
-          <p ref={labelRef} className="section-label mb-6">
+      <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 md:px-12 md:pb-20">
+        <div className="w-full max-w-[900px]">
+          <p ref={labelRef} style={{ ...sectionLabelStyle, marginBottom: 24 }}>
             GOSPEL SAXOPHONIST · MUSIC MINISTER
           </p>
 
-          <h1 className="display-text">
-            <span className="block overflow-hidden text-bjs-white">
+          <div style={{ overflow: 'hidden' }}>
+            <h1
+              style={{
+                ...heroDisplayLineStyle,
+                color: '#F5F0E8',
+                whiteSpace: 'nowrap',
+                display: 'block',
+              }}
+            >
               <span ref={line1Ref} className="inline-block">
                 {splitLine('BeeJay')}
               </span>
-            </span>
-            <span className="mt-1 block overflow-hidden text-bjs-gold">
+            </h1>
+          </div>
+          <div style={{ overflow: 'hidden' }}>
+            <h1
+              style={{
+                ...heroDisplayLineStyle,
+                color: '#C9A84C',
+                whiteSpace: 'nowrap',
+                display: 'block',
+              }}
+            >
               <span ref={line2Ref} className="inline-block">
                 {splitLine('Sax.')}
               </span>
-            </span>
-          </h1>
+            </h1>
+          </div>
 
           <p ref={tagRef} className="mt-6 font-serif text-lg italic text-[rgba(245,240,232,0.5)] md:text-xl">
             Blessed & Highly Favoured.
@@ -145,7 +162,7 @@ export default function Hero() {
         ref={scrollRef}
         className="absolute bottom-28 left-6 z-10 flex items-center gap-3 md:left-12 lg:bottom-32"
       >
-        <span className="section-label">SCROLL</span>
+        <span style={sectionLabelStyle}>SCROLL</span>
         <div ref={linePulseRef} className="h-px w-10 origin-left bg-bjs-gold" aria-hidden />
       </div>
 

@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { format } from 'date-fns'
 import { Music } from 'lucide-react'
+import { sectionLabelStyle } from '@/lib/typography-styles'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -79,7 +80,9 @@ export default async function ReleaseDetailPage({ params }: Props) {
             <p className="mt-8 font-sans text-base leading-relaxed text-bjs-white/80">{release.description}</p>
           )}
 
-          <h2 className="section-label mt-12 border-none pl-0">Listen Now</h2>
+          <h2 className="mt-12 border-none pl-0" style={sectionLabelStyle}>
+            Listen Now
+          </h2>
           <div className="mt-6 flex flex-col gap-3">
             {links.map((l) => (
               <a

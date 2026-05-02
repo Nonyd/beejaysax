@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import SectionLabel from '@/components/ui/SectionLabel'
+import { h1TextStyle } from '@/lib/typography-styles'
 import GalleryView from '@/components/gallery/GalleryView'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
@@ -31,9 +32,11 @@ export default async function GalleryPage() {
         }}
       >
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(201,168,76,0.04)_0%,transparent_60%)]" />
-        <div className="relative mx-auto w-full max-w-6xl px-6 pb-12 pt-32 md:px-8 lg:px-12">
+        <div className="relative mx-auto w-full max-w-6xl px-6 pb-12 pt-32 md:px-12">
           <SectionLabel>Gallery</SectionLabel>
-          <h1 className="h1-text mt-3 text-bjs-white">Moments.</h1>
+          <h1 className="mt-3 text-bjs-white" style={h1TextStyle}>
+            Moments.
+          </h1>
         </div>
       </section>
 

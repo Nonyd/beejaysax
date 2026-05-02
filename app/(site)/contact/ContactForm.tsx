@@ -6,13 +6,12 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import GoldButton from '@/components/ui/GoldButton'
 import { Loader2, Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
+import { goldRuleStyle, h1TextStyle, sectionLabelStyle } from '@/lib/typography-styles'
 
 const INQUIRY = ['BOOKING', 'COLLABORATION', 'MEDIA', 'GENERAL'] as const
 
 const inputClass =
   'w-full border border-bjs-border bg-bjs-surface px-4 py-3.5 font-sans text-sm text-bjs-white outline-none transition-colors duration-200 placeholder:text-[#2A2A2A] focus:border-bjs-gold'
-
-const labelClass = 'section-label mb-2 block'
 
 export default function ContactForm() {
   const searchParams = useSearchParams()
@@ -66,11 +65,13 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-16 px-6 py-32 md:px-8 lg:grid-cols-2 lg:gap-24 lg:px-12">
+    <div className="mx-auto grid max-w-6xl gap-16 px-6 py-32 md:grid-cols-2 md:gap-24 md:px-12">
       <div>
         <SectionLabel>Reach Out</SectionLabel>
-        <h1 className="h1-text mt-3 text-bjs-white">Let&apos;s Talk.</h1>
-        <span className="gold-rule my-8 block" />
+        <h1 className="mt-3 text-bjs-white" style={h1TextStyle}>
+          Let&apos;s Talk.
+        </h1>
+        <span className="my-8 block" style={goldRuleStyle} />
 
         <ul className="space-y-5">
           <li className="flex items-center gap-4">
@@ -124,17 +125,23 @@ export default function ContactForm() {
       <div className="space-y-5">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <label className="block">
-            <span className={labelClass}>First name</span>
+            <span className="mb-2 block" style={sectionLabelStyle}>
+              First name
+            </span>
             <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputClass} placeholder="" />
           </label>
           <label className="block">
-            <span className={labelClass}>Last name</span>
+            <span className="mb-2 block" style={sectionLabelStyle}>
+              Last name
+            </span>
             <input value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputClass} placeholder="" />
           </label>
         </div>
 
         <label className="block">
-          <span className={labelClass}>Email</span>
+          <span className="mb-2 block" style={sectionLabelStyle}>
+            Email
+          </span>
           <input
             type="email"
             value={email}
@@ -144,12 +151,16 @@ export default function ContactForm() {
         </label>
 
         <label className="block">
-          <span className={labelClass}>Phone (optional)</span>
+          <span className="mb-2 block" style={sectionLabelStyle}>
+            Phone (optional)
+          </span>
           <input value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} />
         </label>
 
         <label className="block">
-          <span className={labelClass}>Inquiry type</span>
+          <span className="mb-2 block" style={sectionLabelStyle}>
+            Inquiry type
+          </span>
           <select
             value={inquiryType}
             onChange={(e) => setInquiryType(e.target.value)}
@@ -164,12 +175,16 @@ export default function ContactForm() {
         </label>
 
         <label className="block">
-          <span className={labelClass}>Subject</span>
+          <span className="mb-2 block" style={sectionLabelStyle}>
+            Subject
+          </span>
           <input value={subject} onChange={(e) => setSubject(e.target.value)} className={inputClass} />
         </label>
 
         <label className="block">
-          <span className={labelClass}>Message</span>
+          <span className="mb-2 block" style={sectionLabelStyle}>
+            Message
+          </span>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}

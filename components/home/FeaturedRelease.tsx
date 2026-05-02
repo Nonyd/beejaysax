@@ -8,6 +8,7 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import { Music } from 'lucide-react'
 import { registerGSAP, scaleInOnScroll } from '@/lib/animations'
 import { format } from 'date-fns'
+import { bodyTextStyle, goldRuleStyle, h2TextStyle, sectionLabelStyle } from '@/lib/typography-styles'
 
 export default function FeaturedRelease({ release }: { release: Release | null }) {
   const coverRef = useRef<HTMLDivElement>(null)
@@ -21,8 +22,8 @@ export default function FeaturedRelease({ release }: { release: Release | null }
   if (!release) return null
 
   return (
-    <section className="border-y border-bjs-border bg-bjs-surface py-24 md:py-32 lg:py-40">
-      <div className="mx-auto max-w-6xl px-6 md:px-8 lg:px-12">
+    <section className="border-y border-bjs-border bg-bjs-surface py-20 md:py-32">
+      <div className="mx-auto max-w-6xl px-6 md:px-12">
         <SectionLabel>Latest Release</SectionLabel>
 
         <div className="mt-12 grid grid-cols-1 gap-0 lg:grid-cols-5">
@@ -46,14 +47,20 @@ export default function FeaturedRelease({ release }: { release: Release | null }
             <span className="inline-block w-fit border border-[rgba(201,168,76,0.3)] px-3 py-1 font-sans text-[9px] uppercase tracking-[0.2em] text-bjs-gold">
               {release.releaseType}
             </span>
-            <h2 className="h2-text mt-4 text-bjs-white">{release.title}</h2>
-            <span className="gold-rule my-5 block" />
-            <p className="body-text line-clamp-3">{release.description}</p>
+            <h2 className="mt-4 text-bjs-white" style={h2TextStyle}>
+              {release.title}
+            </h2>
+            <span className="my-5 block" style={goldRuleStyle} />
+            <p className="line-clamp-3" style={bodyTextStyle}>
+              {release.description}
+            </p>
             {release.releaseDate && (
               <p className="mt-4 font-sans text-[13px] text-bjs-muted">{format(release.releaseDate, 'MMMM d, yyyy')}</p>
             )}
 
-            <p className="section-label mb-3 mt-8">Stream Now</p>
+            <p className="mb-3 mt-8" style={sectionLabelStyle}>
+              Stream Now
+            </p>
             <div className="flex flex-wrap gap-3">
               {[
                 { url: release.spotifyUrl, label: 'Spotify' },

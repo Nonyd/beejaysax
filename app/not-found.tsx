@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { sectionLabelStyle } from '@/lib/typography-styles'
 
 export default function NotFound() {
   return (
@@ -18,7 +19,9 @@ export default function NotFound() {
           404
         </p>
 
-        <p className="section-label mb-6">Page not found</p>
+        <p className="mb-6" style={sectionLabelStyle}>
+          Page not found
+        </p>
 
         <h1
           style={{

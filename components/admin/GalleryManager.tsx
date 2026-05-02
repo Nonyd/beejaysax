@@ -5,6 +5,7 @@ import Image from 'next/image'
 import toast from 'react-hot-toast'
 import AdminFormField from './AdminFormField'
 import CloudinaryUpload from './CloudinaryUpload'
+import SectionLabel from '@/components/ui/SectionLabel'
 
 interface GalleryImageRow {
   id: string
@@ -81,7 +82,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
   return (
     <div>
       <div className="mb-8 border border-[#1E1E1E] bg-[#0F0F0F] p-6">
-        <p className="section-label mb-4">Add Image</p>
+        <SectionLabel className="mb-4">Add Image</SectionLabel>
         <div className="space-y-3">
           <AdminFormField label="Upload Image *">
             <CloudinaryUpload

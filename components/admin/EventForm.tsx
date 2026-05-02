@@ -9,6 +9,7 @@ import AdminTextarea from './AdminTextarea'
 import AdminSelect from './AdminSelect'
 import AdminToggle from './AdminToggle'
 import CloudinaryUpload from './CloudinaryUpload'
+import SectionLabel from '@/components/ui/SectionLabel'
 import type { Event, EventStatus } from '@prisma/client'
 
 interface EventFormProps {
@@ -88,7 +89,7 @@ export default function EventForm({ mode, event }: EventFormProps) {
   return (
     <div className="max-w-2xl space-y-8">
       <section>
-        <p className="section-label mb-4">Event Details</p>
+        <SectionLabel className="mb-4">Event Details</SectionLabel>
         <div className="space-y-4">
           <AdminFormField label="Title *">
             <AdminInput
@@ -109,7 +110,7 @@ export default function EventForm({ mode, event }: EventFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Location</p>
+        <SectionLabel className="mb-4">Location</SectionLabel>
         <div className="space-y-4">
           <AdminFormField label="Venue *">
             <AdminInput
@@ -137,7 +138,7 @@ export default function EventForm({ mode, event }: EventFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Date & Time</p>
+        <SectionLabel className="mb-4">Date & Time</SectionLabel>
         <div className="grid grid-cols-2 gap-4">
           <AdminFormField label="Event Date *">
             <AdminInput type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
@@ -149,7 +150,7 @@ export default function EventForm({ mode, event }: EventFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Tickets</p>
+        <SectionLabel className="mb-4">Tickets</SectionLabel>
         <div className="space-y-4">
           <AdminToggle
             checked={isFree}
@@ -183,7 +184,7 @@ export default function EventForm({ mode, event }: EventFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Poster Image</p>
+        <SectionLabel className="mb-4">Poster Image</SectionLabel>
         <CloudinaryUpload
           onUpload={(url) => setPosterImage(url)}
           folder="beejaysax/events"
@@ -217,7 +218,7 @@ export default function EventForm({ mode, event }: EventFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Settings</p>
+        <SectionLabel className="mb-4">Settings</SectionLabel>
         <div className="space-y-3">
           <AdminToggle
             checked={isFeatured}

@@ -6,6 +6,7 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import OutlineButton from '@/components/ui/OutlineButton'
 import EventCard from '@/components/events/EventCard'
 import { registerGSAP, fadeUpOnScroll } from '@/lib/animations'
+import { bodyTextStyle, h1DisplaySplitStyle, h2TextStyle } from '@/lib/typography-styles'
 
 export default function UpcomingEvents({ events }: { events: Event[] }) {
   const headRef = useRef<HTMLDivElement>(null)
@@ -17,15 +18,32 @@ export default function UpcomingEvents({ events }: { events: Event[] }) {
   }, [])
 
   return (
-    <section className="bg-bjs-black py-24 md:py-32 lg:py-40">
-      <div className="mx-auto max-w-6xl px-6 md:px-8 lg:px-12">
+    <section className="bg-bjs-black py-20 md:py-32">
+      <div className="mx-auto max-w-6xl px-6 md:px-12">
         <div ref={headRef} className="mb-16 flex min-w-0 flex-col justify-between gap-8 md:flex-row md:items-end">
           <div className="min-w-0 max-w-full">
             <SectionLabel>On Stage</SectionLabel>
-            <h2 className="mt-3">
-              <span className="h1-text block whitespace-nowrap text-bjs-white">Catch BeeJay</span>
-              <span className="h1-text block whitespace-nowrap font-serif italic text-bjs-gold">Live.</span>
-            </h2>
+            <div className="mt-3">
+              <h2
+                style={{
+                  ...h1DisplaySplitStyle,
+                  color: '#F5F0E8',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Catch BeeJay
+              </h2>
+              <h2
+                style={{
+                  ...h1DisplaySplitStyle,
+                  fontStyle: 'italic',
+                  color: '#C9A84C',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Live.
+              </h2>
+            </div>
           </div>
           <div className="hidden shrink-0 md:block">
             <OutlineButton href="/events">View All Events →</OutlineButton>
@@ -37,8 +55,8 @@ export default function UpcomingEvents({ events }: { events: Event[] }) {
             <span className="text-7xl opacity-20" aria-hidden>
               🎷
             </span>
-            <p className="h2-text opacity-30">No upcoming events.</p>
-            <p className="body-text">New dates coming soon.</p>
+            <p style={{ ...h2TextStyle, opacity: 0.3 }}>No upcoming events.</p>
+            <p style={bodyTextStyle}>New dates coming soon.</p>
             <OutlineButton href="/contact">Get Notified</OutlineButton>
           </div>
         ) : (

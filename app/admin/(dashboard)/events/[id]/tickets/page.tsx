@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import TicketListClient from '@/components/admin/TicketListClient'
+import SectionLabel from '@/components/ui/SectionLabel'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,7 +41,7 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ i
           { label: 'Revenue', value: `₦${totalRevenue.toLocaleString()}` },
         ].map((stat) => (
           <div key={stat.label} className="border border-[#1E1E1E] bg-[#0F0F0F] p-4">
-            <p className="section-label mb-2">{stat.label}</p>
+            <SectionLabel className="mb-2">{stat.label}</SectionLabel>
             <p style={{ fontFamily: 'var(--font-serif)', fontSize: 36, color: '#C9A84C', lineHeight: 1 }}>
               {stat.value}
             </p>

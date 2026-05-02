@@ -9,6 +9,7 @@ import AdminTextarea from './AdminTextarea'
 import AdminSelect from './AdminSelect'
 import AdminToggle from './AdminToggle'
 import CloudinaryUpload from './CloudinaryUpload'
+import SectionLabel from '@/components/ui/SectionLabel'
 import type { Release, ReleaseType } from '@prisma/client'
 
 interface ReleaseFormProps {
@@ -91,7 +92,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
   return (
     <div className="max-w-2xl space-y-8">
       <section>
-        <p className="section-label mb-4">Release Details</p>
+        <SectionLabel className="mb-4">Release Details</SectionLabel>
         <div className="space-y-4">
           <AdminFormField label="Title *">
             <AdminInput value={title} onChange={(e) => autoSlug(e.target.value)} placeholder="Praise Session 1" />
@@ -120,7 +121,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Cover Image</p>
+        <SectionLabel className="mb-4">Cover Image</SectionLabel>
         <CloudinaryUpload
           onUpload={(url) => setCoverImage(url)}
           folder="beejaysax/releases"
@@ -154,7 +155,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Streaming Links</p>
+        <SectionLabel className="mb-4">Streaming Links</SectionLabel>
         <div className="space-y-4">
           {[
             { label: 'Spotify URL', value: spotifyUrl, setter: setSpotifyUrl },
@@ -171,7 +172,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
       </section>
 
       <section>
-        <p className="section-label mb-4">Settings</p>
+        <SectionLabel className="mb-4">Settings</SectionLabel>
         <AdminToggle
           checked={isFeatured}
           onChange={setIsFeatured}

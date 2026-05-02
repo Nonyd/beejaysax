@@ -7,6 +7,7 @@ import Image from 'next/image'
 import OutlineButton from '@/components/ui/OutlineButton'
 import { Play } from 'lucide-react'
 import { registerGSAP, scaleInOnScroll, fadeUpOnScroll } from '@/lib/animations'
+import { h2TextStyle } from '@/lib/typography-styles'
 
 export default function VideoSection({ videos }: { videos: Video[] }) {
   const featuredRef = useRef<HTMLDivElement>(null)
@@ -30,12 +31,16 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
   const thumb = (id: string) => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
 
   return (
-    <section className="border-y border-bjs-border bg-bjs-surface py-24 md:py-32 lg:py-40">
-      <div className="mx-auto max-w-6xl px-6 md:px-8 lg:px-12">
+    <section className="border-y border-bjs-border bg-bjs-surface py-20 md:py-32">
+      <div className="mx-auto max-w-6xl px-6 md:px-12">
         <SectionLabel>Watch</SectionLabel>
         <h2 className="mt-3">
-          <span className="h2-text block text-bjs-white">Experience The</span>
-          <span className="h2-text block text-bjs-gold">Performance.</span>
+          <span className="block text-bjs-white" style={h2TextStyle}>
+            Experience The
+          </span>
+          <span className="block text-bjs-gold" style={h2TextStyle}>
+            Performance.
+          </span>
         </h2>
 
         <div ref={featuredRef} className="relative mt-12 aspect-video w-full overflow-hidden bg-bjs-black">

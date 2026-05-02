@@ -5,6 +5,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import SectionLabel from '@/components/ui/SectionLabel'
 import { registerGSAP } from '@/lib/animations'
+import { h2TextStyle } from '@/lib/typography-styles'
 
 const QUOTES = [
   {
@@ -50,17 +51,27 @@ export default function TestimonialsSection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="border-t border-bjs-border bg-bjs-surface py-24 md:py-32 lg:py-40">
-      <div className="mx-auto max-w-6xl px-6 md:px-8 lg:px-12">
+    <section ref={sectionRef} className="border-t border-bjs-border bg-bjs-surface py-20 md:py-32">
+      <div className="mx-auto max-w-6xl px-6 md:px-12">
         <SectionLabel>They Say</SectionLabel>
-        <h2 className="h2-text mt-3 text-bjs-white">The Sound Speaks</h2>
+        <h2 className="mt-3 text-bjs-white" style={h2TextStyle}>
+          The Sound Speaks
+        </h2>
 
-        <div className="mt-16 grid grid-cols-1 gap-px border border-bjs-border bg-bjs-border md:grid-cols-3">
+        <div
+          className="mt-16 grid grid-cols-1 gap-px border border-[#1E1E1E] md:grid-cols-3"
+          style={{
+            background: '#1E1E1E',
+          }}
+        >
           {QUOTES.map((q) => (
             <blockquote
               key={q.name}
               data-quote-card
-              className="relative bg-bjs-surface px-8 py-10 md:px-10 md:py-12"
+              className="relative bg-[#0F0F0F]"
+              style={{
+                padding: '40px 32px',
+              }}
             >
               <span
                 className="pointer-events-none absolute right-6 top-6 select-none font-serif text-[80px] leading-none text-[rgba(201,168,76,0.06)]"

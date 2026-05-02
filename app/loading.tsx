@@ -1,3 +1,5 @@
+import { sectionLabelStyle } from '@/lib/typography-styles'
+
 export default function GlobalLoading() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#080808]">
@@ -13,7 +15,9 @@ export default function GlobalLoading() {
             animation: 'spin 0.8s linear infinite',
           }}
         />
-        <p className="section-label mt-6">Loading</p>
+        <p className="mt-6" style={sectionLabelStyle}>
+          Loading
+        </p>
       </div>
       <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
     </div>

@@ -12,9 +12,7 @@ import {
   fadeUpOnScroll,
 } from '@/lib/animations'
 import { HOMEPAGE_ABOUT_STATS } from '@/lib/homepage-stats'
-
-const WORDS_L1 = ['A', 'Sound', 'That']
-const WORDS_L2 = ['Moves', 'Heaven.']
+import { bodyTextStyle, goldRuleStyle, h2TextStyle } from '@/lib/typography-styles'
 
 export default function AboutTeaser() {
   const imageRef = useRef<HTMLDivElement>(null)
@@ -40,8 +38,8 @@ export default function AboutTeaser() {
   }, [])
 
   return (
-    <section className="bg-bjs-black py-24 md:py-32 lg:py-40">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 md:px-8 lg:grid-cols-2 lg:gap-24 lg:px-12">
+    <section className="bg-bjs-black py-20 md:py-32">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 md:px-12 lg:grid-cols-2 lg:gap-24">
         <div ref={imageRef} className="group relative aspect-[3/4] overflow-hidden">
           <span className="absolute left-0 top-0 z-10 h-full w-[2px] bg-bjs-gold" aria-hidden />
           <Image
@@ -55,25 +53,21 @@ export default function AboutTeaser() {
 
         <div ref={textRef}>
           <SectionLabel>The Artist</SectionLabel>
-          <h2 ref={headingRef} className="h2-text mt-4 text-bjs-white">
-            <span className="block">
-              {WORDS_L1.map((w) => (
-                <span key={w} className="inline-block whitespace-nowrap">
-                  {w}{' '}
-                </span>
-              ))}
-            </span>
-            <span className="mt-1 block">
-              {WORDS_L2.map((w) => (
-                <span key={w} className="inline-block whitespace-nowrap">
-                  {w}{' '}
-                </span>
-              ))}
-            </span>
+          <h2
+            ref={headingRef}
+            className="mt-4"
+            style={{
+              ...h2TextStyle,
+              lineHeight: 1.1,
+              color: '#F5F0E8',
+            }}
+          >
+            <span style={{ display: 'block', whiteSpace: 'nowrap' }}>A Sound That</span>
+            <span style={{ display: 'block', whiteSpace: 'nowrap' }}>Moves Heaven.</span>
           </h2>
-          <span className="gold-rule my-6 block" />
+          <span className="my-6 block" style={goldRuleStyle} />
 
-          <div className="body-text max-w-md space-y-6">
+          <div className="max-w-md space-y-6" style={bodyTextStyle}>
             <p>
               Abolaji David Banjoko — known to the world as BeeJay Sax — is one of Nigeria&apos;s most distinctive gospel
               saxophonists. His spirit-filled tone doesn&apos;t just fill rooms; it moves hearts.

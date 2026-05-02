@@ -3,6 +3,7 @@
 import { useState, Suspense } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { sectionLabelStyle } from '@/lib/typography-styles'
 
 function LoginForm() {
   const router = useRouter()
@@ -55,7 +56,9 @@ function LoginForm() {
           </span>
         </div>
 
-        <p className="section-label mb-1 mt-8 text-center">Admin Portal</p>
+        <p className="mb-1 mt-8 text-center" style={sectionLabelStyle}>
+          Admin Portal
+        </p>
         <p style={{ color: '#555', fontSize: 13, textAlign: 'center' }}>Sign in to continue</p>
 
         <div style={{ width: 48, height: 1, background: '#C9A84C', margin: '24px auto' }} />
