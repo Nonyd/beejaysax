@@ -1,5 +1,6 @@
 'use client'
 
+import type { CSSProperties } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { GalleryImage } from '@prisma/client'
@@ -20,6 +21,52 @@ const DEMO_STRIP_IMAGES = [
 
 type StripItem = Pick<GalleryImage, 'id' | 'imagePath'> & { caption?: string | null }
 
+function MarqueeRow({
+  items,
+  reverse,
+}: {
+  items: { id: string; imagePath: string; caption: string | null | undefined }[]
+  reverse: boolean
+}) {
+  const innerStyle: CSSProperties = {
+    display: 'flex',
+    width: 'max-content',
+    gap: 12,
+    animation: 'marquee 50s linear infinite',
+    ...(reverse ? { animationDirection: 'reverse' } : {}),
+  }
+
+  const segment = (dup: number) => (
+    <>
+      {items.map((img) => (
+        <Link
+          key={`${dup}-${img.id}`}
+          href="/gallery"
+          className="relative h-[180px] w-[260px] shrink-0 overflow-hidden transition-all duration-300 ease-out hover:brightness-110"
+        >
+          <Image
+            src={img.imagePath}
+            alt={img.caption ?? 'BeeJay Sax — gallery photo'}
+            fill
+            className="object-cover"
+            sizes="260px"
+          />
+        </Link>
+      ))}
+    </>
+  )
+
+  return (
+    <div style={{ overflow: 'hidden', width: '100%' }}>
+      <div style={innerStyle}>
+        {segment(0)}
+        {segment(1)}
+        {segment(2)}
+      </div>
+    </div>
+  )
+}
+
 export default function GalleryStrip({ images }: { images: GalleryImage[] }) {
   const stripItems: StripItem[] =
     images.length > 0
@@ -30,29 +77,11 @@ export default function GalleryStrip({ images }: { images: GalleryImage[] }) {
           caption: null,
         }))
 
-  const row = (reverse: boolean) => (
-    <div
-      className={`flex w-max gap-3 ${reverse ? 'animate-marquee-fast [animation-direction:reverse]' : 'animate-marquee'} group-hover:[animation-play-state:paused]`}
-    >
-      {[0, 1, 2].flatMap((dup) =>
-        stripItems.map((img) => (
-          <Link
-            key={`${dup}-${img.id}`}
-            href="/gallery"
-            className="relative h-[180px] w-[260px] shrink-0 overflow-hidden transition-all duration-300 ease-out hover:scale-105 hover:brightness-110"
-          >
-            <Image
-              src={img.imagePath}
-              alt={img.caption ?? 'BeeJay Sax — gallery photo'}
-              fill
-              className="object-cover"
-              sizes="260px"
-            />
-          </Link>
-        ))
-      )}
-    </div>
-  )
+  const rowItems = stripItems.map((img) => ({
+    id: img.id,
+    imagePath: img.imagePath,
+    caption: img.caption,
+  }))
 
   return (
     <section className="overflow-hidden bg-bjs-black py-20">
@@ -60,9 +89,9 @@ export default function GalleryStrip({ images }: { images: GalleryImage[] }) {
         <SectionLabel className="inline-block">Moments</SectionLabel>
       </div>
 
-      <div className="group mt-8 space-y-3">
-        <div className="overflow-hidden">{row(false)}</div>
-        <div className="overflow-hidden">{row(true)}</div>
+      <div className="mt-8 flex flex-col gap-3">
+        <MarqueeRow items={rowItems} reverse={false} />
+        <MarqueeRow items={rowItems} reverse />
       </div>
 
       <div className="mt-10 flex justify-center px-6 md:px-8">

@@ -46,6 +46,7 @@ export default function EventCard({
     <div
       role="link"
       tabIndex={0}
+      className="w-full"
       style={{
         background: '#0F0F0F',
         border: '1px solid #1E1E1E',

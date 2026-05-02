@@ -34,7 +34,7 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
     <section className="border-y border-bjs-border bg-bjs-surface py-20 md:py-32">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
         <SectionLabel>Watch</SectionLabel>
-        <h2 className="mt-3">
+        <h2 className="mt-3" style={{ marginBottom: 48 }}>
           <span className="block text-bjs-white" style={h2TextStyle}>
             Experience The
           </span>
@@ -43,7 +43,7 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
           </span>
         </h2>
 
-        <div ref={featuredRef} className="relative mt-12 aspect-video w-full overflow-hidden bg-bjs-black">
+        <div ref={featuredRef} className="relative aspect-video w-full overflow-hidden bg-bjs-black">
           {!playMain ? (
             <>
               <button
@@ -74,7 +74,7 @@ export default function VideoSection({ videos }: { videos: Video[] }) {
         </div>
 
         {rest.length > 0 && (
-          <div ref={rowRef} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div ref={rowRef} className="mt-4 grid grid-cols-2 gap-4">
             {rest.map((v, i) => (
               <div key={v.id} data-video-tile className="relative aspect-video overflow-hidden bg-bjs-black">
                 {playIdx === i ? (

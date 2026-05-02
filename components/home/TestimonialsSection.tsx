@@ -93,7 +93,12 @@ export default function TestimonialsSection() {
             <div
               key={i}
               data-quote-card
-              style={{ background: '#0F0F0F', padding: '48px 36px', position: 'relative' }}
+              style={{
+                background: '#0F0F0F',
+                padding: '48px 40px',
+                position: 'relative',
+                minHeight: 280,
+              }}
             >
               <span
                 style={{
@@ -115,7 +120,7 @@ export default function TestimonialsSection() {
               <p
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: 17,
+                  fontSize: 18,
                   fontStyle: 'italic',
                   lineHeight: 1.7,
                   color: 'rgba(245,240,232,0.8)',
@@ -132,7 +137,7 @@ export default function TestimonialsSection() {
                 <p
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: 600,
                     letterSpacing: '0.2em',
                     textTransform: 'uppercase',

@@ -60,9 +60,14 @@ export default function UpcomingEvents({ events }: { events: Event[] }) {
             <OutlineButton href="/contact">Get Notified</OutlineButton>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            style={{ gap: 20, marginTop: 48 }}
+          >
             {events.map((e) => (
-              <EventCard key={e.id} event={e} />
+              <div key={e.id} className="min-w-0 w-full">
+                <EventCard event={e} />
+              </div>
             ))}
           </div>
         )}
