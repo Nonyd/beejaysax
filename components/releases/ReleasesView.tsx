@@ -56,7 +56,7 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
         className="sticky z-30 border-b"
         style={{ top: 72, background: '#080808', borderColor: '#1E1E1E' }}
       >
-        <div className="mx-auto flex max-w-[1200px] flex-wrap px-6 md:px-12">
+        <div className="site-shell flex flex-wrap">
           {TABS.map((t) => (
             <button
               key={t.label}
@@ -81,7 +81,7 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
         </div>
       </div>
 
-      <section className="mx-auto max-w-[1200px] px-6 py-16 md:px-12">
+      <section className="site-shell py-16">
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
           {filtered.map((r) => (
             <Link key={r.id} href={`/releases/${r.slug}`} style={{ textDecoration: 'none', display: 'block' }}>

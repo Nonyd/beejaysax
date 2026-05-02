@@ -61,7 +61,7 @@ export default function AboutPage() {
         }}
       >
         <div style={{ position: 'absolute', bottom: 56, left: 0, right: 0 }}>
-          <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+          <div className="site-shell">
             <SectionLabel>The Artist</SectionLabel>
             <h1
               style={{
@@ -82,7 +82,7 @@ export default function AboutPage() {
       </section>
 
       <section style={{ paddingTop: 100, paddingBottom: 100 }}>
-        <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <div className="site-shell">
           <div className="grid grid-cols-1 gap-16 md:grid-cols-3">
             <div>
               <p
@@ -164,7 +164,7 @@ export default function AboutPage() {
           paddingBottom: 96,
         }}
       >
-        <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <div className="site-shell">
           <SectionLabel>Notable Performances</SectionLabel>
           <h2
             style={{
@@ -226,7 +226,7 @@ export default function AboutPage() {
       </section>
 
       <section style={{ paddingTop: 96, paddingBottom: 96 }}>
-        <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <div className="site-shell">
           <SectionLabel>Milestones</SectionLabel>
           <ul
             style={{
@@ -262,7 +262,7 @@ export default function AboutPage() {
       </section>
 
       <section style={{ paddingTop: 64, paddingBottom: 64, textAlign: 'center' }}>
-        <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+        <div className="site-shell">
           <SectionLabel>The Event</SectionLabel>
           <h2
             style={{

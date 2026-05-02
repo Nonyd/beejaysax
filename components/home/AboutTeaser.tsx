@@ -6,35 +6,55 @@ const DEMO_PORTRAIT = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a
 export default function AboutTeaser() {
   return (
     <section style={{ background: '#080808', paddingTop: 120, paddingBottom: 120 }}>
-      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 80, alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
-            <div
-              style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: 2,
-                background: '#C9A84C',
-                zIndex: 1,
-              }}
-            />
-            <div style={{ marginLeft: 20, position: 'relative', overflow: 'hidden', aspectRatio: '3/4' }}>
-              <Image src={DEMO_PORTRAIT} alt="BeeJay Sax portrait" fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 50vw" />
+      <div className="site-shell">
+        <div
+          className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16"
+          style={{ alignItems: 'stretch' }}
+        >
+          <div className="flex justify-center lg:justify-start">
+            <div style={{ position: 'relative', width: '100%', maxWidth: 440 }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: 3,
+                  background: '#C9A84C',
+                  zIndex: 1,
+                }}
+              />
+              <div
+                style={{
+                  marginLeft: 20,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  aspectRatio: '3/4',
+                  border: '1px solid #1E1E1E',
+                  boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
+                }}
+              >
+                <Image
+                  src={DEMO_PORTRAIT}
+                  alt="BeeJay Sax portrait"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="(max-width:1024px) 90vw, 440px"
+                />
+              </div>
             </div>
           </div>
 
-          <div>
+          <div style={{ minWidth: 0 }}>
             <p
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: '0.3em',
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: '0.28em',
                 textTransform: 'uppercase',
                 color: '#C9A84C',
-                marginBottom: 20,
+                marginBottom: 16,
               }}
             >
               The Artist
@@ -43,38 +63,40 @@ export default function AboutTeaser() {
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(32px,4vw,52px)',
+                fontSize: 'clamp(32px,4.5vw,56px)',
                 fontWeight: 600,
-                lineHeight: 1.05,
+                lineHeight: 1.08,
                 color: '#F5F0E8',
-                margin: '0 0 24px',
+                margin: '0 0 20px',
               }}
             >
               <span style={{ display: 'block' }}>A Sound That</span>
               <span style={{ display: 'block' }}>Moves Heaven.</span>
             </h2>
 
-            <div style={{ width: 40, height: 1, background: '#C9A84C', marginBottom: 24 }} />
+            <div style={{ width: 48, height: 2, background: '#C9A84C', marginBottom: 24 }} />
 
             <p
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 15,
-                lineHeight: 1.8,
-                color: 'rgba(245,240,232,0.6)',
-                marginBottom: 16,
+                fontSize: 17,
+                lineHeight: 1.75,
+                color: 'rgba(245,240,232,0.72)',
+                marginBottom: 18,
+                maxWidth: 560,
               }}
             >
-              Abolaji David Banjoko — known as BeeJay Sax — is one of Nigeria&apos;s most distinctive gospel
-              saxophonists. His spirit-filled tone doesn&apos;t just fill rooms; it moves hearts.
+              Abolaji David Banjoko — known as BeeJay Sax — is one of Nigeria&apos;s most distinctive gospel saxophonists.
+              His spirit-filled tone doesn&apos;t just fill rooms; it moves hearts.
             </p>
             <p
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 15,
-                lineHeight: 1.8,
-                color: 'rgba(245,240,232,0.6)',
-                marginBottom: 40,
+                fontSize: 17,
+                lineHeight: 1.75,
+                color: 'rgba(245,240,232,0.72)',
+                marginBottom: 36,
+                maxWidth: 560,
               }}
             >
               A Mechanical Engineering graduate who traded blueprints for full-time ministry, BeeJay has graced stages
@@ -84,10 +106,12 @@ export default function AboutTeaser() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                borderTop: '1px solid #1E1E1E',
-                paddingTop: 32,
-                marginBottom: 40,
+                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                gap: 16,
+                borderTop: '1px solid #2A2A2A',
+                paddingTop: 28,
+                marginBottom: 36,
+                maxWidth: 520,
               }}
             >
               {[
@@ -98,19 +122,20 @@ export default function AboutTeaser() {
                 <div
                   key={s.label}
                   style={{
-                    paddingLeft: i > 0 ? 24 : 0,
-                    paddingRight: i < 2 ? 24 : 0,
-                    borderRight: i < 2 ? '1px solid #1E1E1E' : 'none',
+                    textAlign: 'center',
+                    borderRight: i < 2 ? '1px solid #2A2A2A' : 'none',
+                    paddingLeft: i === 1 ? 8 : 0,
+                    paddingRight: i === 1 ? 8 : 0,
                   }}
                 >
                   <p
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: 'clamp(36px,4vw,52px)',
+                      fontSize: 'clamp(40px,5vw,56px)',
                       fontWeight: 700,
                       color: '#C9A84C',
                       lineHeight: 1,
-                      margin: '0 0 6px',
+                      margin: '0 0 8px',
                     }}
                   >
                     {s.num}
@@ -118,10 +143,10 @@ export default function AboutTeaser() {
                   <p
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: 10,
-                      letterSpacing: '0.15em',
+                      fontSize: 11,
+                      letterSpacing: '0.12em',
                       textTransform: 'uppercase',
-                      color: '#444',
+                      color: '#666',
                       margin: 0,
                     }}
                   >
@@ -135,12 +160,15 @@ export default function AboutTeaser() {
               href="/about"
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.15em',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 color: '#C9A84C',
                 textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
               }}
             >
               Full Story →

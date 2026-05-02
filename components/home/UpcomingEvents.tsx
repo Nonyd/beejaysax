@@ -16,27 +16,21 @@ export default async function UpcomingEvents() {
 
   return (
     <section style={{ background: '#080808', paddingTop: 120, paddingBottom: 120 }}>
-      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+      <div className="site-shell">
         <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            marginBottom: 56,
-            flexWrap: 'wrap',
-            gap: 24,
-          }}
+          className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:items-end"
+          style={{ marginBottom: 48, borderBottom: '1px solid #1E1E1E', paddingBottom: 32 }}
         >
-          <div>
+          <div style={{ minWidth: 0 }}>
             <p
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: '0.3em',
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: '0.28em',
                 textTransform: 'uppercase',
                 color: '#C9A84C',
-                marginBottom: 16,
+                marginBottom: 12,
               }}
             >
               On Stage
@@ -44,9 +38,9 @@ export default async function UpcomingEvents() {
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(40px,7vw,88px)',
+                fontSize: 'clamp(36px,6.5vw,80px)',
                 fontWeight: 700,
-                lineHeight: 0.92,
+                lineHeight: 0.95,
                 margin: 0,
               }}
             >
@@ -56,17 +50,19 @@ export default async function UpcomingEvents() {
           </div>
           <Link
             href="/events"
-            className="hidden md:block"
+            className="hidden md:inline-flex"
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: 600,
-              letterSpacing: '0.15em',
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: '#C9A84C',
               textDecoration: 'none',
-              border: '1px solid rgba(201,168,76,0.3)',
-              padding: '12px 24px',
+              border: '1px solid rgba(201,168,76,0.35)',
+              padding: '14px 28px',
+              alignSelf: 'end',
+              whiteSpace: 'nowrap',
             }}
           >
             View All Events →
@@ -74,7 +70,14 @@ export default async function UpcomingEvents() {
         </div>
 
         {events.length > 0 ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+              gap: 24,
+              alignItems: 'stretch',
+            }}
+          >
             {events.map((e) => (
               <EventCard key={e.id} event={e} />
             ))}
@@ -84,33 +87,33 @@ export default async function UpcomingEvents() {
             <p
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 24,
+                fontSize: 26,
                 fontStyle: 'italic',
-                color: 'rgba(245,240,232,0.2)',
+                color: 'rgba(245,240,232,0.25)',
                 marginBottom: 16,
               }}
             >
               No upcoming events
             </p>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#333' }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: '#555' }}>
               New dates coming soon. Stay tuned.
             </p>
           </div>
         )}
 
-        <div className="md:hidden" style={{ textAlign: 'center', marginTop: 40 }}>
+        <div className="mt-10 md:hidden" style={{ textAlign: 'center' }}>
           <Link
             href="/events"
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.15em',
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: '#C9A84C',
               textDecoration: 'none',
-              border: '1px solid rgba(201,168,76,0.3)',
-              padding: '12px 28px',
+              border: '1px solid rgba(201,168,76,0.35)',
+              padding: '14px 28px',
               display: 'inline-block',
             }}
           >

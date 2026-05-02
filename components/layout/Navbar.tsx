@@ -49,17 +49,24 @@ export default function Navbar() {
 
   return (
     <>
-      <nav style={navStyle} className="px-6 md:px-12">
-        <Link
-          href="/"
-          style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 3 }}
+      <nav style={navStyle}>
+        <div
+          className="site-shell"
+          style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+          }}
         >
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4 }}>
           <span
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 11,
+              fontSize: 13,
               fontWeight: 700,
-              letterSpacing: '0.25em',
+              letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#F5F0E8',
             }}
@@ -69,7 +76,7 @@ export default function Navbar() {
           <span
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 12,
+              fontSize: 14,
               fontStyle: 'italic',
               color: '#C9A84C',
             }}
@@ -78,19 +85,19 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div style={{ display: 'flex', gap: 32, alignItems: 'center' }} className="hidden lg:flex">
+        <div style={{ display: 'flex', gap: 28, alignItems: 'center' }} className="hidden lg:flex">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 500,
-                letterSpacing: '0.2em',
+                letterSpacing: '0.16em',
                 textTransform: 'uppercase',
                 textDecoration: 'none',
-                color: pathname === l.href ? '#C9A84C' : 'rgba(245,240,232,0.45)',
+                color: pathname === l.href ? '#C9A84C' : 'rgba(245,240,232,0.55)',
                 transition: 'color 200ms',
               }}
             >
@@ -101,17 +108,18 @@ export default function Navbar() {
 
         <Link
           href="/contact"
-          className="hidden lg:flex"
+          className="hidden lg:inline-flex"
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 10,
+            fontSize: 11,
             fontWeight: 600,
-            letterSpacing: '0.18em',
+            letterSpacing: '0.16em',
             textTransform: 'uppercase',
             textDecoration: 'none',
-            color: '#C9A84C',
-            border: '1px solid rgba(201,168,76,0.4)',
-            padding: '10px 24px',
+            color: '#080808',
+            background: '#C9A84C',
+            border: '1px solid rgba(201,168,76,0.5)',
+            padding: '12px 22px',
             transition: 'all 200ms',
             alignItems: 'center',
           }}
@@ -166,6 +174,7 @@ export default function Navbar() {
             }}
           />
         </button>
+        </div>
       </nav>
 
       {open && (

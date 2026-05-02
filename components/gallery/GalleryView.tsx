@@ -56,7 +56,7 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
         className="sticky z-30 border-b"
         style={{ top: 72, background: '#080808', borderColor: '#1E1E1E' }}
       >
-        <div className="mx-auto flex max-w-[1200px] flex-wrap px-6 md:px-12">
+        <div className="site-shell flex flex-wrap">
           {FILTERS.map((f) => (
             <button
               key={f.label}
@@ -84,7 +84,7 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
         </div>
       </div>
 
-      <section className="mx-auto max-w-[1200px] px-6 py-16 md:px-12">
+      <section className="site-shell py-16">
         <div className="columns-2 gap-3 md:columns-3 lg:columns-4">
           {filtered.map((img, i) => (
             <button

@@ -21,6 +21,8 @@ function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?
         aspectRatio: '16/9',
         background: '#0F0F0F',
         cursor: 'pointer',
+        border: '1px solid #2A2A2A',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
       }}
       onClick={() => setPlaying(true)}
       onKeyDown={(e) => {
@@ -40,7 +42,7 @@ function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?
       ) : (
         <>
           <Image src={thumb} alt={video.title} fill style={{ objectFit: 'cover' }} sizes="(max-width:1200px) 100vw, 1200px" />
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,8,0.4)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,8,0.32)' }} />
           <div
             style={{
               position: 'absolute',
@@ -77,7 +79,9 @@ function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?
               padding: '24px 16px 16px',
             }}
           >
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#F5F0E8', margin: 0 }}>{video.title}</p>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: '#F5F0E8', margin: 0, lineHeight: 1.4 }}>
+              {video.title}
+            </p>
           </div>
         </>
       )}
@@ -88,63 +92,65 @@ function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?
 export default function VideoSection() {
   return (
     <section style={{ background: '#080808', borderTop: '1px solid #1E1E1E', paddingTop: 120, paddingBottom: 120 }}>
-      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
-        <p
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 10,
-            fontWeight: 500,
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            color: '#C9A84C',
-            marginBottom: 16,
-          }}
-        >
-          Watch
-        </p>
-        <h2
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(28px,4vw,52px)',
-            fontWeight: 600,
-            lineHeight: 1.05,
-            color: '#F5F0E8',
-            margin: '0 0 48px',
-          }}
-        >
-          <span style={{ display: 'block' }}>Experience The</span>
-          <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Performance.</span>
-        </h2>
+      <div className="site-shell">
+        <div style={{ marginBottom: 40, borderBottom: '1px solid #1E1E1E', paddingBottom: 28 }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.28em',
+              textTransform: 'uppercase',
+              color: '#C9A84C',
+              marginBottom: 12,
+            }}
+          >
+            Watch
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(30px,4.5vw,52px)',
+              fontWeight: 600,
+              lineHeight: 1.08,
+              color: '#F5F0E8',
+              margin: 0,
+            }}
+          >
+            <span style={{ display: 'block' }}>Experience The</span>
+            <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Performance.</span>
+          </h2>
+        </div>
 
         {VIDEOS[0] && (
-          <div style={{ marginBottom: 12 }}>
+          <div style={{ marginBottom: 16 }}>
             <VideoCard video={VIDEOS[0]} large />
           </div>
         )}
 
         {VIDEOS.length > 1 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 12 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 16 }}>
             {VIDEOS.slice(1).map((v) => (
               <VideoCard key={v.id} video={v} />
             ))}
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: 40 }}>
+        <div style={{ textAlign: 'center', marginTop: 44 }}>
           <Link
             href="https://youtube.com/@beejaysax"
             target="_blank"
             rel="noopener noreferrer"
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.15em',
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: '#C9A84C',
               textDecoration: 'none',
-              border: '1px solid rgba(201,168,76,0.3)',
-              padding: '12px 28px',
+              border: '1px solid rgba(201,168,76,0.35)',
+              padding: '14px 32px',
               display: 'inline-block',
             }}
           >

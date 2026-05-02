@@ -73,7 +73,7 @@ export default async function EventDetailPage({ params }: Props) {
             }}
           />
         </div>
-        <div className="relative z-10 mx-auto w-full max-w-[1200px]">
+        <div className="site-shell relative z-10 w-full">
           <p
             style={{
               fontFamily: 'var(--font-sans)',
@@ -104,7 +104,7 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1200px] gap-12 px-6 py-16 md:grid-cols-5 md:px-12">
+      <section className="site-shell grid gap-12 py-16 md:grid-cols-5">
         <div className="space-y-8 md:col-span-3">
           {event.description && (
             <div>
@@ -242,7 +242,7 @@ export default async function EventDetailPage({ params }: Props) {
         </aside>
       </section>
 
-      <div className="mx-auto max-w-[1200px] px-6 pb-16 md:px-12">
+      <div className="site-shell pb-16">
         <Link href="/events" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#C9A84C', textDecoration: 'none' }}>
           ← All events
         </Link>

@@ -23,55 +23,65 @@ export default function Hero() {
           src={DEMO_HERO}
           alt="BeeJay Sax performing"
           fill
-          style={{ objectFit: 'cover', objectPosition: 'center top' }}
+          style={{ objectFit: 'cover', objectPosition: 'center 25%' }}
           priority
           sizes="100vw"
         />
       </div>
 
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,8,0.45)' }} />
+      {/* Symmetric readability stack — avoids “empty right half” */}
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,8,0.35)' }} />
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(to bottom, transparent 20%, rgba(8,8,8,0.7) 65%, #080808 100%)',
+          background:
+            'radial-gradient(ellipse 90% 70% at 50% 45%, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.82) 72%, #080808 100%)',
         }}
       />
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(to right, rgba(8,8,8,0.55) 0%, transparent 55%)',
+          background: 'linear-gradient(to bottom, rgba(8,8,8,0.35) 0%, transparent 35%, rgba(8,8,8,0.88) 100%)',
         }}
       />
 
-      <div style={{ position: 'absolute', bottom: 100, left: 0, right: 0 }}>
-        <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 100,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <div className="site-shell" style={{ textAlign: 'center' }}>
           <p
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 10,
-              fontWeight: 500,
-              letterSpacing: '0.3em',
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.28em',
               textTransform: 'uppercase',
               color: '#C9A84C',
-              marginBottom: 24,
+              marginBottom: 20,
             }}
           >
             Gospel Saxophonist · Music Minister
           </p>
 
-          <div style={{ marginBottom: 24 }}>
+          <div style={{ marginBottom: 20 }}>
             <h1
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(72px, 12vw, 160px)',
+                fontSize: 'clamp(52px, 11vw, 140px)',
                 fontWeight: 700,
-                lineHeight: 0.88,
+                lineHeight: 0.9,
                 letterSpacing: '-0.02em',
                 color: '#F5F0E8',
                 margin: 0,
-                display: 'block',
               }}
             >
               BeeJay
@@ -79,14 +89,13 @@ export default function Hero() {
             <h1
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(72px, 12vw, 160px)',
+                fontSize: 'clamp(52px, 11vw, 140px)',
                 fontWeight: 700,
                 fontStyle: 'italic',
-                lineHeight: 0.88,
+                lineHeight: 0.9,
                 letterSpacing: '-0.02em',
                 color: '#C9A84C',
                 margin: 0,
-                display: 'block',
               }}
             >
               Sax.
@@ -96,29 +105,34 @@ export default function Hero() {
           <p
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 17,
+              fontSize: 18,
               fontStyle: 'italic',
-              color: 'rgba(245,240,232,0.5)',
-              marginBottom: 40,
+              color: 'rgba(245,240,232,0.72)',
+              marginBottom: 36,
+              maxWidth: 520,
+              marginLeft: 'auto',
+              marginRight: 'auto',
             }}
           >
             Blessed & Highly Favoured.
           </p>
 
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
             <Link
               href="/events"
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.15em',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 color: '#080808',
                 background: '#C9A84C',
-                padding: '14px 32px',
+                padding: '16px 36px',
                 textDecoration: 'none',
                 display: 'inline-block',
+                minWidth: 200,
+                textAlign: 'center',
               }}
             >
               Upcoming Events
@@ -127,16 +141,18 @@ export default function Hero() {
               href="/releases"
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.15em',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 color: '#F5F0E8',
                 background: 'transparent',
-                border: '1px solid rgba(245,240,232,0.3)',
-                padding: '14px 32px',
+                border: '1px solid rgba(245,240,232,0.35)',
+                padding: '16px 36px',
                 textDecoration: 'none',
                 display: 'inline-block',
+                minWidth: 200,
+                textAlign: 'center',
               }}
             >
               Listen Now
@@ -161,17 +177,17 @@ export default function Hero() {
           style={{
             width: 1,
             height: 48,
-            background: 'rgba(201,168,76,0.4)',
+            background: 'rgba(201,168,76,0.45)',
             animation: 'pulse 2s ease-in-out infinite',
           }}
         />
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 9,
+            fontSize: 10,
             letterSpacing: '0.25em',
             textTransform: 'uppercase',
-            color: 'rgba(201,168,76,0.4)',
+            color: 'rgba(201,168,76,0.5)',
           }}
         >
           Scroll
@@ -184,26 +200,24 @@ export default function Hero() {
           bottom: 0,
           left: 0,
           right: 0,
-          height: 36,
-          background: 'rgba(8,8,8,0.8)',
+          height: 40,
+          background: 'rgba(8,8,8,0.88)',
           borderTop: '1px solid #1E1E1E',
           overflow: 'hidden',
           display: 'flex',
           alignItems: 'center',
         }}
       >
-        <div
-          style={{ display: 'flex', whiteSpace: 'nowrap', animation: 'marquee 60s linear infinite' }}
-        >
+        <div style={{ display: 'flex', whiteSpace: 'nowrap', animation: 'marquee 60s linear infinite' }}>
           {[...Array(4)].map((_, i) => (
             <span
               key={i}
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 9,
-                letterSpacing: '0.25em',
+                fontSize: 10,
+                letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: '#333',
+                color: '#4a4a4a',
                 paddingRight: 48,
               }}
             >

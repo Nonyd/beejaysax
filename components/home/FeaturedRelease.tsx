@@ -26,78 +26,100 @@ export default async function FeaturedRelease() {
         paddingBottom: 120,
       }}
     >
-      <div className="mx-auto max-w-[1200px] px-6 md:px-12">
-        <p
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 10,
-            fontWeight: 500,
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase',
-            color: '#C9A84C',
-            marginBottom: 56,
-          }}
-        >
-          Latest Release
-        </p>
+      <div className="site-shell">
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.28em',
+              textTransform: 'uppercase',
+              color: '#C9A84C',
+              marginBottom: 12,
+            }}
+          >
+            Latest Release
+          </p>
+          <div style={{ height: 1, maxWidth: 120, background: '#C9A84C', margin: '0 auto', opacity: 0.5 }} />
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr]" style={{ gap: 80, alignItems: 'center' }}>
-          <div style={{ position: 'relative', overflow: 'hidden', aspectRatio: '1/1', width: '100%' }}>
-            {release.coverImage ? (
-              <Image src={release.coverImage} alt={release.title} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 400px" />
-            ) : (
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  background: 'linear-gradient(135deg, #1a1204, #0d0a02)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: 32,
-                }}
-              >
-                <p
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="flex justify-center">
+            <div
+              style={{
+                position: 'relative',
+                overflow: 'hidden',
+                aspectRatio: '1/1',
+                width: '100%',
+                maxWidth: 420,
+                border: '1px solid #2A2A2A',
+                boxShadow: '0 28px 100px rgba(0,0,0,0.35)',
+              }}
+            >
+              {release.coverImage ? (
+                <Image
+                  src={release.coverImage}
+                  alt={release.title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="(max-width:1024px) 100vw, 420px"
+                />
+              ) : (
+                <div
                   style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 9,
-                    letterSpacing: '0.3em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(201,168,76,0.4)',
-                    marginBottom: 16,
+                    width: '100%',
+                    height: '100%',
+                    background: 'linear-gradient(145deg, #1a1204, #0d0a02)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 32,
                   }}
                 >
-                  {release.releaseType}
-                </p>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: 'clamp(20px,2vw,28px)',
-                    fontStyle: 'italic',
-                    color: '#C9A84C',
-                    textAlign: 'center',
-                  }}
-                >
-                  {release.title}
-                </p>
-              </div>
-            )}
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: 10,
+                      letterSpacing: '0.28em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(201,168,76,0.45)',
+                      marginBottom: 16,
+                    }}
+                  >
+                    {release.releaseType}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: 'clamp(22px,3vw,30px)',
+                      fontStyle: 'italic',
+                      color: '#C9A84C',
+                      textAlign: 'center',
+                      margin: 0,
+                    }}
+                  >
+                    {release.title}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div>
+          <div style={{ minWidth: 0, textAlign: 'left' }}>
             <span
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 9,
+                fontSize: 10,
                 fontWeight: 600,
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: '#C9A84C',
-                border: '1px solid rgba(201,168,76,0.3)',
-                padding: '5px 12px',
+                border: '1px solid rgba(201,168,76,0.35)',
+                padding: '6px 14px',
                 display: 'inline-block',
-                marginBottom: 20,
+                marginBottom: 18,
               }}
             >
               {release.releaseType}
@@ -106,26 +128,27 @@ export default async function FeaturedRelease() {
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(28px,4vw,52px)',
+                fontSize: 'clamp(30px,4.5vw,48px)',
                 fontWeight: 600,
-                lineHeight: 1.05,
+                lineHeight: 1.1,
                 color: '#F5F0E8',
-                margin: '0 0 20px',
+                margin: '0 0 18px',
               }}
             >
               {release.title}
             </h2>
 
-            <div style={{ width: 40, height: 1, background: '#C9A84C', marginBottom: 20 }} />
+            <div style={{ width: 48, height: 2, background: '#C9A84C', marginBottom: 22 }} />
 
             {release.description && (
               <p
                 style={{
                   fontFamily: 'var(--font-sans)',
-                  fontSize: 15,
-                  lineHeight: 1.8,
-                  color: 'rgba(245,240,232,0.6)',
-                  marginBottom: 32,
+                  fontSize: 17,
+                  lineHeight: 1.75,
+                  color: 'rgba(245,240,232,0.72)',
+                  marginBottom: 28,
+                  maxWidth: 560,
                 }}
               >
                 {release.description}
@@ -133,15 +156,15 @@ export default async function FeaturedRelease() {
             )}
 
             {platforms.length > 0 && (
-              <div style={{ marginBottom: 32 }}>
+              <div style={{ marginBottom: 28 }}>
                 <p
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: 9,
-                    letterSpacing: '0.3em',
+                    fontSize: 10,
+                    letterSpacing: '0.28em',
                     textTransform: 'uppercase',
                     color: '#C9A84C',
-                    marginBottom: 16,
+                    marginBottom: 14,
                   }}
                 >
                   Stream Now
@@ -154,9 +177,9 @@ export default async function FeaturedRelease() {
               href={`/releases/${release.slug}`}
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.15em',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 color: '#C9A84C',
                 textDecoration: 'none',

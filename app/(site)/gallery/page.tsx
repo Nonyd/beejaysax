@@ -30,7 +30,7 @@ export default async function GalleryPage() {
         }}
       >
         <div style={{ position: 'absolute', bottom: 48, left: 0, right: 0 }}>
-          <div className="mx-auto max-w-[1200px] px-6 md:px-12">
+          <div className="site-shell">
             <p
               style={{
                 fontFamily: 'var(--font-sans)',

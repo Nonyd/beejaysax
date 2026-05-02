@@ -43,7 +43,7 @@ export default async function ReleaseDetailPage({ params }: Props) {
   const yt = release.youtubeUrl?.match(/(?:v=|youtu\.be\/)([\w-]{11})/)
 
   return (
-    <article className="mx-auto max-w-[1200px] px-6 py-24 md:px-12">
+    <article className="site-shell py-24">
       <Link href="/releases" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#C9A84C', textDecoration: 'none' }}>
         ← All Releases
       </Link>

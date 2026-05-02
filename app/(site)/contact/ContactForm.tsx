@@ -92,7 +92,7 @@ export default function ContactForm() {
 
   return (
     <div
-      className="mx-auto grid max-w-[1200px] grid-cols-1 gap-16 px-6 py-24 lg:grid-cols-2 lg:gap-16 md:px-12"
+      className="site-shell grid grid-cols-1 gap-16 py-24 lg:grid-cols-2 lg:gap-16"
       style={{ paddingTop: 80 }}
     >
       <div>

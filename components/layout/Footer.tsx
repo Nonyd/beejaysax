@@ -23,8 +23,8 @@ export default function Footer() {
   return (
     <footer style={{ background: '#080808', borderTop: '1px solid #1E1E1E' }}>
       <div
+        className="site-shell"
         style={{ paddingTop: 80, paddingBottom: 64, textAlign: 'center', borderBottom: '1px solid #1E1E1E' }}
-        className="px-6 md:px-12"
       >
         <div style={{ marginBottom: 12 }}>
           <span
@@ -94,8 +94,8 @@ export default function Footer() {
       </div>
 
       <div
+        className="site-shell"
         style={{ paddingTop: 20, paddingBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}
-        className="px-6 md:px-12"
       >
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
           {NAV.map((l) => (

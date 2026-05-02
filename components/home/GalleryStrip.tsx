@@ -14,6 +14,9 @@ const DEMO_IMAGES = [
   'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&q=80',
 ]
 
+const TILE_W = 320
+const TILE_H = 200
+
 export default async function GalleryStrip() {
   const dbImages = await safeDb(
     () => prisma.galleryImage.findMany({ take: 16, orderBy: { sortOrder: 'asc' } }),
@@ -23,30 +26,46 @@ export default async function GalleryStrip() {
   const doubled = [...images, ...images, ...images, ...images]
 
   return (
-    <section style={{ background: '#080808', paddingTop: 80, paddingBottom: 80, overflow: 'hidden' }}>
-      <div style={{ textAlign: 'center', marginBottom: 40 }}>
+    <section style={{ background: '#080808', paddingTop: 96, paddingBottom: 96, overflow: 'hidden' }}>
+      <div className="site-shell" style={{ marginBottom: 40, textAlign: 'center' }}>
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 10,
-            fontWeight: 500,
-            letterSpacing: '0.3em',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.28em',
             textTransform: 'uppercase',
             color: '#C9A84C',
+            marginBottom: 8,
           }}
         >
           Moments
         </p>
+        <div style={{ height: 1, maxWidth: 80, background: '#C9A84C', margin: '0 auto', opacity: 0.45 }} />
       </div>
 
-      <div style={{ overflow: 'hidden', marginBottom: 12 }}>
-        <div style={{ display: 'flex', gap: 12, animation: 'marquee 40s linear infinite', width: 'max-content' }}>
+      <div style={{ overflow: 'hidden', marginBottom: 16 }}>
+        <div style={{ display: 'flex', gap: 16, animation: 'marquee 45s linear infinite', width: 'max-content' }}>
           {doubled.map((src, i) => (
             <div
               key={`a-${i}`}
-              style={{ flexShrink: 0, width: 280, height: 180, position: 'relative', overflow: 'hidden' }}
+              style={{
+                flexShrink: 0,
+                width: TILE_W,
+                height: TILE_H,
+                position: 'relative',
+                overflow: 'hidden',
+                border: '1px solid #2A2A2A',
+                boxShadow: 'inset 0 0 0 1px rgba(201,168,76,0.08)',
+              }}
             >
-              <Image src={src} alt="" fill style={{ objectFit: 'cover' }} sizes="280px" />
+              <Image
+                src={src}
+                alt=""
+                fill
+                style={{ objectFit: 'cover', filter: 'brightness(1.08) contrast(1.05)' }}
+                sizes={`${TILE_W}px`}
+              />
             </div>
           ))}
         </div>
@@ -56,35 +75,49 @@ export default async function GalleryStrip() {
         <div
           style={{
             display: 'flex',
-            gap: 12,
-            animation: 'marquee 50s linear infinite reverse',
+            gap: 16,
+            animation: 'marquee 55s linear infinite reverse',
             width: 'max-content',
           }}
         >
           {[...doubled].reverse().map((src, i) => (
             <div
               key={`b-${i}`}
-              style={{ flexShrink: 0, width: 280, height: 180, position: 'relative', overflow: 'hidden' }}
+              style={{
+                flexShrink: 0,
+                width: TILE_W,
+                height: TILE_H,
+                position: 'relative',
+                overflow: 'hidden',
+                border: '1px solid #2A2A2A',
+                boxShadow: 'inset 0 0 0 1px rgba(201,168,76,0.08)',
+              }}
             >
-              <Image src={src} alt="" fill style={{ objectFit: 'cover' }} sizes="280px" />
+              <Image
+                src={src}
+                alt=""
+                fill
+                style={{ objectFit: 'cover', filter: 'brightness(1.08) contrast(1.05)' }}
+                sizes={`${TILE_W}px`}
+              />
             </div>
           ))}
         </div>
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: 40 }}>
+      <div className="site-shell" style={{ textAlign: 'center', marginTop: 44 }}>
         <Link
           href="/gallery"
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 600,
-            letterSpacing: '0.15em',
+            letterSpacing: '0.14em',
             textTransform: 'uppercase',
             color: '#C9A84C',
             textDecoration: 'none',
-            border: '1px solid rgba(201,168,76,0.3)',
-            padding: '12px 28px',
+            border: '1px solid rgba(201,168,76,0.35)',
+            padding: '14px 32px',
             display: 'inline-block',
           }}
         >

@@ -22,7 +22,7 @@ export default function EventsPageContent({
         className="sticky z-30 border-b"
         style={{ top: 72, background: '#080808', borderColor: '#1E1E1E', height: 52 }}
       >
-        <div className="mx-auto flex h-full max-w-[1200px] items-stretch px-6 md:px-12">
+        <div className="site-shell flex h-full items-stretch">
           <button
             type="button"
             onClick={() => setTab('upcoming')}
@@ -64,7 +64,7 @@ export default function EventsPageContent({
         </div>
       </div>
 
-      <section className="mx-auto max-w-[1200px] px-6 py-16 md:px-12">
+      <section className="site-shell py-16">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
           {list.map((e) => (
             <EventCard key={e.id} event={e} showViewButton={tab === 'past'} dimmed={tab === 'past'} />

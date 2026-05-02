@@ -3,16 +3,16 @@ import Link from 'next/link'
 export default function ContactCTA() {
   return (
     <section style={{ background: '#080808', borderTop: '1px solid #1E1E1E', paddingTop: 120, paddingBottom: 120 }}>
-      <div className="mx-auto max-w-[1200px] px-6 md:px-12" style={{ textAlign: 'center' }}>
+      <div className="site-shell" style={{ textAlign: 'center' }}>
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 10,
-            fontWeight: 500,
-            letterSpacing: '0.3em',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.28em',
             textTransform: 'uppercase',
             color: '#C9A84C',
-            marginBottom: 20,
+            marginBottom: 16,
           }}
         >
           Get In Touch
@@ -32,16 +32,16 @@ export default function ContactCTA() {
           <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Something Sacred.</span>
         </h2>
 
-        <div style={{ width: 40, height: 1, background: '#C9A84C', margin: '32px auto' }} />
+        <div style={{ width: 48, height: 2, background: '#C9A84C', margin: '28px auto', opacity: 0.65 }} />
 
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 15,
-            lineHeight: 1.8,
-            color: 'rgba(245,240,232,0.5)',
-            maxWidth: 480,
-            margin: '0 auto 48px',
+            fontSize: 17,
+            lineHeight: 1.75,
+            color: 'rgba(245,240,232,0.62)',
+            maxWidth: 560,
+            margin: '0 auto 40px',
           }}
         >
           Available for concerts, corporate events, gospel conferences, and collaborations — within Nigeria and
@@ -53,15 +53,16 @@ export default function ContactCTA() {
             href="/contact?inquiry=booking"
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.15em',
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: '#080808',
               background: '#C9A84C',
-              padding: '14px 36px',
+              padding: '16px 40px',
               textDecoration: 'none',
               display: 'inline-block',
+              minWidth: 200,
             }}
           >
             Book BeeJay
@@ -70,16 +71,17 @@ export default function ContactCTA() {
             href="/contact"
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.15em',
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: '#F5F0E8',
               background: 'transparent',
-              border: '1px solid rgba(245,240,232,0.25)',
-              padding: '14px 36px',
+              border: '1px solid rgba(245,240,232,0.35)',
+              padding: '16px 40px',
               textDecoration: 'none',
               display: 'inline-block',
+              minWidth: 200,
             }}
           >
             Send a Message
@@ -92,9 +94,9 @@ export default function ContactCTA() {
             { icon: '📞', text: '+234 80 5898 2828' },
             { icon: '✉️', text: 'booking@beejaysax.com' },
           ].map((item) => (
-            <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 13 }}>{item.icon}</span>
-              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#444' }}>{item.text}</span>
+            <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: 15 }}>{item.icon}</span>
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#777' }}>{item.text}</span>
             </div>
           ))}
         </div>
