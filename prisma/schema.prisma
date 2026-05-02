@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Event {
+  id           String      @id @default(cuid())
+  title        String
+  description  String?
+  venue        String
+  address      String?
+  city         String
+  country      String      @default("Nigeria")
+  eventDate    DateTime
+  eventTime    String?
+  ticketPrice  Float?
+  isFree       Boolean     @default(false)
+  totalTickets Int?
+  posterImage  String?
+  isFeatured   Boolean     @default(false)
+  status       EventStatus @default(UPCOMING)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  tickets      Ticket[]
+}
+
+enum EventStatus {
+  UPCOMING
+  PAST
+  CANCELLED
+}
+
+model Ticket {
+  id            String        @id @default(cuid())
+  ticketNumber  String        @unique
+  eventId       String
+  event         Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  firstName     String
+  lastName      String
+  email         String
+  phone         String?
+  ticketType    TicketType    @default(GENERAL)
+  quantity      Int           @default(1)
+  totalAmount   Float         @default(0)
+  qrCode        String        @unique
+  qrToken       String        @unique
+  isUsed        Boolean       @default(false)
+  usedAt        DateTime?
+  usedByAdmin   String?
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentRef    String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum TicketType {
+  GENERAL
+  VIP
+  VVIP
+  FREE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FREE
+  REFUNDED
+}
+
+model Release {
+  id            String      @id @default(cuid())
+  title         String
+  slug          String      @unique
+  releaseType   ReleaseType @default(SINGLE)
+  description   String?
+  coverImage    String?
+  spotifyUrl    String?
+  appleMusicUrl String?
+  youtubeUrl    String?
+  audiomackUrl  String?
+  boomplayUrl   String?
+  releaseDate   DateTime?
+  isFeatured    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+enum ReleaseType {
+  SINGLE
+  ALBUM
+  EP
+}
+
+model GalleryImage {
+  id        String          @id @default(cuid())
+  imagePath String
+  caption   String?
+  category  GalleryCategory @default(PERFORMANCE)
+  sortOrder Int             @default(0)
+  width     Int?
+  height    Int?
+  createdAt DateTime        @default(now())
+}
+
+enum GalleryCategory {
+  PERFORMANCE
+  PORTRAIT
+  EVENTS
+  BACKSTAGE
+}
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  youtubeId   String
+  description String?
+  isFeatured  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id          String      @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  inquiryType InquiryType @default(GENERAL)
+  subject     String
+  message     String
+  isRead      Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+}
+
+enum InquiryType {
+  BOOKING
+  COLLABORATION
+  MEDIA
+  GENERAL
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  email        String    @unique
+  passwordHash String
+  name         String?
+  accounts     Account[]
+  sessions     Session[]
+  createdAt    DateTime  @default(now())
+}
+
+model Account {
+  id                String    @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String    @id @default(cuid())
+  sessionToken String    @unique
+  userId       String
+  expires      DateTime
+  user         AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

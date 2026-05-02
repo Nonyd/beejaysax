@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BeeJay Sax — Official Website
 
-## Getting Started
+Built by [SonsHub Media Ltd.](https://sonshubmedia.com)
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Next.js 16 · TypeScript · Tailwind CSS v4 · Prisma 5 · Neon PostgreSQL
+NextAuth v5 · GSAP 3 · Lenis · Cloudinary · Resend · QR Tickets
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone repo
+2. `npm install`
+3. Copy `.env.example` → `.env.local` and fill all values
+4. `npx prisma db push`
+5. `npx prisma db seed`
+6. `npm run dev`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open http://localhost:3000
 
-## Learn More
+Admin: http://localhost:3000/admin
+Login: `admin` / `BeejaySax2026!` — **change immediately after first login**
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment (Vercel — Staging)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Push repo to GitHub
+2. Import project in Vercel dashboard
+3. Add all env variables from `.env.example` in Vercel → Settings → Environment Variables
+4. Set `NEXTAUTH_URL` to your Vercel preview URL first, then update to production domain
+5. Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Migration to Webuzo VPS (Production)
 
-## Deploy on Vercel
+When client approves the Vercel staging build:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. SSH into Webuzo server
+2. Install Node.js 20+, PM2, Nginx
+3. Clone repo to `/var/www/beejaysax`
+4. Copy `.env.local` with production values to server
+5. `npm install && npm run build`
+6. `pm2 start npm --name beejaysax -- start`
+7. Configure Nginx reverse proxy to port 3000
+8. Point beejaysax.com DNS to server IP
+9. Enable SSL via Certbot
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Key Routes
+
+| Route                         | Description                    |
+| ----------------------------- | ------------------------------ |
+| `/`                           | Homepage                       |
+| `/events`                     | All events                     |
+| `/events/[id]`                | Event detail + ticket purchase |
+| `/events/[id]/purchase`       | Ticket registration form       |
+| `/tickets/[token]`            | Digital ticket with QR code    |
+| `/releases`                   | Discography                    |
+| `/releases/[slug]`            | Release detail                 |
+| `/gallery`                    | Photo gallery                  |
+| `/about`                      | Artist biography               |
+| `/contact`                    | Contact + booking form         |
+| `/admin`                      | Dashboard (auth required)      |
+| `/admin/events`               | Events CRUD                    |
+| `/admin/releases`             | Releases CRUD                  |
+| `/admin/gallery`              | Gallery manager                |
+| `/admin/messages`             | Messages inbox                 |
+| `/admin/events/[id]/tickets`  | Ticket list + QR scanner       |
+| `/api/tickets/purchase`       | POST — create ticket           |
+| `/api/tickets/[token]/verify` | POST — verify + admit ticket   |
+| `/sitemap.xml`                | Auto-generated sitemap         |
+| `/robots.txt`                 | Crawl rules                    |
