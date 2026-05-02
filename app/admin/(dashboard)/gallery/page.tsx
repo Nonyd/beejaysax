@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import GalleryManager from '@/components/admin/GalleryManager'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 
 export const dynamic = 'force-dynamic'
 
@@ -8,10 +9,11 @@ export default async function AdminGalleryPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F5F0E8' }}>Gallery</h2>
-        <p style={{ color: '#555', fontSize: 13, marginTop: 4 }}>Manage photos and media</p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Media"
+        title="Gallery"
+        subtitle="Upload and organise images for the public gallery — drag to reorder when supported."
+      />
       <GalleryManager initialImages={JSON.parse(JSON.stringify(images))} />
     </div>
   )

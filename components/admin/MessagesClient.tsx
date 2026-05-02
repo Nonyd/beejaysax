@@ -51,7 +51,10 @@ export default function MessagesClient({ initialMessages }: { initialMessages: M
         </div>
       )}
 
-      <div className="flex gap-0 border border-[#1E1E1E] bg-[#0F0F0F]" style={{ minHeight: 500 }}>
+      <div
+        className="flex gap-0 border border-[#1E1E1E] bg-[#0F0F0F]"
+        style={{ minHeight: 500, boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }}
+      >
         <div className="w-80 shrink-0 overflow-y-auto border-r border-[#1E1E1E]">
           {messages.length === 0 && (
             <p className="p-6 text-center text-sm" style={{ color: '#444' }}>

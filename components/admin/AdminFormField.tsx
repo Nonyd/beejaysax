@@ -9,12 +9,14 @@ export default function AdminFormField({ label, children, optional }: AdminFormF
     <div>
       <label
         style={{
+          fontFamily: 'var(--font-sans)',
           fontSize: 10,
-          letterSpacing: '0.2em',
+          fontWeight: 600,
+          letterSpacing: '0.22em',
           textTransform: 'uppercase',
           color: '#C9A84C',
           display: 'block',
-          marginBottom: 6,
+          marginBottom: 8,
         }}
       >
         {label}

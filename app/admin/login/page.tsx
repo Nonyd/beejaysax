@@ -1,9 +1,33 @@
 'use client'
 
 import { useState, Suspense } from 'react'
+import type { CSSProperties } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { sectionLabelStyle } from '@/lib/typography-styles'
+import Link from 'next/link'
+
+const labelStyle = {
+  fontFamily: 'var(--font-sans)',
+  fontSize: 10,
+  fontWeight: 600,
+  letterSpacing: '0.22em',
+  textTransform: 'uppercase' as const,
+  color: '#C9A84C',
+  display: 'block',
+  marginBottom: 8,
+}
+
+const inputStyle: CSSProperties = {
+  width: '100%',
+  fontFamily: 'var(--font-sans)',
+  fontSize: 14,
+  color: '#F5F0E8',
+  background: '#0F0F0F',
+  border: '1px solid #1E1E1E',
+  padding: '14px 16px',
+  outline: 'none',
+  boxSizing: 'border-box',
+}
 
 function LoginForm() {
   const router = useRouter()
@@ -34,103 +58,149 @@ function LoginForm() {
     }
   }
 
+  const focusGold = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = '#C9A84C'
+  }
+  const blurBorder = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = '#1E1E1E'
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#080808] px-4">
-      <div className="w-full max-w-sm border border-[#2A2A2A] bg-[#0F0F0F] p-10">
-        <div className="text-center">
+    <div
+      className="flex min-h-screen flex-col items-center justify-center px-4"
+      style={{
+        background: '#080808',
+        backgroundImage:
+          'radial-gradient(ellipse 80% 55% at 50% -10%, rgba(201,168,76,0.12) 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 100% 100%, rgba(201,168,76,0.06) 0%, transparent 45%)',
+      }}
+    >
+      <div
+        className="w-full max-w-[420px]"
+        style={{
+          border: '1px solid #2A2A2A',
+          background: 'rgba(15,15,15,0.95)',
+          boxShadow: '0 32px 120px rgba(0,0,0,0.55)',
+          padding: '48px 40px',
+        }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 8 }}>
           <span
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: '0.18em',
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#F5F0E8',
             }}
           >
             BEEJAY
           </span>
-          <span style={{ fontFamily: 'var(--font-serif)', fontSize: 14, fontStyle: 'italic', color: '#C9A84C' }}>
+          <span style={{ fontFamily: 'var(--font-serif)', fontSize: 16, fontStyle: 'italic', color: '#C9A84C' }}>
             {' '}
             SAX
           </span>
         </div>
 
-        <p className="mb-1 mt-8 text-center" style={sectionLabelStyle}>
+        <p
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 10,
+            fontWeight: 600,
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+            textAlign: 'center',
+            marginBottom: 8,
+          }}
+        >
           Admin Portal
         </p>
-        <p style={{ color: '#555', fontSize: 13, textAlign: 'center' }}>Sign in to continue</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: '#777', textAlign: 'center', marginBottom: 0 }}>
+          Sign in to continue
+        </p>
 
-        <div style={{ width: 48, height: 1, background: '#C9A84C', margin: '24px auto' }} />
+        <div style={{ width: 48, height: 2, background: '#C9A84C', margin: '28px auto', opacity: 0.7 }} />
 
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>
-            <label
-              style={{
-                fontSize: 10,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#C9A84C',
-                display: 'block',
-                marginBottom: 6,
-              }}
-            >
+            <label htmlFor="admin-user" style={labelStyle}>
               Username
             </label>
             <input
+              id="admin-user"
               type="text"
               autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && void handleLogin()}
-              className="w-full border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-3 text-sm text-white transition-colors focus:border-[#C9A84C] focus:outline-none"
+              style={inputStyle}
+              onFocus={focusGold}
+              onBlur={blurBorder}
             />
           </div>
           <div>
-            <label
-              style={{
-                fontSize: 10,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#C9A84C',
-                display: 'block',
-                marginBottom: 6,
-              }}
-            >
+            <label htmlFor="admin-pass" style={labelStyle}>
               Password
             </label>
             <input
+              id="admin-pass"
               type="password"
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && void handleLogin()}
-              className="w-full border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-3 text-sm text-white transition-colors focus:border-[#C9A84C] focus:outline-none"
+              style={inputStyle}
+              onFocus={focusGold}
+              onBlur={blurBorder}
             />
           </div>
         </div>
 
         {error && (
-          <p style={{ color: '#f87171', fontSize: 13, textAlign: 'center', marginTop: 12 }}>{error}</p>
+          <p style={{ fontFamily: 'var(--font-sans)', color: '#f87171', fontSize: 14, textAlign: 'center', marginTop: 16 }}>
+            {error}
+          </p>
         )}
 
         <button
           type="button"
           onClick={() => void handleLogin()}
           disabled={loading || !username || !password}
-          className="mt-6 w-full bg-[#C9A84C] py-3.5 font-semibold text-[#080808] transition hover:bg-[#E8C96D] disabled:cursor-not-allowed disabled:opacity-40"
-          style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase' }}
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 12,
+            fontWeight: 600,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            width: '100%',
+            marginTop: 28,
+            padding: '16px 24px',
+            background: '#C9A84C',
+            color: '#080808',
+            border: '1px solid rgba(201,168,76,0.5)',
+            cursor: loading || !username || !password ? 'not-allowed' : 'pointer',
+            opacity: loading || !username || !password ? 0.45 : 1,
+            transition: 'opacity 200ms',
+          }}
         >
-          {loading ? 'Signing in...' : 'Sign In'}
+          {loading ? 'Signing in…' : 'Sign In'}
         </button>
 
-        <a
+        <Link
           href="/"
-          style={{ color: '#333', fontSize: 12, textAlign: 'center', display: 'block', marginTop: 32 }}
-          className="transition hover:text-white"
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 13,
+            color: '#555',
+            textAlign: 'center',
+            display: 'block',
+            marginTop: 36,
+            textDecoration: 'none',
+          }}
         >
           ← Back to site
-        </a>
+        </Link>
       </div>
     </div>
   )
@@ -138,7 +208,11 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#080808]" />}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen" style={{ background: '#080808' }} />
+      }
+    >
       <LoginForm />
     </Suspense>
   )

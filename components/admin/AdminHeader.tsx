@@ -26,20 +26,48 @@ export default function AdminHeader() {
 
   return (
     <header
-      className="flex items-center justify-between border-b border-[#1E1E1E] bg-[#0A0A0A] px-8"
-      style={{ height: 64 }}
+      className="flex items-center justify-between"
+      style={{
+        height: 72,
+        flexShrink: 0,
+        borderBottom: '1px solid #1E1E1E',
+        background: 'rgba(10,10,10,0.92)',
+        backdropFilter: 'blur(12px)',
+        paddingLeft: 32,
+        paddingRight: 32,
+      }}
     >
-      <h1
-        style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: 20,
-          color: '#F5F0E8',
-          fontWeight: 600,
-        }}
-      >
-        {title}
-      </h1>
-      <span style={{ fontSize: 12, color: '#333' }}>{today}</span>
+      <div>
+        <p
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 10,
+            fontWeight: 600,
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+            marginBottom: 4,
+          }}
+        >
+          BeeJay Sax
+        </p>
+        <h1
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(22px,2.5vw,28px)',
+            color: '#F5F0E8',
+            fontWeight: 600,
+            margin: 0,
+            lineHeight: 1.2,
+          }}
+        >
+          {title}
+        </h1>
+      </div>
+      <div style={{ textAlign: 'right' }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', margin: 0 }}>Today</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#A8A8A8', margin: '4px 0 0' }}>{today}</p>
+      </div>
     </header>
   )
 }

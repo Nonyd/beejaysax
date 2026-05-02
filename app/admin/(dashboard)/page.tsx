@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import SectionLabel from '@/components/ui/SectionLabel'
+import AdminPageHeader, { adminOutlineLinkStyle, adminPrimaryLinkStyle } from '@/components/admin/AdminPageHeader'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,83 +46,89 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, color: '#F5F0E8' }}>Welcome back.</h2>
-        <p style={{ color: '#555', fontSize: 14, marginTop: 4 }}>Here&apos;s what&apos;s happening with BeeJay Sax.</p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Dashboard"
+        title="Welcome back"
+        subtitle={`Here's what's happening with BeeJay Sax — tickets, releases, and fan messages at a glance.`}
+      />
 
-      <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="border border-[#1E1E1E] bg-[#0F0F0F] p-6">
+          <div
+            key={stat.label}
+            style={{
+              border: '1px solid #1E1E1E',
+              background: '#0F0F0F',
+              padding: '24px 28px',
+              transition: 'border-color 200ms, box-shadow 200ms',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
+            }}
+            className="hover:border-[#2A2A2A]"
+          >
             <SectionLabel className="mb-3">{stat.label}</SectionLabel>
             <p
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: stat.isText ? 28 : 48,
+                fontSize: stat.isText ? 30 : 44,
                 color: '#C9A84C',
                 lineHeight: 1,
+                fontWeight: 700,
               }}
             >
               {stat.value}
             </p>
-            <p style={{ color: '#444', fontSize: 12, marginTop: 8 }}>{stat.sub}</p>
+            <p style={{ fontFamily: 'var(--font-sans)', color: '#666', fontSize: 13, marginTop: 10 }}>{stat.sub}</p>
           </div>
         ))}
       </div>
 
-      <div className="mb-10 flex flex-wrap gap-3">
-        {[
-          { label: '+ New Event', href: '/admin/events/new', gold: true },
-          { label: '+ New Release', href: '/admin/releases/new', gold: false },
-          { label: 'Upload Photos', href: '/admin/gallery', gold: false },
-          { label: 'View Messages', href: '/admin/messages', gold: false },
-        ].map((action) => (
-          <Link
-            key={action.href}
-            href={action.href}
-            className="transition"
-            style={{
-              padding: '10px 20px',
-              fontSize: 11,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-              background: action.gold ? '#C9A84C' : 'transparent',
-              color: action.gold ? '#080808' : '#F5F0E8',
-              border: action.gold ? 'none' : '1px solid #2A2A2A',
-            }}
-          >
-            {action.label}
-          </Link>
-        ))}
+      <div className="mb-12 flex flex-wrap gap-3">
+        <Link href="/admin/events/new" style={adminPrimaryLinkStyle()}>
+          + New Event
+        </Link>
+        <Link href="/admin/releases/new" style={adminOutlineLinkStyle()}>
+          + New Release
+        </Link>
+        <Link href="/admin/gallery" style={adminOutlineLinkStyle()}>
+          Upload Photos
+        </Link>
+        <Link href="/admin/messages" style={adminOutlineLinkStyle()}>
+          View Messages
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
-          <div className="border-b border-[#1E1E1E] px-6 py-4">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div style={{ border: '1px solid #1E1E1E', background: '#0F0F0F', overflow: 'hidden' }}>
+          <div style={{ borderBottom: '1px solid #1E1E1E', padding: '20px 24px' }}>
             <SectionLabel>Recent Registrations</SectionLabel>
           </div>
           <div className="divide-y divide-[#1E1E1E]">
             {recentTickets.length === 0 && (
-              <p className="px-6 py-8 text-center text-sm text-[#444]">No tickets yet</p>
+              <p className="px-6 py-10 text-center" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555' }}>
+                No tickets yet
+              </p>
             )}
             {recentTickets.map((ticket) => (
               <div key={ticket.id} className="flex items-center justify-between px-6 py-4">
                 <div>
-                  <p style={{ fontSize: 14, color: '#F5F0E8' }}>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: '#F5F0E8' }}>
                     {ticket.firstName} {ticket.lastName}
                   </p>
-                  <p style={{ fontSize: 12, color: '#555', marginTop: 2 }}>{ticket.event.title}</p>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+                    {ticket.event.title}
+                  </p>
                 </div>
                 <span
                   style={{
+                    fontFamily: 'var(--font-sans)',
                     fontSize: 10,
+                    fontWeight: 600,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
-                    padding: '3px 8px',
-                    background: ticket.isUsed ? 'rgba(127,29,29,0.3)' : 'rgba(20,83,45,0.3)',
+                    padding: '6px 10px',
+                    background: ticket.isUsed ? 'rgba(127,29,29,0.25)' : 'rgba(20,83,45,0.25)',
                     color: ticket.isUsed ? '#f87171' : '#4ade80',
-                    border: `1px solid ${ticket.isUsed ? 'rgba(127,29,29,0.5)' : 'rgba(20,83,45,0.5)'}`,
+                    border: `1px solid ${ticket.isUsed ? 'rgba(127,29,29,0.45)' : 'rgba(20,83,45,0.45)'}`,
                   }}
                 >
                   {ticket.isUsed ? 'Used' : 'Valid'}
@@ -129,41 +136,52 @@ export default async function AdminDashboard() {
               </div>
             ))}
           </div>
-          <div className="border-t border-[#1E1E1E] px-6 py-3">
-            <Link href="/admin/events" style={{ fontSize: 12, color: '#C9A84C' }}>
+          <div style={{ borderTop: '1px solid #1E1E1E', padding: '14px 24px' }}>
+            <Link href="/admin/events" style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#C9A84C' }}>
               View all →
             </Link>
           </div>
         </div>
 
-        <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
-          <div className="border-b border-[#1E1E1E] px-6 py-4">
+        <div style={{ border: '1px solid #1E1E1E', background: '#0F0F0F', overflow: 'hidden' }}>
+          <div style={{ borderBottom: '1px solid #1E1E1E', padding: '20px 24px' }}>
             <SectionLabel>Recent Messages</SectionLabel>
           </div>
           <div className="divide-y divide-[#1E1E1E]">
             {recentMessages.length === 0 && (
-              <p className="px-6 py-8 text-center text-sm text-[#444]">No messages yet</p>
+              <p className="px-6 py-10 text-center" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555' }}>
+                No messages yet
+              </p>
             )}
             {recentMessages.map((msg) => (
               <div
                 key={msg.id}
                 className="px-6 py-4"
-                style={{ borderLeft: msg.isRead ? 'none' : '2px solid #C9A84C' }}
+                style={{ borderLeft: msg.isRead ? 'none' : '3px solid #C9A84C' }}
               >
-                <div className="flex items-center justify-between">
-                  <p style={{ fontSize: 14, color: '#F5F0E8', fontWeight: msg.isRead ? 400 : 600 }}>{msg.name}</p>
-                  <span style={{ fontSize: 10, color: '#555' }}>
+                <div className="flex items-center justify-between gap-4">
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: 15,
+                      color: '#F5F0E8',
+                      fontWeight: msg.isRead ? 400 : 600,
+                    }}
+                  >
+                    {msg.name}
+                  </p>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#555', flexShrink: 0 }}>
                     {new Date(msg.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p style={{ fontSize: 12, color: '#555', marginTop: 2 }} className="truncate">
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#666', marginTop: 6 }} className="truncate">
                   {msg.subject}
                 </p>
               </div>
             ))}
           </div>
-          <div className="border-t border-[#1E1E1E] px-6 py-3">
-            <Link href="/admin/messages" style={{ fontSize: 12, color: '#C9A84C' }}>
+          <div style={{ borderTop: '1px solid #1E1E1E', padding: '14px 24px' }}>
+            <Link href="/admin/messages" style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#C9A84C' }}>
               View all →
             </Link>
           </div>

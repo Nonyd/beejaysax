@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import AdminDeleteButton from '@/components/admin/AdminDeleteButton'
+import AdminPageHeader, { adminPrimaryLinkStyle } from '@/components/admin/AdminPageHeader'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,19 +11,16 @@ export default async function AdminReleasesPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F5F0E8' }}>Releases</h2>
-          <p style={{ color: '#555', fontSize: 13, marginTop: 4 }}>Manage discography</p>
-        </div>
-        <Link
-          href="/admin/releases/new"
-          className="bg-[#C9A84C] px-6 py-2.5 font-semibold text-[#080808] transition hover:bg-[#E8C96D]"
-          style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
-        >
-          + New Release
-        </Link>
-      </div>
+      <AdminPageHeader
+        eyebrow="Releases"
+        title="Discography"
+        subtitle="Singles, albums, and EPs — set a featured release for the public homepage."
+        action={
+          <Link href="/admin/releases/new" style={adminPrimaryLinkStyle()}>
+            + New Release
+          </Link>
+        }
+      />
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {releases.map((release) => (

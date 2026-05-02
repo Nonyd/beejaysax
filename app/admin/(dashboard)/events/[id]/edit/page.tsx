@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import EventForm from '@/components/admin/EventForm'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,10 +12,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
 
   return (
     <div>
-      <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F5F0E8', marginBottom: 4 }}>
-        Edit Event
-      </h2>
-      <p style={{ color: '#555', fontSize: 13, marginBottom: 32 }}>{event.title}</p>
+      <AdminPageHeader eyebrow="Events" title="Edit event" subtitle={event.title} />
       <EventForm mode="edit" event={JSON.parse(JSON.stringify(event))} />
     </div>
   )

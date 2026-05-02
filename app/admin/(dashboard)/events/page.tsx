@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import AdminDeleteButton from '@/components/admin/AdminDeleteButton'
+import AdminPageHeader, { adminPrimaryLinkStyle } from '@/components/admin/AdminPageHeader'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,29 +14,29 @@ export default async function AdminEventsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F5F0E8' }}>Events</h2>
-          <p style={{ color: '#555', fontSize: 13, marginTop: 4 }}>Manage concerts and appearances</p>
-        </div>
-        <Link
-          href="/admin/events/new"
-          className="bg-[#C9A84C] px-6 py-2.5 font-semibold text-[#080808] transition hover:bg-[#E8C96D]"
-          style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
-        >
-          + New Event
-        </Link>
-      </div>
+      <AdminPageHeader
+        eyebrow="Events"
+        title="Concerts & appearances"
+        subtitle="Create events, sell tickets, and track attendance from one place."
+        action={
+          <Link href="/admin/events/new" style={adminPrimaryLinkStyle()}>
+            + New Event
+          </Link>
+        }
+      />
 
       {events.length === 0 ? (
-        <div className="border border-[#1E1E1E] bg-[#0F0F0F] p-16 text-center">
-          <p style={{ color: '#444', fontSize: 14 }}>No events yet.</p>
-          <Link href="/admin/events/new" style={{ color: '#C9A84C', fontSize: 13, marginTop: 8, display: 'block' }}>
+        <div className="border border-[#1E1E1E] bg-[#0F0F0F] p-16 text-center" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', color: '#666', fontSize: 15 }}>No events yet.</p>
+          <Link
+            href="/admin/events/new"
+            style={{ fontFamily: 'var(--font-sans)', color: '#C9A84C', fontSize: 14, marginTop: 12, display: 'inline-block' }}
+          >
             Create your first event →
           </Link>
         </div>
       ) : (
-        <div className="overflow-hidden border border-[#1E1E1E] bg-[#0F0F0F]">
+        <div className="overflow-hidden border border-[#1E1E1E] bg-[#0F0F0F]" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#1E1E1E]">

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import ReleaseForm from '@/components/admin/ReleaseForm'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,10 +12,7 @@ export default async function EditReleasePage({ params }: { params: Promise<{ id
 
   return (
     <div>
-      <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F5F0E8', marginBottom: 4 }}>
-        Edit Release
-      </h2>
-      <p style={{ color: '#555', fontSize: 13, marginBottom: 32 }}>{release.title}</p>
+      <AdminPageHeader eyebrow="Releases" title="Edit release" subtitle={release.title} />
       <ReleaseForm mode="edit" release={JSON.parse(JSON.stringify(release))} />
     </div>
   )

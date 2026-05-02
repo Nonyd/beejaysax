@@ -1,12 +1,14 @@
 import EventForm from '@/components/admin/EventForm'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 
 export default function NewEventPage() {
   return (
     <div>
-      <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F5F0E8', marginBottom: 4 }}>
-        New Event
-      </h2>
-      <p style={{ color: '#555', fontSize: 13, marginBottom: 32 }}>Add a new concert or appearance</p>
+      <AdminPageHeader
+        eyebrow="Events"
+        title="New event"
+        subtitle="Add a concert or appearance — set date, venue, ticket tiers, and poster art."
+      />
       <EventForm mode="create" />
     </div>
   )
