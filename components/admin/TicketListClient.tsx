@@ -70,12 +70,12 @@ export default function TicketListClient({ tickets, eventId }: { tickets: Ticket
 
       {activeTab === 'list' && (
         <div>
-          <div className="mb-4 flex gap-3">
+          <div className="mb-4 flex max-w-2xl flex-wrap gap-3">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name, email, or ticket number..."
-              className="flex-1 border border-[#2A2A2A] bg-[#161616] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
+              className="min-w-[200px] flex-1 border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
             />
             <button
               type="button"

@@ -5,7 +5,8 @@ import Image from 'next/image'
 import toast from 'react-hot-toast'
 import AdminFormField from './AdminFormField'
 import CloudinaryUpload from './CloudinaryUpload'
-import SectionLabel from '@/components/ui/SectionLabel'
+import AdminFormShell from './AdminFormShell'
+import AdminSectionCard from './AdminSectionCard'
 
 interface GalleryImageRow {
   id: string
@@ -81,26 +82,29 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
 
   return (
     <div>
-      <div className="mb-8 border border-[#1E1E1E] bg-[#0F0F0F] p-6">
-        <SectionLabel className="mb-4">Add Image</SectionLabel>
-        <div className="space-y-3">
-          <AdminFormField label="Upload Image *">
-            <CloudinaryUpload
-              onUpload={(url) => setImageUrl(url)}
-              folder="beejaysax/gallery"
-              label="Upload Gallery Photo"
-              currentUrl={imageUrl || undefined}
-              aspectRatio="free"
-            />
-            {imageUrl && (
-              <input
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="Cloudinary URL"
-                className="mt-2 w-full border border-[#2A2A2A] bg-[#161616] px-4 py-2 text-xs text-white focus:border-[#C9A84C] focus:outline-none"
+      <AdminFormShell maxWidth={800}>
+        <div className="mb-8">
+          <AdminSectionCard
+            title="Add image"
+            description="Upload to Cloudinary, then add a caption and category before saving."
+          >
+            <AdminFormField label="Upload Image *">
+              <CloudinaryUpload
+                onUpload={(url) => setImageUrl(url)}
+                folder="beejaysax/gallery"
+                label="Upload Gallery Photo"
+                currentUrl={imageUrl || undefined}
+                aspectRatio="free"
               />
-            )}
-          </AdminFormField>
+              {imageUrl && (
+                <input
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="Cloudinary URL"
+                  className="mt-2 w-full border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2 text-xs text-white focus:border-[#C9A84C] focus:outline-none"
+                />
+              )}
+            </AdminFormField>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label
@@ -119,7 +123,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
                 placeholder="Optional caption..."
-                className="w-full border border-[#2A2A2A] bg-[#161616] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
+                className="w-full border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
               />
             </div>
             <div>
@@ -138,7 +142,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full border border-[#2A2A2A] bg-[#161616] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
+                className="w-full border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -148,20 +152,21 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
               </select>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={handleAddImage}
-            disabled={uploading || !imageUrl.trim()}
-            className="bg-[#C9A84C] px-6 py-2.5 font-semibold text-[#080808] transition hover:bg-[#E8C96D] disabled:opacity-40"
-            style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
-          >
-            {uploading ? 'Adding...' : 'Add Image'}
-          </button>
+            <button
+              type="button"
+              onClick={handleAddImage}
+              disabled={uploading || !imageUrl.trim()}
+              className="bg-[#C9A84C] px-6 py-2.5 font-semibold text-[#080808] transition hover:bg-[#E8C96D] disabled:opacity-40"
+              style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+            >
+              {uploading ? 'Adding...' : 'Add Image'}
+            </button>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', margin: 0 }}>
+              Folder: <code style={{ color: '#888' }}>beejaysax/gallery</code>
+            </p>
+          </AdminSectionCard>
         </div>
-        <p style={{ fontSize: 12, color: '#333', marginTop: 12 }}>
-          Images upload to Cloudinary in folder <code style={{ color: '#888' }}>beejaysax/gallery</code>.
-        </p>
-      </div>
+      </AdminFormShell>
 
       <div className="mb-6 flex flex-wrap gap-0">
         {['ALL', ...CATEGORIES].map((cat) => (

@@ -9,7 +9,8 @@ import AdminTextarea from './AdminTextarea'
 import AdminSelect from './AdminSelect'
 import AdminToggle from './AdminToggle'
 import CloudinaryUpload from './CloudinaryUpload'
-import SectionLabel from '@/components/ui/SectionLabel'
+import AdminFormShell from './AdminFormShell'
+import AdminSectionCard from './AdminSectionCard'
 import type { Event, EventStatus } from '@prisma/client'
 
 interface EventFormProps {
@@ -87,59 +88,52 @@ export default function EventForm({ mode, event }: EventFormProps) {
   }
 
   return (
-    <div className="max-w-2xl space-y-8">
-      <section>
-        <SectionLabel className="mb-4">Event Details</SectionLabel>
-        <div className="space-y-4">
-          <AdminFormField label="Title *">
-            <AdminInput
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Beejay Sax Live Concert 2026"
-            />
+    <AdminFormShell maxWidth={800}>
+      <AdminSectionCard title="Event details" description="Name and description shown on the public event page.">
+        <AdminFormField label="Title *">
+          <AdminInput
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Beejay Sax Live Concert 2026"
+          />
+        </AdminFormField>
+        <AdminFormField label="Description" optional>
+          <AdminTextarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
+            placeholder="Describe the event..."
+          />
+        </AdminFormField>
+      </AdminSectionCard>
+
+      <AdminSectionCard title="Location">
+        <AdminFormField label="Venue *">
+          <AdminInput
+            value={venue}
+            onChange={(e) => setVenue(e.target.value)}
+            placeholder="Eko Hotels and Suites"
+          />
+        </AdminFormField>
+        <AdminFormField label="Address" optional>
+          <AdminInput
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Full street address"
+          />
+        </AdminFormField>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <AdminFormField label="City *">
+            <AdminInput value={city} onChange={(e) => setCity(e.target.value)} placeholder="Lagos" />
           </AdminFormField>
-          <AdminFormField label="Description" optional>
-            <AdminTextarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              placeholder="Describe the event..."
-            />
+          <AdminFormField label="Country">
+            <AdminInput value={country} onChange={(e) => setCountry(e.target.value)} placeholder="Nigeria" />
           </AdminFormField>
         </div>
-      </section>
+      </AdminSectionCard>
 
-      <section>
-        <SectionLabel className="mb-4">Location</SectionLabel>
-        <div className="space-y-4">
-          <AdminFormField label="Venue *">
-            <AdminInput
-              value={venue}
-              onChange={(e) => setVenue(e.target.value)}
-              placeholder="Eko Hotels and Suites"
-            />
-          </AdminFormField>
-          <AdminFormField label="Address" optional>
-            <AdminInput
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Full street address"
-            />
-          </AdminFormField>
-          <div className="grid grid-cols-2 gap-4">
-            <AdminFormField label="City *">
-              <AdminInput value={city} onChange={(e) => setCity(e.target.value)} placeholder="Lagos" />
-            </AdminFormField>
-            <AdminFormField label="Country">
-              <AdminInput value={country} onChange={(e) => setCountry(e.target.value)} placeholder="Nigeria" />
-            </AdminFormField>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <SectionLabel className="mb-4">Date & Time</SectionLabel>
-        <div className="grid grid-cols-2 gap-4">
+      <AdminSectionCard title="Date & time">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <AdminFormField label="Event Date *">
             <AdminInput type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
           </AdminFormField>
@@ -147,44 +141,40 @@ export default function EventForm({ mode, event }: EventFormProps) {
             <AdminInput type="time" value={eventTime} onChange={(e) => setEventTime(e.target.value)} />
           </AdminFormField>
         </div>
-      </section>
+      </AdminSectionCard>
 
-      <section>
-        <SectionLabel className="mb-4">Tickets</SectionLabel>
-        <div className="space-y-4">
-          <AdminToggle
-            checked={isFree}
-            onChange={setIsFree}
-            label="Free Event"
-            description="Attendees register for free — no payment required"
-          />
-          {!isFree && (
-            <div className="grid grid-cols-2 gap-4">
-              <AdminFormField label="Ticket Price (₦)">
-                <AdminInput
-                  type="number"
-                  value={ticketPrice}
-                  onChange={(e) => setTicketPrice(e.target.value)}
-                  placeholder="5000"
-                  min="0"
-                />
-              </AdminFormField>
-              <AdminFormField label="Total Tickets" optional>
-                <AdminInput
-                  type="number"
-                  value={totalTickets}
-                  onChange={(e) => setTotalTickets(e.target.value)}
-                  placeholder="Unlimited"
-                  min="1"
-                />
-              </AdminFormField>
-            </div>
-          )}
-        </div>
-      </section>
+      <AdminSectionCard title="Tickets">
+        <AdminToggle
+          checked={isFree}
+          onChange={setIsFree}
+          label="Free event"
+          description="Attendees register for free — no payment required."
+        />
+        {!isFree && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <AdminFormField label="Ticket Price (₦)">
+              <AdminInput
+                type="number"
+                value={ticketPrice}
+                onChange={(e) => setTicketPrice(e.target.value)}
+                placeholder="5000"
+                min="0"
+              />
+            </AdminFormField>
+            <AdminFormField label="Total Tickets" optional>
+              <AdminInput
+                type="number"
+                value={totalTickets}
+                onChange={(e) => setTotalTickets(e.target.value)}
+                placeholder="Unlimited"
+                min="1"
+              />
+            </AdminFormField>
+          </div>
+        )}
+      </AdminSectionCard>
 
-      <section>
-        <SectionLabel className="mb-4">Poster Image</SectionLabel>
+      <AdminSectionCard title="Poster image" description="Portrait poster for the event listing.">
         <CloudinaryUpload
           onUpload={(url) => setPosterImage(url)}
           folder="beejaysax/events"
@@ -193,12 +183,12 @@ export default function EventForm({ mode, event }: EventFormProps) {
           aspectRatio="poster"
         />
         {posterImage && (
-          <div className="mt-3 flex items-center gap-3">
+          <div className="flex max-w-full flex-wrap items-center gap-3">
             <input
               value={posterImage}
               onChange={(e) => setPosterImage(e.target.value)}
               placeholder="Or paste Cloudinary URL directly..."
-              className="flex-1 bg-[#161616] border border-[#2A2A2A] px-4 py-2 text-white text-sm focus:border-[#C9A84C] focus:outline-none"
+              className="min-w-0 flex-1 bg-[#0F0F0F] border border-[#1E1E1E] px-4 py-2 text-white text-sm focus:border-[#C9A84C] focus:outline-none"
               style={{ fontSize: 11 }}
             />
             <button
@@ -215,32 +205,32 @@ export default function EventForm({ mode, event }: EventFormProps) {
             </button>
           </div>
         )}
-      </section>
+      </AdminSectionCard>
 
-      <section>
-        <SectionLabel className="mb-4">Settings</SectionLabel>
-        <div className="space-y-3">
-          <AdminToggle
-            checked={isFeatured}
-            onChange={setIsFeatured}
-            label="Featured Event"
-            description="Show this event on the homepage"
+      <AdminSectionCard title="Settings">
+        <AdminToggle
+          checked={isFeatured}
+          onChange={setIsFeatured}
+          label="Featured event"
+          description="Show this event on the homepage."
+        />
+        <AdminFormField label="Status">
+          <AdminSelect
+            value={status}
+            onChange={(e) => setStatus(e.target.value as EventStatus)}
+            options={[
+              { value: 'UPCOMING', label: 'Upcoming' },
+              { value: 'PAST', label: 'Past' },
+              { value: 'CANCELLED', label: 'Cancelled' },
+            ]}
           />
-          <AdminFormField label="Status">
-            <AdminSelect
-              value={status}
-              onChange={(e) => setStatus(e.target.value as EventStatus)}
-              options={[
-                { value: 'UPCOMING', label: 'Upcoming' },
-                { value: 'PAST', label: 'Past' },
-                { value: 'CANCELLED', label: 'Cancelled' },
-              ]}
-            />
-          </AdminFormField>
-        </div>
-      </section>
+        </AdminFormField>
+      </AdminSectionCard>
 
-      <div className="flex gap-3 border-t border-[#1E1E1E] pt-4">
+      <div
+        className="flex flex-wrap gap-3 border-t border-[#1E1E1E] pt-5"
+        style={{ marginTop: 4, marginBottom: 8 }}
+      >
         <button
           type="button"
           onClick={handleSubmit}
@@ -259,6 +249,6 @@ export default function EventForm({ mode, event }: EventFormProps) {
           Cancel
         </button>
       </div>
-    </div>
+    </AdminFormShell>
   )
 }

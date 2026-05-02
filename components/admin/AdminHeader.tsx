@@ -26,18 +26,19 @@ export default function AdminHeader() {
 
   return (
     <header
-      className="flex items-center justify-between"
+      className="flex min-h-[72px] items-stretch justify-between gap-6"
       style={{
-        height: 72,
         flexShrink: 0,
         borderBottom: '1px solid #1E1E1E',
         background: 'rgba(10,10,10,0.92)',
         backdropFilter: 'blur(12px)',
         paddingLeft: 32,
         paddingRight: 32,
+        paddingTop: 14,
+        paddingBottom: 14,
       }}
     >
-      <div>
+      <div className="min-w-0 flex-1">
         <p
           style={{
             fontFamily: 'var(--font-sans)',
@@ -64,9 +65,19 @@ export default function AdminHeader() {
           {title}
         </h1>
       </div>
-      <div style={{ textAlign: 'right' }}>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', margin: 0 }}>Today</p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#A8A8A8', margin: '4px 0 0' }}>{today}</p>
+      <div
+        className="hidden shrink-0 sm:block"
+        style={{
+          alignSelf: 'center',
+          borderLeft: '1px solid #1E1E1E',
+          paddingLeft: 24,
+          textAlign: 'right',
+        }}
+      >
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#666', margin: 0, letterSpacing: '0.06em' }}>
+          Today
+        </p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#A8A8A8', margin: '6px 0 0' }}>{today}</p>
       </div>
     </header>
   )

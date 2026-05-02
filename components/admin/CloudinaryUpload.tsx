@@ -70,26 +70,29 @@ export default function CloudinaryUpload({
     }
   }
 
+  const dropMaxW =
+    aspectRatio === 'square' ? 320 : aspectRatio === 'poster' ? 260 : 420
+
   const previewStyle: CSSProperties =
     aspectRatio === 'square'
-      ? { aspectRatio: '1/1', objectFit: 'cover', width: '100%', maxWidth: 200, display: 'block' }
+      ? { aspectRatio: '1/1', objectFit: 'cover', width: '100%', maxWidth: 240, display: 'block' }
       : aspectRatio === 'poster'
-        ? { aspectRatio: '3/4', objectFit: 'cover', width: '100%', maxWidth: 150, display: 'block' }
-        : { height: 120, objectFit: 'cover', width: '100%', maxWidth: 300, display: 'block' }
+        ? { aspectRatio: '3/4', objectFit: 'cover', width: '100%', maxWidth: 200, display: 'block' }
+        : { height: 120, objectFit: 'cover', width: '100%', maxWidth: 360, display: 'block' }
 
   return (
-    <div>
+    <div style={{ width: '100%', maxWidth: dropMaxW }}>
       {/* Current image preview */}
       {currentUrl && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={currentUrl}
           alt="Current upload"
-          style={{ ...previewStyle, marginBottom: 12, border: '1px solid #2A2A2A' }}
+          style={{ ...previewStyle, marginBottom: 12, border: '1px solid #1E1E1E' }}
         />
       )}
 
-      {/* Drop zone */}
+      {/* Drop zone — width capped so it doesn’t span the whole dashboard */}
       <div
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
@@ -100,20 +103,22 @@ export default function CloudinaryUpload({
         }}
         style={{
           border: '1px dashed #2A2A2A',
-          padding: '24px 16px',
+          padding: '20px 14px',
           textAlign: 'center',
           cursor: uploading ? 'not-allowed' : 'pointer',
-          background: '#111',
+          background: '#0A0A0A',
           transition: 'border-color 0.2s',
+          width: '100%',
+          boxSizing: 'border-box',
         }}
         onMouseEnter={(e) => !uploading && ((e.currentTarget as HTMLDivElement).style.borderColor = '#C9A84C')}
         onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = '#2A2A2A')}
       >
-        <p style={{ fontSize: 24, marginBottom: 8 }}>📁</p>
-        <p style={{ fontSize: 13, color: uploading ? '#C9A84C' : '#888' }}>
+        <p style={{ fontSize: 22, marginBottom: 6 }}>📁</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: uploading ? '#C9A84C' : '#A8A8A8' }}>
           {uploading ? 'Uploading...' : label}
         </p>
-        <p style={{ fontSize: 11, color: '#444', marginTop: 4 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#555', marginTop: 6, lineHeight: 1.4 }}>
           {uploading ? 'Please wait' : 'Click or drag & drop · JPG, PNG, WebP · Max 10MB'}
         </p>
       </div>

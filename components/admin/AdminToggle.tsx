@@ -9,10 +9,19 @@ interface AdminToggleProps {
 
 export default function AdminToggle({ checked, onChange, label, description }: AdminToggleProps) {
   return (
-    <div className="flex items-center justify-between border border-[#2A2A2A] px-4 py-3">
-      <div>
-        <p style={{ fontSize: 13, color: '#F5F0E8' }}>{label}</p>
-        {description && <p style={{ fontSize: 12, color: '#555', marginTop: 2 }}>{description}</p>}
+    <div
+      className="flex items-start gap-4 border border-[#1E1E1E] bg-[#080808] px-4 py-3"
+      style={{ maxWidth: '100%' }}
+    >
+      <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: '#F5F0E8', margin: 0 }}>
+          {label}
+        </p>
+        {description && (
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#666', margin: '6px 0 0', lineHeight: 1.45 }}>
+            {description}
+          </p>
+        )}
       </div>
       <button
         type="button"

@@ -9,7 +9,8 @@ import AdminTextarea from './AdminTextarea'
 import AdminSelect from './AdminSelect'
 import AdminToggle from './AdminToggle'
 import CloudinaryUpload from './CloudinaryUpload'
-import SectionLabel from '@/components/ui/SectionLabel'
+import AdminFormShell from './AdminFormShell'
+import AdminSectionCard from './AdminSectionCard'
 import type { Release, ReleaseType } from '@prisma/client'
 
 interface ReleaseFormProps {
@@ -89,39 +90,43 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
     }
   }
 
-  return (
-    <div className="max-w-2xl space-y-8">
-      <section>
-        <SectionLabel className="mb-4">Release Details</SectionLabel>
-        <div className="space-y-4">
-          <AdminFormField label="Title *">
-            <AdminInput value={title} onChange={(e) => autoSlug(e.target.value)} placeholder="Praise Session 1" />
-          </AdminFormField>
-          <AdminFormField label="Slug *">
-            <AdminInput value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="praise-session-1" />
-          </AdminFormField>
-          <AdminFormField label="Type">
-            <AdminSelect
-              value={releaseType}
-              onChange={(e) => setReleaseType(e.target.value as ReleaseType)}
-              options={[
-                { value: 'SINGLE', label: 'Single' },
-                { value: 'ALBUM', label: 'Album' },
-                { value: 'EP', label: 'EP' },
-              ]}
-            />
-          </AdminFormField>
-          <AdminFormField label="Description" optional>
-            <AdminTextarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
-          </AdminFormField>
-          <AdminFormField label="Release Date" optional>
-            <AdminInput type="date" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} />
-          </AdminFormField>
-        </div>
-      </section>
+  const streamingFields = [
+    { label: 'Spotify URL', value: spotifyUrl, setter: setSpotifyUrl },
+    { label: 'Apple Music URL', value: appleMusicUrl, setter: setAppleMusicUrl },
+    { label: 'YouTube URL', value: youtubeUrl, setter: setYoutubeUrl },
+    { label: 'Audiomack URL', value: audiomackUrl, setter: setAudiomackUrl },
+    { label: 'Boomplay URL', value: boomplayUrl, setter: setBoomplayUrl },
+  ]
 
-      <section>
-        <SectionLabel className="mb-4">Cover Image</SectionLabel>
+  return (
+    <AdminFormShell maxWidth={800}>
+      <AdminSectionCard title="Release details" description="Title, slug, type, and optional description or date.">
+        <AdminFormField label="Title *">
+          <AdminInput value={title} onChange={(e) => autoSlug(e.target.value)} placeholder="Praise Session 1" />
+        </AdminFormField>
+        <AdminFormField label="Slug *">
+          <AdminInput value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="praise-session-1" />
+        </AdminFormField>
+        <AdminFormField label="Type">
+          <AdminSelect
+            value={releaseType}
+            onChange={(e) => setReleaseType(e.target.value as ReleaseType)}
+            options={[
+              { value: 'SINGLE', label: 'Single' },
+              { value: 'ALBUM', label: 'Album' },
+              { value: 'EP', label: 'EP' },
+            ]}
+          />
+        </AdminFormField>
+        <AdminFormField label="Description" optional>
+          <AdminTextarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
+        </AdminFormField>
+        <AdminFormField label="Release Date" optional>
+          <AdminInput type="date" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} />
+        </AdminFormField>
+      </AdminSectionCard>
+
+      <AdminSectionCard title="Cover image" description="Square artwork for listings and players.">
         <CloudinaryUpload
           onUpload={(url) => setCoverImage(url)}
           folder="beejaysax/releases"
@@ -130,12 +135,12 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
           aspectRatio="square"
         />
         {coverImage && (
-          <div className="mt-3 flex items-center gap-3">
+          <div className="flex max-w-full flex-wrap items-center gap-3">
             <input
               value={coverImage}
               onChange={(e) => setCoverImage(e.target.value)}
               placeholder="Or paste Cloudinary URL directly..."
-              className="flex-1 bg-[#161616] border border-[#2A2A2A] px-4 py-2 text-white text-sm focus:border-[#C9A84C] focus:outline-none"
+              className="min-w-0 flex-1 bg-[#0F0F0F] border border-[#1E1E1E] px-4 py-2 text-white text-sm focus:border-[#C9A84C] focus:outline-none"
               style={{ fontSize: 11 }}
             />
             <button
@@ -152,36 +157,31 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
             </button>
           </div>
         )}
-      </section>
+      </AdminSectionCard>
 
-      <section>
-        <SectionLabel className="mb-4">Streaming Links</SectionLabel>
-        <div className="space-y-4">
-          {[
-            { label: 'Spotify URL', value: spotifyUrl, setter: setSpotifyUrl },
-            { label: 'Apple Music URL', value: appleMusicUrl, setter: setAppleMusicUrl },
-            { label: 'YouTube URL', value: youtubeUrl, setter: setYoutubeUrl },
-            { label: 'Audiomack URL', value: audiomackUrl, setter: setAudiomackUrl },
-            { label: 'Boomplay URL', value: boomplayUrl, setter: setBoomplayUrl },
-          ].map((field) => (
+      <AdminSectionCard title="Streaming links" description="Optional URLs for each platform.">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {streamingFields.map((field) => (
             <AdminFormField key={field.label} label={field.label} optional>
               <AdminInput value={field.value} onChange={(e) => field.setter(e.target.value)} placeholder="https://..." />
             </AdminFormField>
           ))}
         </div>
-      </section>
+      </AdminSectionCard>
 
-      <section>
-        <SectionLabel className="mb-4">Settings</SectionLabel>
+      <AdminSectionCard title="Settings">
         <AdminToggle
           checked={isFeatured}
           onChange={setIsFeatured}
-          label="Featured Release"
-          description="Show this release on the homepage"
+          label="Featured release"
+          description="Show this release on the homepage."
         />
-      </section>
+      </AdminSectionCard>
 
-      <div className="flex gap-3 border-t border-[#1E1E1E] pt-4">
+      <div
+        className="flex flex-wrap gap-3 border-t border-[#1E1E1E] pt-5"
+        style={{ marginTop: 4, marginBottom: 8 }}
+      >
         <button
           type="button"
           onClick={handleSubmit}
@@ -200,6 +200,6 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
           Cancel
         </button>
       </div>
-    </div>
+    </AdminFormShell>
   )
 }
