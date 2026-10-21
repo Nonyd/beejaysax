@@ -73,7 +73,10 @@ export default async function TicketViewPage({ params }: Props) {
 
         <article className="overflow-hidden border-2 border-bjs-gold shadow-[0_0_60px_rgba(201,168,76,0.15)]">
           <div className="bg-bjs-gold px-6 py-5 text-center text-bjs-black">
-            <p className="font-serif text-[clamp(22px,5vw,28px)] italic leading-tight">BeeJay Sax Live</p>
+            <p className="font-serif text-[clamp(22px,5vw,28px)] italic leading-tight">
+              {/* Upright "BeeJay": Playfair's italic J is a swash that reads as a 3 */}
+              <span className="not-italic">BeeJay</span> Sax Live
+            </p>
             <p className="mt-2 font-sans text-[10px] font-semibold uppercase tracking-[0.35em]">Official ticket</p>
           </div>
 
@@ -115,7 +118,7 @@ export default async function TicketViewPage({ params }: Props) {
               </div>
             </dl>
 
-            <span className="inline-flex rounded-full border border-bjs-gold bg-bjs-gold-dim px-4 py-1.5 font-sans text-[11px] font-medium uppercase tracking-wide text-bjs-gold">
+            <span className="inline-flex border border-bjs-gold bg-bjs-gold-dim px-4 py-1.5 font-sans text-[11px] font-medium uppercase tracking-wide text-bjs-gold">
               {typeLabel(ticket.ticketType)}
             </span>
 

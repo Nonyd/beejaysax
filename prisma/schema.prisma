@@ -47,7 +47,7 @@ model Ticket {
   ticketType    TicketType    @default(GENERAL)
   quantity      Int           @default(1)
   totalAmount   Float         @default(0)
-  qrCode        String        @unique
+  qrCode        String
   qrToken       String        @unique
   isUsed        Boolean       @default(false)
   usedAt        DateTime?
