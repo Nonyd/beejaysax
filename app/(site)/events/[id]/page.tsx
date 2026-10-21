@@ -58,7 +58,7 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <>
-      <section style={{ position: 'relative', minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '0 24px 64px', overflow: 'hidden' }} className="md:px-12">
+      <section style={{ position: 'relative', minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: 64, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
           {event.posterImage ? (
             <Image src={event.posterImage} alt={`${event.title} — event poster`} fill style={{ objectFit: 'cover' }} priority sizes="100vw" />
@@ -92,13 +92,15 @@ export default async function EventDetailPage({ params }: Props) {
               fontSize: 'clamp(38px,6vw,80px)',
               fontWeight: 600,
               color: '#F5F0E8',
+              lineHeight: 1.05,
+              letterSpacing: '-0.01em',
               margin: '16px 0 0',
               maxWidth: '56rem',
             }}
           >
             {event.title}
           </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', marginTop: 16 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(245,240,232,0.55)', marginTop: 20 }}>
             {event.venue} · {event.city}, {event.country}
           </p>
         </div>

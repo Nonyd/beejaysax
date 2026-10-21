@@ -59,24 +59,27 @@ export default function TestimonialsSection() {
               style={{
                 padding: '40px 28px',
                 position: 'relative',
-                borderRight: i < 2 ? '1px solid #2A2A2A' : 'none',
+                display: 'flex',
+                flexDirection: 'column',
               }}
-              className={i < 2 ? 'border-b border-[#2A2A2A] md:border-b-0' : ''}
+              className={
+                i < 2 ? 'border-b border-[#2A2A2A] md:border-r md:border-b-0' : ''
+              }
             >
               <span
+                aria-hidden
                 style={{
-                  position: 'absolute',
-                  top: 24,
-                  right: 24,
+                  display: 'block',
                   fontFamily: 'var(--font-serif)',
-                  fontSize: 80,
-                  color: 'rgba(201,168,76,0.07)',
-                  lineHeight: 1,
+                  fontSize: 64,
+                  color: 'rgba(201,168,76,0.4)',
+                  lineHeight: 0.6,
+                  height: 28,
+                  marginBottom: 12,
                   userSelect: 'none',
-                  pointerEvents: 'none',
                 }}
               >
-                &quot;
+                &ldquo;
               </span>
               <p
                 style={{
@@ -86,10 +89,16 @@ export default function TestimonialsSection() {
                   lineHeight: 1.65,
                   color: 'rgba(245,240,232,0.92)',
                   marginBottom: 28,
-                  position: 'relative',
+                  flex: 1,
                 }}
               >
-                &ldquo;{q.quote}&rdquo;
+                {/* Upright "BeeJay": Playfair's italic J is a swash that reads as a 3 */}
+                {q.quote.split('BeeJay').map((part, j) => (
+                  <span key={j}>
+                    {j > 0 && <span style={{ fontStyle: 'normal' }}>BeeJay</span>}
+                    {part}
+                  </span>
+                ))}
               </p>
               <div style={{ borderTop: '1px solid #2A2A2A', paddingTop: 22 }}>
                 <div style={{ width: 28, height: 2, background: '#C9A84C', marginBottom: 12 }} />

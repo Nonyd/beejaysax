@@ -31,7 +31,7 @@ export default async function EventPurchasePage({ params }: Props) {
 
   if (remaining !== null && remaining === 0) {
     return (
-      <section className="mx-auto max-w-lg px-8 py-32">
+      <section className="mx-auto max-w-lg px-6 py-32">
         <SectionLabel className="border-none pl-0">Sold out</SectionLabel>
         <p className="mt-4 font-sans text-bjs-muted">This event has no tickets left.</p>
         <Link href={`/events/${id}`} className="mt-10 inline-block font-sans text-sm text-bjs-gold hover:underline">
@@ -42,7 +42,7 @@ export default async function EventPurchasePage({ params }: Props) {
   }
 
   return (
-    <section className="mx-auto max-w-xl px-8 py-24 pb-32">
+    <section className="mx-auto max-w-xl px-6 py-24 pb-32">
       <Link href={`/events/${id}`} className="font-sans text-sm text-bjs-gold hover:underline">
         ← Event details
       </Link>

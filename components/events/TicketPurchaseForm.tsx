@@ -98,7 +98,7 @@ export default function TicketPurchaseForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-10 space-y-8 border border-bjs-border bg-bjs-surface p-8">
+    <form onSubmit={onSubmit} className="mt-10 space-y-8 border border-bjs-border bg-bjs-surface p-6 sm:p-8">
       {!isFree ? (
         <div>
           <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-bjs-gold">Ticket type</p>
@@ -151,7 +151,7 @@ export default function TicketPurchaseForm({
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
-          <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-muted" htmlFor="firstName">
+          <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="firstName">
             First name
           </label>
           <input
@@ -163,7 +163,7 @@ export default function TicketPurchaseForm({
           />
         </div>
         <div>
-          <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-muted" htmlFor="lastName">
+          <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="lastName">
             Last name
           </label>
           <input
@@ -177,7 +177,7 @@ export default function TicketPurchaseForm({
       </div>
 
       <div>
-        <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-muted" htmlFor="email">
+        <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="email">
           Email (ticket sent here)
         </label>
         <input
@@ -191,8 +191,8 @@ export default function TicketPurchaseForm({
       </div>
 
       <div>
-        <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-muted" htmlFor="phone">
-          Phone <span className="text-bjs-border">(optional)</span>
+        <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="phone">
+          Phone <span className="text-bjs-muted">(optional)</span>
         </label>
         <input
           id="phone"
@@ -205,15 +205,14 @@ export default function TicketPurchaseForm({
 
       <div className="border-t border-bjs-border pt-6">
         <div className="flex items-baseline justify-between font-sans">
-          <span className="text-sm text-bjs-muted">Total</span>
+          <span className="text-sm text-bjs-white-dim">Total</span>
           <span className="font-serif text-2xl text-bjs-gold">
             {isFree ? 'FREE' : `₦${total.toLocaleString()}`}
           </span>
         </div>
         {!isFree ? (
           <p className="mt-2 font-sans text-[11px] leading-relaxed text-bjs-muted">
-            Checkout completes your reservation. Wire a live payment provider (e.g. Paystack) when you&apos;re ready for
-            production collections.
+            Your ticket is issued instantly and emailed to you with a QR code for entry at the door.
           </p>
         ) : null}
       </div>

@@ -23,11 +23,8 @@
   --animate-marquee-slow: marquee 60s linear infinite;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* No global `* { margin: 0; padding: 0 }` here: Tailwind's preflight already resets
+   inside @layer base, and an unlayered reset overrides every p-/m-/space- utility. */
 
 html {
   background: #080808;

@@ -11,10 +11,13 @@ export default function EventCard({
   event,
   showViewButton,
   dimmed,
+  wide,
 }: {
   event: Event
   showViewButton?: boolean
   dimmed?: boolean
+  /** Horizontal layout (poster beside details) for a lone event spanning the full container. */
+  wide?: boolean
 }) {
   const router = useRouter()
   const day = format(event.eventDate, 'd')
@@ -46,15 +49,13 @@ export default function EventCard({
     <div
       role="link"
       tabIndex={0}
-      className="w-full"
+      className={wide ? 'flex w-full flex-col md:flex-row' : 'flex w-full flex-col'}
       style={{
         background: '#0F0F0F',
         border: '1px solid #1E1E1E',
         overflow: 'hidden',
         cursor: 'pointer',
         transition: 'all 300ms ease',
-        display: 'flex',
-        flexDirection: 'column',
         opacity: dimmed ? 0.6 : 1,
       }}
       onMouseEnter={(e) => {
@@ -70,14 +71,17 @@ export default function EventCard({
         if (e.key === 'Enter') router.push(`/events/${event.id}`)
       }}
     >
-      <div style={{ position: 'relative', overflow: 'hidden', aspectRatio: '16/9', flexShrink: 0 }}>
+      <div
+        className={wide ? 'md:w-1/2' : undefined}
+        style={{ position: 'relative', overflow: 'hidden', aspectRatio: '16/9', flexShrink: 0 }}
+      >
         {event.posterImage ? (
           <Image
             src={event.posterImage}
             alt={`${event.title} — event poster`}
             fill
             style={{ objectFit: 'cover' }}
-            sizes="(max-width:768px) 100vw, 33vw"
+            sizes={wide ? '(max-width:768px) 100vw, 600px' : '(max-width:768px) 100vw, 33vw'}
           />
         ) : (
           <div
@@ -136,11 +140,12 @@ export default function EventCard({
         </div>
       </div>
 
-      <div style={{ padding: '20px 20px 0', flex: 1 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+      <div style={{ padding: wide ? '32px 32px 0' : '20px 20px 0', flex: 1 }}>
         <h3
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: 18,
+            fontSize: wide ? 'clamp(22px, 2.4vw, 30px)' : 18,
             fontWeight: 600,
             lineHeight: 1.3,
             color: '#F5F0E8',
@@ -153,19 +158,37 @@ export default function EventCard({
         >
           {event.title}
         </h3>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', margin: 0 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: wide ? 14 : 12, color: 'rgba(245,240,232,0.55)', margin: 0 }}>
           {event.venue} · {event.city}
         </p>
         {event.eventTime && (
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#333', marginTop: 4 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: wide ? 13 : 11, color: 'rgba(245,240,232,0.4)', marginTop: 4 }}>
             {event.eventTime}
+          </p>
+        )}
+        {wide && event.description && (
+          <p
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 15,
+              lineHeight: 1.7,
+              color: 'rgba(245,240,232,0.65)',
+              marginTop: 20,
+              maxWidth: 460,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {event.description}
           </p>
         )}
       </div>
 
       <div
         style={{
-          padding: '16px 20px',
+          padding: wide ? '20px 32px' : '16px 20px',
           marginTop: 16,
           borderTop: '1px solid #141414',
           display: 'flex',
@@ -201,6 +224,7 @@ export default function EventCard({
             {cta}
           </Link>
         </span>
+      </div>
       </div>
     </div>
   )

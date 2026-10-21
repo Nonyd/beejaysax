@@ -164,7 +164,7 @@ export default function ContactForm() {
 
         <div style={{ marginTop: 32, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
           <Link
-            href="https://www.instagram.com"
+            href="https://instagram.com/beejaysax"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -172,16 +172,16 @@ export default function ContactForm() {
               fontSize: 10,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              color: '#444',
+              color: 'rgba(245,240,232,0.6)',
               textDecoration: 'none',
-              border: '1px solid #1E1E1E',
+              border: '1px solid #2A2A2A',
               padding: '10px 16px',
             }}
           >
             Instagram
           </Link>
           <Link
-            href="https://www.youtube.com"
+            href="https://youtube.com/@beejaysax"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -189,9 +189,9 @@ export default function ContactForm() {
               fontSize: 10,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              color: '#444',
+              color: 'rgba(245,240,232,0.6)',
               textDecoration: 'none',
-              border: '1px solid #1E1E1E',
+              border: '1px solid #2A2A2A',
               padding: '10px 16px',
             }}
           >

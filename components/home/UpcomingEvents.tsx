@@ -69,11 +69,14 @@ export default async function UpcomingEvents() {
           </Link>
         </div>
 
-        {events.length > 0 ? (
+        {events.length === 1 ? (
+          <EventCard event={events[0]} wide />
+        ) : events.length > 1 ? (
+          // auto-fit collapses empty tracks, so 2 or 3 cards always share the full container width
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
               gap: 24,
               alignItems: 'stretch',
             }}
@@ -101,7 +104,7 @@ export default async function UpcomingEvents() {
           </div>
         )}
 
-        <div className="mt-10 md:hidden" style={{ textAlign: 'center' }}>
+        <div className="md:hidden" style={{ textAlign: 'center', marginTop: 40 }}>
           <Link
             href="/events"
             style={{

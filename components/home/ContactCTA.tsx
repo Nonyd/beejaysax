@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Mail, MapPin, Phone } from 'lucide-react'
 
 export default function ContactCTA() {
   return (
@@ -90,13 +91,13 @@ export default function ContactCTA() {
 
         <div style={{ display: 'flex', gap: 40, justifyContent: 'center', flexWrap: 'wrap' }}>
           {[
-            { icon: '📍', text: 'Lagos, Nigeria' },
-            { icon: '📞', text: '+234 80 5898 2828' },
-            { icon: '✉️', text: 'booking@beejaysax.com' },
-          ].map((item) => (
-            <div key={item.text} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 15 }}>{item.icon}</span>
-              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#777' }}>{item.text}</span>
+            { Icon: MapPin, text: 'Lagos, Nigeria' },
+            { Icon: Phone, text: '+234 80 5898 2828' },
+            { Icon: Mail, text: 'booking@beejaysax.com' },
+          ].map(({ Icon, text }) => (
+            <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Icon style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(245,240,232,0.6)' }}>{text}</span>
             </div>
           ))}
         </div>

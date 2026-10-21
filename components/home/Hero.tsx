@@ -72,35 +72,38 @@ export default function Hero() {
             Gospel Saxophonist · Music Minister
           </p>
 
-          <div style={{ marginBottom: 20 }}>
-            <h1
+          <h1
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(52px, 11vw, 140px)',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              margin: '0 0 20px',
+            }}
+          >
+            {/* "BeeJay" stays upright: Playfair's italic J is a swash that reads as a 3.
+                The taller line box leaves room for the J's descender above "Sax." */}
+            <span
               style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(52px, 11vw, 140px)',
-                fontWeight: 700,
-                lineHeight: 0.9,
-                letterSpacing: '-0.02em',
+                display: 'block',
+                fontStyle: 'normal',
+                lineHeight: 1,
                 color: '#F5F0E8',
-                margin: 0,
               }}
             >
               BeeJay
-            </h1>
-            <h1
+            </span>
+            <span
               style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(52px, 11vw, 140px)',
-                fontWeight: 700,
+                display: 'block',
                 fontStyle: 'italic',
-                lineHeight: 0.9,
-                letterSpacing: '-0.02em',
+                lineHeight: 0.95,
                 color: '#C9A84C',
-                margin: 0,
               }}
             >
               Sax.
-            </h1>
-          </div>
+            </span>
+          </h1>
 
           <p
             style={{
@@ -131,7 +134,7 @@ export default function Hero() {
                 padding: '16px 36px',
                 textDecoration: 'none',
                 display: 'inline-block',
-                minWidth: 200,
+                minWidth: 224,
                 textAlign: 'center',
               }}
             >
@@ -151,7 +154,7 @@ export default function Hero() {
                 padding: '16px 36px',
                 textDecoration: 'none',
                 display: 'inline-block',
-                minWidth: 200,
+                minWidth: 224,
                 textAlign: 'center',
               }}
             >
@@ -164,7 +167,7 @@ export default function Hero() {
       <div
         style={{
           position: 'absolute',
-          bottom: 32,
+          bottom: 56,
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',

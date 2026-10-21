@@ -56,7 +56,7 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
         className="sticky z-30 border-b"
         style={{ top: 72, background: '#080808', borderColor: '#1E1E1E' }}
       >
-        <div className="site-shell flex flex-wrap">
+        <div className="site-shell flex flex-wrap" style={{ columnGap: 32 }}>
           {TABS.map((t) => (
             <button
               key={t.label}
@@ -67,11 +67,11 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
                 fontSize: 10,
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                padding: '16px 16px',
+                padding: '16px 2px',
                 border: 'none',
                 borderBottom: filter === t.value ? '2px solid #C9A84C' : '2px solid transparent',
                 background: 'transparent',
-                color: filter === t.value ? '#C9A84C' : '#555',
+                color: filter === t.value ? '#C9A84C' : 'rgba(245,240,232,0.45)',
                 cursor: 'pointer',
               }}
             >
@@ -82,7 +82,7 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
       </div>
 
       <section className="site-shell py-16">
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
           {filtered.map((r) => (
             <Link key={r.id} href={`/releases/${r.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
               <div

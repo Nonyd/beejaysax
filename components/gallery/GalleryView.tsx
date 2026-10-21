@@ -56,7 +56,7 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
         className="sticky z-30 border-b"
         style={{ top: 72, background: '#080808', borderColor: '#1E1E1E' }}
       >
-        <div className="site-shell flex flex-wrap">
+        <div className="site-shell flex flex-wrap" style={{ columnGap: 32 }}>
           {FILTERS.map((f) => (
             <button
               key={f.label}
@@ -70,11 +70,11 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
                 fontSize: 10,
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                padding: '16px 16px',
+                padding: '16px 2px',
                 border: 'none',
                 borderBottom: filter === f.value ? '2px solid #C9A84C' : '2px solid transparent',
                 background: 'transparent',
-                color: filter === f.value ? '#C9A84C' : '#555',
+                color: filter === f.value ? '#C9A84C' : 'rgba(245,240,232,0.45)',
                 cursor: 'pointer',
               }}
             >
@@ -113,7 +113,22 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
           ))}
         </div>
         {filtered.length === 0 && (
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555' }}>No images in this category.</p>
+          <div style={{ textAlign: 'center', padding: '96px 0' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 26,
+                fontStyle: 'italic',
+                color: 'rgba(245,240,232,0.3)',
+                marginBottom: 12,
+              }}
+            >
+              No photos here yet
+            </p>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(245,240,232,0.45)' }}>
+              New moments are added after every event. Check back soon.
+            </p>
+          </div>
         )}
       </section>
 

@@ -98,14 +98,14 @@ export default function AboutPage() {
               >
                 The Origin
               </p>
-              <p style={{ fontFamily: 'var(--font-serif)', fontSize: 14, color: '#C9A84C', marginBottom: 4 }}>Since 2000</p>
+              <p style={{ fontFamily: 'var(--font-serif)', fontSize: 14, color: '#C9A84C', marginBottom: 4 }}>In ministry since</p>
               <p
                 style={{
                   fontFamily: 'var(--font-serif)',
                   fontSize: 96,
                   lineHeight: 1,
                   fontStyle: 'italic',
-                  color: 'rgba(201,168,76,0.1)',
+                  color: 'rgba(201,168,76,0.45)',
                   margin: 0,
                 }}
               >

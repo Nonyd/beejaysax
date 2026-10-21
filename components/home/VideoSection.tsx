@@ -4,10 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const VIDEOS = [
-  { id: '0jxRD456j_w', title: 'BeeJay Sax Live in London, Indigo O2' },
-  { id: 'z4saapf2BrA', title: 'BeeJay Sax at House on the Rock (TAPE 2022)' },
-]
+// 'z4saapf2BrA' (House on the Rock, TAPE 2022) was removed: YouTube returns 404 for it.
+// Add a replacement here once the client sends a live link.
+const VIDEOS = [{ id: '0jxRD456j_w', title: 'BeeJay Sax Live in London, Indigo O2' }]
 
 function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?: boolean }) {
   const [playing, setPlaying] = useState(false)
@@ -122,15 +121,16 @@ export default function VideoSection() {
           </h2>
         </div>
 
-        {VIDEOS[0] && (
-          <div style={{ marginBottom: 16 }}>
+        {/* Feature the first video only when the rest pair up evenly, so no half-empty row. */}
+        {VIDEOS.length % 2 === 1 && (
+          <div style={{ marginBottom: VIDEOS.length > 1 ? 16 : 0 }}>
             <VideoCard video={VIDEOS[0]} large />
           </div>
         )}
 
         {VIDEOS.length > 1 && (
           <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 16 }}>
-            {VIDEOS.slice(1).map((v) => (
+            {VIDEOS.slice(VIDEOS.length % 2).map((v) => (
               <VideoCard key={v.id} video={v} />
             ))}
           </div>

@@ -24,7 +24,7 @@ export default function Footer() {
     <footer style={{ background: '#080808', borderTop: '1px solid #1E1E1E' }}>
       <div
         className="site-shell"
-        style={{ paddingTop: 80, paddingBottom: 64, textAlign: 'center', borderBottom: '1px solid #1E1E1E' }}
+        style={{ paddingTop: 80, paddingBottom: 64, textAlign: 'center' }}
       >
         <div style={{ marginBottom: 12 }}>
           <span
@@ -63,7 +63,7 @@ export default function Footer() {
           Blessed & Highly Favoured.
         </p>
 
-        <div style={{ display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '16px 28px', justifyContent: 'center', flexWrap: 'wrap' }}>
           {SOCIAL.map((s) => (
             <a
               key={s.label}
@@ -76,7 +76,7 @@ export default function Footer() {
                 fontWeight: 500,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: '#333',
+                color: 'rgba(245,240,232,0.45)',
                 textDecoration: 'none',
                 transition: 'color 200ms',
               }}
@@ -84,7 +84,7 @@ export default function Footer() {
                 e.currentTarget.style.color = '#C9A84C'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#333'
+                e.currentTarget.style.color = 'rgba(245,240,232,0.45)'
               }}
             >
               {s.label}
@@ -93,11 +93,13 @@ export default function Footer() {
         </div>
       </div>
 
+      <div className="site-shell">
+      {/* Divider lives inside the shell so it matches the content width, not the padded box */}
       <div
-        className="site-shell"
-        style={{ paddingTop: 20, paddingBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}
+        className="flex flex-col items-center justify-between gap-4 md:flex-row"
+        style={{ borderTop: '1px solid #1E1E1E', paddingTop: 24, paddingBottom: 24 }}
       >
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+        <div className="flex flex-wrap justify-center" style={{ gap: '12px 20px' }}>
           {NAV.map((l) => (
             <Link
               key={l.href}
@@ -107,7 +109,7 @@ export default function Footer() {
                 fontSize: 10,
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
-                color: '#222',
+                color: 'rgba(245,240,232,0.4)',
                 textDecoration: 'none',
               }}
             >
@@ -116,18 +118,19 @@ export default function Footer() {
           ))}
         </div>
         <div style={{ display: 'flex', gap: 20 }}>
-          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: '#1E1E1E' }}>
+          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(245,240,232,0.3)' }}>
             © {new Date().getFullYear()} BeeJay Sax
           </span>
           <a
             href="https://sonshubmedia.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: '#222', textDecoration: 'none' }}
+            style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(245,240,232,0.3)', textDecoration: 'none' }}
           >
             Built by SonsHub Media
           </a>
         </div>
+      </div>
       </div>
     </footer>
   )

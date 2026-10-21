@@ -85,7 +85,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div style={{ display: 'flex', gap: 28, alignItems: 'center' }} className="hidden lg:flex">
+        {/* display comes from className only: an inline display would override hidden/lg:flex */}
+        <div style={{ gap: 28, alignItems: 'center' }} className="hidden lg:flex">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}
@@ -130,13 +131,12 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="lg:hidden"
+          className="flex lg:hidden"
           style={{
             background: 'none',
             border: 'none',
             cursor: 'pointer',
             padding: 8,
-            display: 'flex',
             flexDirection: 'column',
             gap: 5,
             alignItems: 'flex-end',
