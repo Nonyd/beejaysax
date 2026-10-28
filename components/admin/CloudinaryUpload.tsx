@@ -88,7 +88,7 @@ export default function CloudinaryUpload({
         <img
           src={currentUrl}
           alt="Current upload"
-          style={{ ...previewStyle, marginBottom: 12, border: '1px solid #1E1E1E' }}
+          style={{ ...previewStyle, marginBottom: 12, border: '1px solid rgba(247,241,227,0.12)' }}
         />
       )}
 
@@ -102,23 +102,23 @@ export default function CloudinaryUpload({
           if (file) handleFile(file)
         }}
         style={{
-          border: '1px dashed #2A2A2A',
+          border: '1px dashed rgba(247,241,227,0.2)',
           padding: '20px 14px',
           textAlign: 'center',
           cursor: uploading ? 'not-allowed' : 'pointer',
-          background: '#0A0A0A',
+          background: '#141838',
           transition: 'border-color 0.2s',
           width: '100%',
           boxSizing: 'border-box',
         }}
-        onMouseEnter={(e) => !uploading && ((e.currentTarget as HTMLDivElement).style.borderColor = '#C9A84C')}
-        onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = '#2A2A2A')}
+        onMouseEnter={(e) => !uploading && ((e.currentTarget as HTMLDivElement).style.borderColor = '#E3B23C')}
+        onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(247,241,227,0.2)')}
       >
         <p style={{ fontSize: 22, marginBottom: 6 }}>📁</p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: uploading ? '#C9A84C' : '#A8A8A8' }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: uploading ? '#E3B23C' : 'rgba(247,241,227,0.8)' }}>
           {uploading ? 'Uploading...' : label}
         </p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#555', marginTop: 6, lineHeight: 1.4 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(247,241,227,0.55)', marginTop: 6, lineHeight: 1.4 }}>
           {uploading ? 'Please wait' : 'Click or drag & drop · JPG, PNG, WebP · Max 10MB'}
         </p>
       </div>

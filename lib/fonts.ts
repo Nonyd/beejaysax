@@ -1,16 +1,16 @@
-import { Playfair_Display, DM_Sans } from 'next/font/google'
+import { Gloock, Hanken_Grotesk } from 'next/font/google'
 
-export const playfair = Playfair_Display({
+/** Display: Gloock — warm, high-contrast serif. Single weight, no italic (so no swash "J"). */
+export const gloock = Gloock({
   subsets: ['latin'],
-  variable: '--font-playfair',
+  variable: '--font-gloock',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800', '900'],
-  style: ['normal', 'italic'],
+  weight: '400',
 })
 
-export const dmSans = DM_Sans({
+/** Body / UI: Hanken Grotesk. */
+export const hanken = Hanken_Grotesk({
   subsets: ['latin'],
-  variable: '--font-dm',
+  variable: '--font-hanken',
   display: 'swap',
-  weight: ['300', '400', '500', '600'],
 })

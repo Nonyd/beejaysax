@@ -1,5 +1,6 @@
 'use client'
 
+import { Wordmark } from '@/components/layout/Navbar'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
@@ -26,37 +27,15 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
       style={{
         width,
         zIndex: 40,
-        background: '#0A0A0A',
-        borderColor: '#1E1E1E',
+        background: '#141838',
+        borderColor: 'rgba(247,241,227,0.12)',
         boxShadow: '4px 0 40px rgba(0,0,0,0.35)',
       }}
     >
-      <div style={{ borderBottom: '1px solid #1E1E1E', padding: '24px 20px' }}>
+      <div style={{ borderBottom: '1px solid rgba(247,241,227,0.12)', padding: '24px 20px' }}>
         <div className="flex items-center justify-between gap-2">
-          <Link href="/admin" style={{ textDecoration: 'none' }}>
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 13,
-                fontWeight: 700,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#F5F0E8',
-              }}
-            >
-              BEEJAY
-            </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 15,
-                fontStyle: 'italic',
-                color: '#C9A84C',
-              }}
-            >
-              {' '}
-              SAX
-            </span>
+          <Link href="/admin" className="no-underline" aria-label="Admin dashboard">
+            <Wordmark className="text-[22px]" />
           </Link>
           <span
             style={{
@@ -65,9 +44,9 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
               fontWeight: 600,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              color: '#C9A84C',
-              background: 'rgba(201,168,76,0.12)',
-              border: '1px solid rgba(201,168,76,0.35)',
+              color: '#E3B23C',
+              background: 'rgba(227,178,60,0.12)',
+              border: '1px solid rgba(227,178,60,0.35)',
               padding: '4px 8px',
             }}
           >
@@ -92,9 +71,9 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
                 padding: '12px 14px',
                 borderRadius: 2,
                 textDecoration: 'none',
-                color: active ? '#F5F0E8' : '#777',
-                background: active ? 'rgba(201,168,76,0.12)' : 'transparent',
-                borderLeft: active ? '3px solid #C9A84C' : '3px solid transparent',
+                color: active ? '#F7F1E3' : 'rgba(247,241,227,0.65)',
+                background: active ? 'rgba(227,178,60,0.12)' : 'transparent',
+                borderLeft: active ? '3px solid #E3B23C' : '3px solid transparent',
                 paddingLeft: active ? 11 : 14,
                 transition: 'background 200ms, color 200ms',
               }}
@@ -105,15 +84,15 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
         })}
       </nav>
 
-      <div style={{ borderTop: '1px solid #1E1E1E', padding: 20 }}>
+      <div style={{ borderTop: '1px solid rgba(247,241,227,0.12)', padding: 20 }}>
         <div className="mb-4 flex items-center gap-3">
           <div
             style={{
               width: 40,
               height: 40,
               borderRadius: '50%',
-              background: 'linear-gradient(145deg, #C9A84C, #a88a3d)',
-              color: '#080808',
+              background: 'linear-gradient(145deg, #E3B23C, #C99A2E)',
+              color: '#11142F',
               fontFamily: 'var(--font-sans)',
               fontSize: 15,
               fontWeight: 700,
@@ -129,7 +108,7 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: 14,
-              color: '#F5F0E8',
+              color: '#F7F1E3',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -150,8 +129,8 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
             width: '100%',
             padding: '12px 16px',
             background: 'transparent',
-            color: '#888',
-            border: '1px solid #2A2A2A',
+            color: 'rgba(247,241,227,0.7)',
+            border: '1px solid rgba(247,241,227,0.2)',
             cursor: 'pointer',
             marginBottom: 12,
             transition: 'border-color 200ms, color 200ms',
@@ -164,7 +143,7 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 12,
-            color: '#555',
+            color: 'rgba(247,241,227,0.55)',
             textAlign: 'center',
             display: 'block',
             textDecoration: 'none',

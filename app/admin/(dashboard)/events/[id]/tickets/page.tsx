@@ -26,11 +26,11 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ i
         className="mb-8 flex flex-wrap items-center gap-2"
         style={{ fontFamily: 'var(--font-sans)', fontSize: 13 }}
       >
-        <Link href="/admin/events" style={{ color: '#777', textDecoration: 'none' }}>
+        <Link href="/admin/events" style={{ color: 'rgba(247,241,227,0.65)', textDecoration: 'none' }}>
           Events
         </Link>
-        <span style={{ color: '#333' }}>/</span>
-        <span style={{ color: '#C9A84C' }}>{event.title}</span>
+        <span style={{ color: 'rgba(247,241,227,0.35)' }}>/</span>
+        <span style={{ color: '#E3B23C' }}>{event.title}</span>
       </nav>
 
       <AdminPageHeader
@@ -48,11 +48,11 @@ export default async function EventTicketsPage({ params }: { params: Promise<{ i
         ].map((stat) => (
           <div
             key={stat.label}
-            className="border border-[#1E1E1E] bg-[#0F0F0F] p-5"
+            className="border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-5"
             style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.2)' }}
           >
             <SectionLabel className="mb-2">{stat.label}</SectionLabel>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 34, color: '#C9A84C', lineHeight: 1, fontWeight: 700 }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 34, color: '#E3B23C', lineHeight: 1, fontWeight: 700 }}>
               {stat.value}
             </p>
           </div>

@@ -2,191 +2,92 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import type { Release } from '@prisma/client'
 import { ReleaseType } from '@prisma/client'
 import { format } from 'date-fns'
+import FilterPills from '@/components/ui/FilterPills'
+import RecordSleeve from '@/components/ui/RecordSleeve'
 
 type Filter = 'ALL' | ReleaseType
 
-const TABS: { label: string; value: Filter }[] = [
-  { label: 'All', value: 'ALL' },
-  { label: 'Singles', value: 'SINGLE' },
-  { label: 'Albums', value: 'ALBUM' },
-  { label: 'EPs', value: 'EP' },
-]
+const TYPE_LABEL: Record<ReleaseType, string> = { ALBUM: 'Album', SINGLE: 'Single', EP: 'EP' }
 
-function StreamTextLink({ href, label }: { href: string | null; label: string }) {
-  if (!href) return null
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        fontFamily: 'var(--font-sans)',
-        fontSize: 10,
-        color: '#333',
-        textDecoration: 'none',
-        transition: 'color 200ms',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.color = '#C9A84C'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.color = '#333'
-      }}
-    >
-      {label}
-    </a>
-  )
-}
+const STREAMS = [
+  ['spotifyUrl', 'Spotify'],
+  ['appleMusicUrl', 'Apple Music'],
+  ['audiomackUrl', 'Audiomack'],
+  ['youtubeUrl', 'YouTube'],
+  ['boomplayUrl', 'Boomplay'],
+] as const
 
 export default function ReleasesView({ releases }: { releases: Release[] }) {
   const [filter, setFilter] = useState<Filter>('ALL')
 
-  const filtered = useMemo(() => {
-    if (filter === 'ALL') return releases
-    return releases.filter((r) => r.releaseType === filter)
-  }, [releases, filter])
+  const filtered = useMemo(
+    () => (filter === 'ALL' ? releases : releases.filter((r) => r.releaseType === filter)),
+    [releases, filter]
+  )
+
+  const count = (t: ReleaseType) => releases.filter((r) => r.releaseType === t).length
+  const options = [
+    { label: 'All', value: 'ALL' as Filter, count: releases.length },
+    ...(['ALBUM', 'SINGLE', 'EP'] as ReleaseType[])
+      .filter((t) => count(t) > 0)
+      .map((t) => ({ label: `${TYPE_LABEL[t]}s`, value: t as Filter, count: count(t) })),
+  ]
 
   return (
-    <>
-      <div
-        className="sticky z-30 border-b"
-        style={{ top: 72, background: '#080808', borderColor: '#1E1E1E' }}
-      >
-        <div className="site-shell flex flex-wrap" style={{ columnGap: 32 }}>
-          {TABS.map((t) => (
-            <button
-              key={t.label}
-              type="button"
-              onClick={() => setFilter(t.value)}
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                padding: '16px 2px',
-                border: 'none',
-                borderBottom: filter === t.value ? '2px solid #C9A84C' : '2px solid transparent',
-                background: 'transparent',
-                color: filter === t.value ? '#C9A84C' : 'rgba(245,240,232,0.45)',
-                cursor: 'pointer',
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-      </div>
+    <section className="bg-night py-16 md:py-24">
+      <div className="site-shell">
+        {releases.length > 0 && <FilterPills label="Filter releases" options={options} value={filter} onChange={setFilter} />}
 
-      <section className="site-shell py-16">
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
-          {filtered.map((r) => (
-            <Link key={r.id} href={`/releases/${r.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-              <div
-                style={{
-                  background: '#0F0F0F',
-                  border: '1px solid #1E1E1E',
-                  overflow: 'hidden',
-                  transition: 'all 300ms ease',
-                }}
-                onMouseEnter={(e) => {
-                  ;(e.currentTarget as HTMLDivElement).style.borderColor = '#C9A84C'
-                  ;(e.currentTarget as HTMLDivElement).style.transform = 'translateY(-3px)'
-                }}
-                onMouseLeave={(e) => {
-                  ;(e.currentTarget as HTMLDivElement).style.borderColor = '#1E1E1E'
-                  ;(e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'
-                }}
-              >
-                <div style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden' }}>
-                  {r.coverImage ? (
-                    <Image
-                      src={r.coverImage}
-                      alt={`${r.title} — album cover`}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      sizes="(max-width:768px) 50vw, 25vw"
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(135deg, #1a1204, #0d0a02)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 16,
-                      }}
-                    >
-                      <p
-                        style={{
-                          fontFamily: 'var(--font-serif)',
-                          fontSize: 'clamp(11px,2.8vw,15px)',
-                          fontWeight: 600,
-                          textAlign: 'center',
-                          color: '#C9A84C',
-                        }}
-                      >
-                        {r.title}
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <div style={{ padding: 16 }}>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: 9,
-                      letterSpacing: '0.15em',
-                      textTransform: 'uppercase',
-                      color: '#C9A84C',
-                      border: '1px solid rgba(201,168,76,0.3)',
-                      padding: '3px 10px',
-                      display: 'inline-block',
-                      marginBottom: 8,
-                    }}
-                  >
-                    {r.releaseType}
-                  </span>
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: 16,
-                      fontWeight: 500,
-                      color: '#F5F0E8',
-                      margin: '0 0 4px',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {r.title}
+        <div className="mt-12 grid grid-cols-1 gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((r) => {
+            const streams = STREAMS.filter(([key]) => r[key])
+            return (
+              <article key={r.id} className="group min-w-0">
+                <Link href={`/releases/${r.slug}`} className="block no-underline">
+                  <RecordSleeve
+                    title={r.title}
+                    coverImage={r.coverImage}
+                    sizes="(max-width:640px) 80vw, (max-width:1024px) 40vw, 320px"
+                    className="transition-transform duration-500 group-hover:-translate-y-1"
+                  />
+                  <p className="mt-6 font-body text-sm font-semibold text-gold">
+                    {TYPE_LABEL[r.releaseType]}
+                    {r.releaseDate ? `, ${format(r.releaseDate, 'yyyy')}` : ''}
                   </p>
-                  {r.releaseDate && (
-                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#444', margin: 0 }}>
-                      {format(r.releaseDate, 'MMM yyyy')}
-                    </p>
-                  )}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12 }}>
-                    <StreamTextLink href={r.spotifyUrl} label="Spotify" />
-                    <StreamTextLink href={r.appleMusicUrl} label="Apple" />
-                    <StreamTextLink href={r.audiomackUrl} label="Audiomack" />
-                    <StreamTextLink href={r.youtubeUrl} label="YouTube" />
-                    <StreamTextLink href={r.boomplayUrl} label="Boomplay" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
+                  <h2 className="mt-1 font-display text-[30px] leading-[1.05] text-ivory transition-colors group-hover:text-gold">
+                    {r.title}
+                  </h2>
+                </Link>
+                {streams.length > 0 && (
+                  <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-body text-sm">
+                    {streams.map(([key, label]) => (
+                      <a
+                        key={key}
+                        href={r[key] as string}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-ivory/65 underline decoration-ivory/25 underline-offset-4 hover:text-gold hover:decoration-gold"
+                      >
+                        {label}
+                      </a>
+                    ))}
+                  </p>
+                )}
+              </article>
+            )
+          })}
         </div>
+
         {filtered.length === 0 && (
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555' }}>No releases in this category.</p>
+          <div className="py-20 text-center">
+            <p className="font-display text-3xl text-ivory">Music is on the way</p>
+            <p className="mt-3 font-body text-base text-ivory/65">New releases will appear here as soon as they drop.</p>
+          </div>
         )}
-      </section>
-    </>
+      </div>
+    </section>
   )
 }

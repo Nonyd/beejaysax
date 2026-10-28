@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 
+/** Small gold kicker, sentence case. Use only where it tells the reader something the heading doesn't. */
 export default function SectionLabel({
   children,
   className,
@@ -10,19 +11,7 @@ export default function SectionLabel({
   style?: React.CSSProperties
 }) {
   return (
-    <p
-      className={cn(className)}
-      style={{
-        fontFamily: 'var(--font-sans)',
-        fontSize: 10,
-        fontWeight: 500,
-        letterSpacing: '0.3em',
-        textTransform: 'uppercase',
-        color: '#C9A84C',
-        marginBottom: 12,
-        ...style,
-      }}
-    >
+    <p className={cn('mb-3 font-body text-sm font-medium text-gold', className)} style={style}>
       {children}
     </p>
   )

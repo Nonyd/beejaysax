@@ -42,7 +42,6 @@ export default function AdminDeleteButton({
       onClick={handleDelete}
       disabled={loading}
       className="border border-red-900/50 px-3 py-1.5 text-xs text-red-500 transition hover:bg-red-900/20 disabled:opacity-40"
-      style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}
     >
       {loading ? '...' : label}
     </button>

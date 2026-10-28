@@ -140,7 +140,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
               value={coverImage}
               onChange={(e) => setCoverImage(e.target.value)}
               placeholder="Or paste Cloudinary URL directly..."
-              className="min-w-0 flex-1 bg-[#0F0F0F] border border-[#1E1E1E] px-4 py-2 text-white text-sm focus:border-[#C9A84C] focus:outline-none"
+              className="min-w-0 flex-1 bg-[#1B1F4B] border border-[rgba(247,241,227,0.12)] px-4 py-2 text-white text-sm focus:border-[#E3B23C] focus:outline-none"
               style={{ fontSize: 11 }}
             />
             <button
@@ -179,14 +179,14 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
       </AdminSectionCard>
 
       <div
-        className="flex flex-wrap gap-3 border-t border-[#1E1E1E] pt-5"
+        className="flex flex-wrap gap-3 border-t border-[rgba(247,241,227,0.12)] pt-5"
         style={{ marginTop: 4, marginBottom: 8 }}
       >
         <button
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="bg-[#C9A84C] px-8 py-3 font-semibold text-[#080808] transition hover:bg-[#E8C96D] disabled:opacity-40"
+          className="bg-[#E3B23C] px-8 py-3 font-semibold text-[#11142F] transition hover:bg-[#F0C75E] disabled:opacity-40"
           style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
         >
           {loading ? 'Saving...' : mode === 'create' ? 'Create Release' : 'Save Changes'}
@@ -194,7 +194,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-[#2A2A2A] px-8 py-3 text-white transition hover:border-[#555]"
+          className="border border-[rgba(247,241,227,0.2)] px-8 py-3 text-white transition hover:border-[rgba(247,241,227,0.55)]"
           style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
         >
           Cancel

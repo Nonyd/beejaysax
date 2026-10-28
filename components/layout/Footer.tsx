@@ -1,6 +1,6 @@
-'use client'
-
 import Link from 'next/link'
+import Adire from '@/components/ui/Adire'
+import { Wordmark } from '@/components/layout/Navbar'
 
 const SOCIAL = [
   { label: 'Instagram', href: 'https://instagram.com/beejaysax' },
@@ -11,8 +11,7 @@ const SOCIAL = [
 ]
 
 const NAV = [
-  { label: 'Home', href: '/' },
-  { label: 'Releases', href: '/releases' },
+  { label: 'Music', href: '/releases' },
   { label: 'Events', href: '/events' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'About', href: '/about' },
@@ -21,116 +20,64 @@ const NAV = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: '#080808', borderTop: '1px solid #1E1E1E' }}>
-      <div
-        className="site-shell"
-        style={{ paddingTop: 80, paddingBottom: 64, textAlign: 'center' }}
-      >
-        <div style={{ marginBottom: 12 }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: '0.3em',
-              textTransform: 'uppercase',
-              color: '#F5F0E8',
-            }}
+    <footer className="bg-night">
+      <Adire variant="band" color="#E3B23C" opacity={0.55} height={40} />
+
+      <div className="site-shell grid grid-cols-2 gap-x-6 gap-y-12 pt-20 pb-14 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="col-span-2 md:col-span-1">
+          <Link href="/" className="no-underline" aria-label="BeeJay Sax home">
+            <Wordmark className="text-[34px]" />
+          </Link>
+          <p className="mt-4 max-w-[34ch] font-body text-base leading-relaxed text-ivory/65">
+            Gospel saxophonist and music minister from Lagos, Nigeria. Blessed and highly favoured.
+          </p>
+          <Link
+            href="/contact?inquiry=booking"
+            className="mt-8 inline-flex rounded-full bg-gold px-6 py-3 font-body text-sm font-semibold text-night no-underline transition-colors hover:bg-gold-lt"
           >
-            BEEJAY{' '}
-          </span>
-          <span
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 12,
-              fontStyle: 'italic',
-              color: '#C9A84C',
-            }}
-          >
-            SAX
-          </span>
+            Book BeeJay
+          </Link>
         </div>
 
-        <p
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 15,
-            fontStyle: 'italic',
-            color: 'rgba(201,168,76,0.5)',
-            marginBottom: 40,
-          }}
-        >
-          Blessed & Highly Favoured.
-        </p>
+        <div>
+          <p className="mb-4 font-body text-sm font-semibold text-gold">Explore</p>
+          <ul className="space-y-2.5">
+            {NAV.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="font-body text-[15px] text-ivory/75 no-underline transition-colors hover:text-gold">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-        <div style={{ display: 'flex', gap: '16px 28px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {SOCIAL.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: 'rgba(245,240,232,0.45)',
-                textDecoration: 'none',
-                transition: 'color 200ms',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#C9A84C'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(245,240,232,0.45)'
-              }}
-            >
-              {s.label}
-            </a>
-          ))}
+        <div>
+          <p className="mb-4 font-body text-sm font-semibold text-gold">Follow</p>
+          <ul className="space-y-2.5">
+            {SOCIAL.map((s) => (
+              <li key={s.label}>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-[15px] text-ivory/75 no-underline transition-colors hover:text-gold"
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
       <div className="site-shell">
-      {/* Divider lives inside the shell so it matches the content width, not the padded box */}
-      <div
-        className="flex flex-col items-center justify-between gap-4 md:flex-row"
-        style={{ borderTop: '1px solid #1E1E1E', paddingTop: 24, paddingBottom: 24 }}
-      >
-        <div className="flex flex-wrap justify-center" style={{ gap: '12px 20px' }}>
-          {NAV.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'rgba(245,240,232,0.4)',
-                textDecoration: 'none',
-              }}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: 20 }}>
-          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(245,240,232,0.3)' }}>
-            © {new Date().getFullYear()} BeeJay Sax
-          </span>
-          <a
-            href="https://sonshubmedia.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(245,240,232,0.3)', textDecoration: 'none' }}
-          >
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-line py-6 font-body text-[13px] text-ivory/50 md:flex-row">
+          <span>© {new Date().getFullYear()} BeeJay Sax</span>
+          <a href="https://sonshubmedia.com" target="_blank" rel="noopener noreferrer" className="text-ivory/50 no-underline hover:text-gold">
             Built by SonsHub Media
           </a>
         </div>
-      </div>
       </div>
     </footer>
   )

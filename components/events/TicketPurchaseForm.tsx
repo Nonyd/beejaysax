@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import GoldButton from '@/components/ui/GoldButton'
 import { cn } from '@/lib/utils'
 
 type TicketTypeOption = 'GENERAL' | 'VIP' | 'VVIP'
@@ -76,39 +75,48 @@ export default function TicketPurchaseForm({
     }
   }
 
+  const label = 'mb-2 block font-body text-sm font-semibold text-ink'
+  const input =
+    'w-full rounded-[14px] border border-ink/20 bg-white/70 px-4 py-3.5 font-body text-base text-ink outline-none transition-colors focus:border-clay focus:bg-white'
+  const stepBtn =
+    'flex h-11 w-11 items-center justify-center rounded-full border border-ink/25 font-body text-xl text-ink transition-colors hover:border-ink disabled:opacity-40'
+
   if (done) {
     return (
-      <div className="mt-10 border border-bjs-gold bg-bjs-surface p-8 text-center shadow-[0_0_60px_rgba(201,168,76,0.12)]">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-bjs-gold text-bjs-gold">
-          <span className="font-serif text-2xl">✓</span>
+      <div className="mt-10 rounded-[32px] bg-ivory p-8 text-center text-ink shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-12">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold font-display text-3xl text-night">
+          ✓
         </div>
-        <p className="mt-6 font-serif text-xl text-bjs-white">You&apos;re on the list!</p>
-        <p className="mt-3 font-sans text-sm text-bjs-muted">
+        <p className="mt-6 font-display text-4xl">You&apos;re on the list</p>
+        <p className="mx-auto mt-3 max-w-[42ch] font-body text-base text-ink/70">
           {done.emailSent
-            ? `Your ticket has been sent to ${done.email}. Check your inbox (and spam).`
-            : `We could not send email (${done.emailError ?? 'configuration'}). You can still open your ticket below.`}
+            ? `Your ticket is on its way to ${done.email}. If it isn't in your inbox in a few minutes, check spam.`
+            : "We couldn't email your ticket just now, but it's ready below. Save or print it and bring it to the door."}
         </p>
         {done.token ? (
-          <GoldButton href={`/tickets/${done.token}`} className="mt-8 w-full justify-center">
+          <Link
+            href={`/tickets/${done.token}`}
+            className="mt-8 inline-flex w-full justify-center rounded-full bg-ink px-8 py-4 font-body text-base font-semibold text-ivory no-underline hover:bg-night"
+          >
             View my ticket
-          </GoldButton>
+          </Link>
         ) : null}
       </div>
     )
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-10 space-y-8 border border-bjs-border bg-bjs-surface p-6 sm:p-8">
+    <form onSubmit={onSubmit} className="mt-10 space-y-8 rounded-[32px] bg-ivory p-6 text-ink shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-10">
       {!isFree ? (
-        <div>
-          <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-bjs-gold">Ticket type</p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <fieldset>
+          <legend className={label}>Ticket type</legend>
+          <div className="grid gap-3 sm:grid-cols-3">
             {(Object.keys(TYPE_LABELS) as TicketTypeOption[]).map((t) => (
               <label
                 key={t}
                 className={cn(
-                  'cursor-pointer border p-4 font-sans text-sm transition-colors',
-                  ticketType === t ? 'border-bjs-gold bg-bjs-gold-dim text-bjs-white' : 'border-bjs-border text-bjs-muted hover:border-bjs-border-lt'
+                  'cursor-pointer rounded-[14px] border px-4 py-3.5 text-center font-body text-base font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-clay',
+                  ticketType === t ? 'border-ink bg-ink text-ivory' : 'border-ink/25 text-ink hover:border-ink'
                 )}
               >
                 <input
@@ -123,110 +131,93 @@ export default function TicketPurchaseForm({
               </label>
             ))}
           </div>
-        </div>
+        </fieldset>
       ) : null}
 
       <div>
-        <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-bjs-gold">Quantity</p>
-        <div className="mt-3 flex items-center gap-4">
+        <p className={label} id="qty-label">
+          How many tickets?
+        </p>
+        <div className="flex items-center gap-4" role="group" aria-labelledby="qty-label">
           <button
             type="button"
-            className="h-10 w-10 border border-bjs-border font-sans text-lg text-bjs-white hover:border-bjs-gold"
+            className={stepBtn}
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            aria-label="Decrease quantity"
+            disabled={quantity <= 1}
+            aria-label="Fewer tickets"
           >
             −
           </button>
-          <span className="min-w-[2rem] text-center font-sans text-bjs-white">{quantity}</span>
+          <span className="min-w-[2ch] text-center font-display text-3xl" aria-live="polite">
+            {quantity}
+          </span>
           <button
             type="button"
-            className="h-10 w-10 border border-bjs-border font-sans text-lg text-bjs-white hover:border-bjs-gold"
+            className={stepBtn}
             onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
-            aria-label="Increase quantity"
+            disabled={quantity >= maxQty}
+            aria-label="More tickets"
           >
             +
           </button>
         </div>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="firstName">
+          <label className={label} htmlFor="firstName">
             First name
           </label>
-          <input
-            id="firstName"
-            required
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="mt-2 w-full border border-bjs-border bg-bjs-black px-4 py-3 font-sans text-bjs-white outline-none focus:border-bjs-gold"
-          />
+          <input id="firstName" required autoComplete="given-name" value={firstName} onChange={(e) => setFirstName(e.target.value)} className={input} />
         </div>
         <div>
-          <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="lastName">
+          <label className={label} htmlFor="lastName">
             Last name
           </label>
-          <input
-            id="lastName"
-            required
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="mt-2 w-full border border-bjs-border bg-bjs-black px-4 py-3 font-sans text-bjs-white outline-none focus:border-bjs-gold"
-          />
+          <input id="lastName" required autoComplete="family-name" value={lastName} onChange={(e) => setLastName(e.target.value)} className={input} />
+        </div>
+        <div>
+          <label className={label} htmlFor="email">
+            Email <span className="font-normal text-ink/55">(we send the ticket here)</span>
+          </label>
+          <input id="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={input} />
+        </div>
+        <div>
+          <label className={label} htmlFor="phone">
+            Phone <span className="font-normal text-ink/55">(optional)</span>
+          </label>
+          <input id="phone" type="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={input} />
         </div>
       </div>
 
-      <div>
-        <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="email">
-          Email (ticket sent here)
-        </label>
-        <input
-          id="email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-2 w-full border border-bjs-border bg-bjs-black px-4 py-3 font-sans text-bjs-white outline-none focus:border-bjs-gold"
-        />
-      </div>
-
-      <div>
-        <label className="font-sans text-[11px] uppercase tracking-wide text-bjs-white-dim" htmlFor="phone">
-          Phone <span className="text-bjs-muted">(optional)</span>
-        </label>
-        <input
-          id="phone"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="mt-2 w-full border border-bjs-border bg-bjs-black px-4 py-3 font-sans text-bjs-white outline-none focus:border-bjs-gold"
-        />
-      </div>
-
-      <div className="border-t border-bjs-border pt-6">
-        <div className="flex items-baseline justify-between font-sans">
-          <span className="text-sm text-bjs-white-dim">Total</span>
-          <span className="font-serif text-2xl text-bjs-gold">
-            {isFree ? 'FREE' : `₦${total.toLocaleString()}`}
-          </span>
+      <div className="border-t-2 border-dashed border-ink/20 pt-6">
+        <div className="flex items-baseline justify-between gap-4">
+          <span className="font-body text-base text-ink/70">Total</span>
+          <span className="font-display text-4xl">{isFree ? 'Free' : `₦${total.toLocaleString()}`}</span>
         </div>
-        {!isFree ? (
-          <p className="mt-2 font-sans text-[11px] leading-relaxed text-bjs-muted">
-            Your ticket is issued instantly and emailed to you with a QR code for entry at the door.
-          </p>
-        ) : null}
+        <p className="mt-2 font-body text-sm text-ink/60">
+          Your ticket is issued instantly and emailed to you with a QR code for entry at the door.
+        </p>
       </div>
 
-      {error ? <p className="font-sans text-sm text-red-400">{error}</p> : null}
+      {error ? (
+        <p role="alert" className="rounded-[14px] bg-clay/10 px-4 py-3 font-body text-sm text-clay-deep">
+          {error}
+        </p>
+      ) : null}
 
-      <GoldButton type="submit" disabled={loading} className="w-full justify-center">
-        {loading ? 'Processing…' : isFree ? 'Complete registration' : 'Complete purchase'}
-      </GoldButton>
+      <button
+        type="submit"
+        disabled={loading}
+        className="inline-flex w-full items-center justify-center rounded-full bg-ink px-8 py-4 font-body text-base font-semibold text-ivory transition-colors hover:bg-night disabled:opacity-60"
+      >
+        {loading ? 'Processing' : isFree ? 'Complete registration' : quantity > 1 ? `Get ${quantity} tickets` : 'Get my ticket'}
+      </button>
 
-      <p className="font-sans text-center text-[11px] text-bjs-muted">
+      <p className="text-center font-body text-sm text-ink/60">
         Questions?{' '}
-        <Link href="/contact?inquiry=booking" className="text-bjs-gold hover:underline">
-          Contact us
+        <Link href="/contact?inquiry=booking" className="font-semibold text-clay-deep hover:underline">
+          Contact the team
         </Link>
       </p>
     </form>

@@ -1,37 +1,24 @@
-'use client'
-
 export default function PlatformStreamPills({
   platforms,
+  tone = 'dark',
 }: {
   platforms: { label: string; url: string }[]
+  /** 'dark' for indigo backgrounds, 'light' for ivory */
+  tone?: 'dark' | 'light'
 }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+    <div className="flex flex-wrap gap-2.5">
       {platforms.map((p) => (
         <a
           key={p.label}
           href={p.url}
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 11,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            color: '#F5F0E8',
-            border: '1px solid #2A2A2A',
-            padding: '10px 18px',
-            textDecoration: 'none',
-            transition: 'all 200ms',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#C9A84C'
-            e.currentTarget.style.color = '#C9A84C'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = '#2A2A2A'
-            e.currentTarget.style.color = '#F5F0E8'
-          }}
+          className={
+            tone === 'dark'
+              ? 'rounded-full border border-ivory/30 px-5 py-2.5 font-body text-sm font-medium text-ivory no-underline transition-colors hover:border-gold hover:text-gold'
+              : 'rounded-full border border-ink/30 px-5 py-2.5 font-body text-sm font-medium text-ink no-underline transition-colors hover:border-clay hover:text-clay'
+          }
         >
           {p.label}
         </a>

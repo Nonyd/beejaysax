@@ -26,20 +26,20 @@ export default async function AdminEventsPage() {
       />
 
       {events.length === 0 ? (
-        <div className="border border-[#1E1E1E] bg-[#0F0F0F] p-16 text-center" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
-          <p style={{ fontFamily: 'var(--font-sans)', color: '#666', fontSize: 15 }}>No events yet.</p>
+        <div className="border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-16 text-center" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', color: 'rgba(247,241,227,0.6)', fontSize: 15 }}>No events yet.</p>
           <Link
             href="/admin/events/new"
-            style={{ fontFamily: 'var(--font-sans)', color: '#C9A84C', fontSize: 14, marginTop: 12, display: 'inline-block' }}
+            style={{ fontFamily: 'var(--font-sans)', color: '#E3B23C', fontSize: 14, marginTop: 12, display: 'inline-block' }}
           >
             Create your first event →
           </Link>
         </div>
       ) : (
-        <div className="overflow-hidden border border-[#1E1E1E] bg-[#0F0F0F]" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+        <div className="overflow-hidden border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B]" style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#1E1E1E]">
+              <tr className="border-b border-[rgba(247,241,227,0.12)]">
                 {['Poster', 'Event', 'Date', 'Venue', 'Tickets', 'Status', 'Actions'].map((h) => (
                   <th
                     key={h}
@@ -48,7 +48,7 @@ export default async function AdminEventsPage() {
                       fontSize: 10,
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
-                      color: '#555',
+                      color: 'rgba(247,241,227,0.55)',
                       fontWeight: 500,
                     }}
                   >
@@ -57,20 +57,20 @@ export default async function AdminEventsPage() {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1E1E1E]">
+            <tbody className="divide-y divide-[rgba(247,241,227,0.12)]">
               {events.map((event) => (
-                <tr key={event.id} className="transition hover:bg-[#161616]">
+                <tr key={event.id} className="transition hover:bg-[#20255A]">
                   <td className="px-4 py-3">
                     {event.posterImage ? (
                       <Image src={event.posterImage} alt={event.title} width={48} height={48} className="object-cover" />
                     ) : (
                       <div
-                        className="flex items-center justify-center text-[#C9A84C]"
+                        className="flex items-center justify-center text-[#E3B23C]"
                         style={{
                           width: 48,
                           height: 48,
-                          background: '#161616',
-                          border: '1px solid #2A2A2A',
+                          background: '#20255A',
+                          border: '1px solid rgba(247,241,227,0.2)',
                           fontSize: 20,
                         }}
                       >
@@ -79,21 +79,21 @@ export default async function AdminEventsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <p style={{ fontSize: 14, color: '#F5F0E8', fontWeight: 500 }}>{event.title}</p>
-                    <p style={{ fontSize: 12, color: '#555', marginTop: 2 }}>{event.city}</p>
+                    <p style={{ fontSize: 14, color: '#F7F1E3', fontWeight: 500 }}>{event.title}</p>
+                    <p style={{ fontSize: 12, color: 'rgba(247,241,227,0.55)', marginTop: 2 }}>{event.city}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p style={{ fontSize: 13, color: '#F5F0E8' }}>
+                    <p style={{ fontSize: 13, color: '#F7F1E3' }}>
                       {new Date(event.eventDate).toLocaleDateString()}
                     </p>
-                    {event.eventTime && <p style={{ fontSize: 11, color: '#555' }}>{event.eventTime}</p>}
+                    {event.eventTime && <p style={{ fontSize: 11, color: 'rgba(247,241,227,0.55)' }}>{event.eventTime}</p>}
                   </td>
-                  <td className="px-4 py-3 text-[13px] text-[#888]">{event.venue}</td>
+                  <td className="px-4 py-3 text-[13px] text-[rgba(247,241,227,0.7)]">{event.venue}</td>
                   <td className="px-4 py-3">
                     <span
                       style={{
                         fontSize: 14,
-                        color: '#C9A84C',
+                        color: '#E3B23C',
                         fontFamily: 'var(--font-serif)',
                         fontWeight: 600,
                       }}
@@ -101,7 +101,7 @@ export default async function AdminEventsPage() {
                       {event._count.tickets}
                     </span>
                     {event.totalTickets != null && (
-                      <span style={{ fontSize: 12, color: '#444' }}> / {event.totalTickets}</span>
+                      <span style={{ fontSize: 12, color: 'rgba(247,241,227,0.45)' }}> / {event.totalTickets}</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -116,19 +116,19 @@ export default async function AdminEventsPage() {
                             ? 'rgba(20,83,45,0.3)'
                             : event.status === 'CANCELLED'
                               ? 'rgba(127,29,29,0.3)'
-                              : 'rgba(30,30,30,0.8)',
+                              : 'rgba(42,48,104,0.8)',
                         color:
                           event.status === 'UPCOMING'
                             ? '#4ade80'
                             : event.status === 'CANCELLED'
                               ? '#f87171'
-                              : '#555',
+                              : 'rgba(247,241,227,0.55)',
                         border: `1px solid ${
                           event.status === 'UPCOMING'
                             ? 'rgba(20,83,45,0.5)'
                             : event.status === 'CANCELLED'
                               ? 'rgba(127,29,29,0.5)'
-                              : '#2A2A2A'
+                              : 'rgba(247,241,227,0.2)'
                         }`,
                       }}
                     >
@@ -139,15 +139,13 @@ export default async function AdminEventsPage() {
                     <div className="flex gap-2">
                       <Link
                         href={`/admin/events/${event.id}/edit`}
-                        className="border border-[#2A2A2A] px-3 py-1.5 text-xs text-white transition hover:border-[#C9A84C] hover:text-[#C9A84C]"
-                        style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}
+                        className="rounded-full border border-[rgba(247,241,227,0.2)] px-4 py-1.5 text-sm text-[#F7F1E3] transition hover:border-[#E3B23C] hover:text-[#E3B23C]"
                       >
                         Edit
                       </Link>
                       <Link
                         href={`/admin/events/${event.id}/tickets`}
-                        className="border border-[#2A2A2A] px-3 py-1.5 text-xs text-white transition hover:border-[#C9A84C] hover:text-[#C9A84C]"
-                        style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}
+                        className="rounded-full border border-[rgba(247,241,227,0.2)] px-4 py-1.5 text-sm text-[#F7F1E3] transition hover:border-[#E3B23C] hover:text-[#E3B23C]"
                       >
                         Tickets
                       </Link>

@@ -1,5 +1,6 @@
 'use client'
 
+import { Wordmark } from '@/components/layout/Navbar'
 import { useState, Suspense } from 'react'
 import type { CSSProperties } from 'react'
 import { signIn } from 'next-auth/react'
@@ -12,7 +13,7 @@ const labelStyle = {
   fontWeight: 600,
   letterSpacing: '0.22em',
   textTransform: 'uppercase' as const,
-  color: '#C9A84C',
+  color: '#E3B23C',
   display: 'block',
   marginBottom: 8,
 }
@@ -21,9 +22,9 @@ const inputStyle: CSSProperties = {
   width: '100%',
   fontFamily: 'var(--font-sans)',
   fontSize: 14,
-  color: '#F5F0E8',
-  background: '#0F0F0F',
-  border: '1px solid #1E1E1E',
+  color: '#F7F1E3',
+  background: '#1B1F4B',
+  border: '1px solid rgba(247,241,227,0.12)',
   padding: '14px 16px',
   outline: 'none',
   boxSizing: 'border-box',
@@ -59,47 +60,32 @@ function LoginForm() {
   }
 
   const focusGold = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = '#C9A84C'
+    e.currentTarget.style.borderColor = '#E3B23C'
   }
   const blurBorder = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = '#1E1E1E'
+    e.currentTarget.style.borderColor = 'rgba(247,241,227,0.12)'
   }
 
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center px-4"
+      className="admin-ui flex min-h-screen flex-col items-center justify-center px-4"
       style={{
-        background: '#080808',
+        background: '#11142F',
         backgroundImage:
-          'radial-gradient(ellipse 80% 55% at 50% -10%, rgba(201,168,76,0.12) 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 100% 100%, rgba(201,168,76,0.06) 0%, transparent 45%)',
+          'radial-gradient(ellipse 80% 55% at 50% -10%, rgba(227,178,60,0.12) 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 100% 100%, rgba(227,178,60,0.06) 0%, transparent 45%)',
       }}
     >
       <div
         className="w-full max-w-[420px]"
         style={{
-          border: '1px solid #2A2A2A',
-          background: 'rgba(15,15,15,0.95)',
+          border: '1px solid rgba(247,241,227,0.2)',
+          background: 'rgba(27,31,75,0.95)',
           boxShadow: '0 32px 120px rgba(0,0,0,0.55)',
           padding: '48px 40px',
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 8 }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 13,
-              fontWeight: 700,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#F5F0E8',
-            }}
-          >
-            BEEJAY
-          </span>
-          <span style={{ fontFamily: 'var(--font-serif)', fontSize: 16, fontStyle: 'italic', color: '#C9A84C' }}>
-            {' '}
-            SAX
-          </span>
+          <Wordmark className="text-[32px]" />
         </div>
 
         <p
@@ -109,18 +95,18 @@ function LoginForm() {
             fontWeight: 600,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            color: '#C9A84C',
+            color: '#E3B23C',
             textAlign: 'center',
             marginBottom: 8,
           }}
         >
           Admin Portal
         </p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: '#777', textAlign: 'center', marginBottom: 0 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'rgba(247,241,227,0.65)', textAlign: 'center', marginBottom: 0 }}>
           Sign in to continue
         </p>
 
-        <div style={{ width: 48, height: 2, background: '#C9A84C', margin: '28px auto', opacity: 0.7 }} />
+        <div style={{ width: 48, height: 2, background: '#E3B23C', margin: '28px auto', opacity: 0.7 }} />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>
@@ -176,9 +162,9 @@ function LoginForm() {
             width: '100%',
             marginTop: 28,
             padding: '16px 24px',
-            background: '#C9A84C',
-            color: '#080808',
-            border: '1px solid rgba(201,168,76,0.5)',
+            background: '#E3B23C',
+            color: '#11142F',
+            border: '1px solid rgba(227,178,60,0.5)',
             cursor: loading || !username || !password ? 'not-allowed' : 'pointer',
             opacity: loading || !username || !password ? 0.45 : 1,
             transition: 'opacity 200ms',
@@ -192,7 +178,7 @@ function LoginForm() {
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 13,
-            color: '#555',
+            color: 'rgba(247,241,227,0.55)',
             textAlign: 'center',
             display: 'block',
             marginTop: 36,
@@ -210,7 +196,7 @@ export default function AdminLoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen" style={{ background: '#080808' }} />
+        <div className="min-h-screen" style={{ background: '#11142F' }} />
       }
     >
       <LoginForm />

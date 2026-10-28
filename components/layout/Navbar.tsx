@@ -3,15 +3,29 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Adire from '@/components/ui/Adire'
+import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
-  { href: '/releases', label: 'Releases' },
+  { href: '/releases', label: 'Music' },
   { href: '/events', label: 'Events' },
   { href: '/gallery', label: 'Gallery' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ]
+
+function isActive(pathname: string, href: string) {
+  return href === '/' ? pathname === '/' : pathname.startsWith(href)
+}
+
+export function Wordmark({ className }: { className?: string }) {
+  return (
+    <span className={cn('font-display text-[24px] leading-none tracking-[-0.01em]', className)}>
+      <span className="text-ivory">BeeJay</span> <span className="text-gold">Sax</span>
+    </span>
+  )
+}
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -19,7 +33,8 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 50)
+    const fn = () => setScrolled(window.scrollY > 40)
+    fn()
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
@@ -31,203 +46,94 @@ export default function Navbar() {
     }
   }, [open])
 
-  const navStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 72,
-    zIndex: 100,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    background: scrolled ? 'rgba(8,8,8,0.96)' : 'transparent',
-    backdropFilter: scrolled ? 'blur(16px)' : 'none',
-    borderBottom: scrolled ? '1px solid #1E1E1E' : 'none',
-    transition: 'all 400ms ease',
-  }
+  useEffect(() => setOpen(false), [pathname])
 
   return (
     <>
-      <nav style={navStyle}>
-        <div
-          className="site-shell"
-          style={{
-            display: 'flex',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-          }}
-        >
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 13,
-              fontWeight: 700,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#F5F0E8',
-            }}
+      <nav
+        className={cn(
+          'fixed inset-x-0 top-0 z-[100] flex h-[72px] items-center transition-colors duration-300',
+          scrolled || open ? 'border-b border-line bg-night/95 backdrop-blur-md' : 'bg-transparent'
+        )}
+      >
+        <div className="site-shell flex items-center justify-between gap-6">
+          <Link href="/" className="no-underline" aria-label="BeeJay Sax home">
+            <Wordmark />
+          </Link>
+
+          <div className="hidden items-center gap-8 lg:flex">
+            {NAV_LINKS.map((l) => {
+              const active = isActive(pathname, l.href)
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'relative py-2 font-body text-[15px] font-medium no-underline transition-colors',
+                    active ? 'text-gold' : 'text-ivory/75 hover:text-ivory'
+                  )}
+                >
+                  {l.label}
+                  {active && (
+                    <span aria-hidden className="absolute -bottom-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rotate-45 bg-gold" />
+                  )}
+                </Link>
+              )
+            })}
+          </div>
+
+          <Link
+            href="/contact?inquiry=booking"
+            className="hidden rounded-full bg-gold px-6 py-2.5 font-body text-sm font-semibold text-night no-underline transition-colors hover:bg-gold-lt lg:inline-flex"
           >
-            BEEJAY
-          </span>
-          <span
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 14,
-              fontStyle: 'italic',
-              color: '#C9A84C',
-            }}
+            Book BeeJay
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="flex h-11 w-11 flex-col items-center justify-center gap-[6px] rounded-full border border-line lg:hidden"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
           >
-            SAX
-          </span>
-        </Link>
-
-        {/* display comes from className only: an inline display would override hidden/lg:flex */}
-        <div style={{ gap: 28, alignItems: 'center' }} className="hidden lg:flex">
-          {NAV_LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 12,
-                fontWeight: 500,
-                letterSpacing: '0.16em',
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                color: pathname === l.href ? '#C9A84C' : 'rgba(245,240,232,0.55)',
-                transition: 'color 200ms',
-              }}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-
-        <Link
-          href="/contact"
-          className="hidden lg:inline-flex"
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            textDecoration: 'none',
-            color: '#080808',
-            background: '#C9A84C',
-            border: '1px solid rgba(201,168,76,0.5)',
-            padding: '12px 22px',
-            transition: 'all 200ms',
-            alignItems: 'center',
-          }}
-        >
-          Book BeeJay
-        </Link>
-
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className="flex lg:hidden"
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 8,
-            flexDirection: 'column',
-            gap: 5,
-            alignItems: 'flex-end',
-          }}
-          aria-label="Menu"
-        >
-          <span
-            style={{
-              display: 'block',
-              width: 22,
-              height: 1,
-              background: '#F5F0E8',
-              transition: 'transform 300ms',
-              transform: open ? 'rotate(45deg) translate(4px, 4px)' : 'none',
-            }}
-          />
-          <span
-            style={{
-              display: 'block',
-              width: 16,
-              height: 1,
-              background: '#F5F0E8',
-              transition: 'opacity 300ms',
-              opacity: open ? 0 : 1,
-            }}
-          />
-          <span
-            style={{
-              display: 'block',
-              width: 22,
-              height: 1,
-              background: '#F5F0E8',
-              transition: 'transform 300ms',
-              transform: open ? 'rotate(-45deg) translate(4px, -4px)' : 'none',
-            }}
-          />
-        </button>
+            <span
+              className={cn('block h-[1.5px] w-5 bg-ivory transition-transform duration-300', open && 'translate-y-[3.75px] rotate-45')}
+            />
+            <span
+              className={cn('block h-[1.5px] w-5 bg-ivory transition-transform duration-300', open && '-translate-y-[3.75px] -rotate-45')}
+            />
+          </button>
         </div>
       </nav>
 
       {open && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 99,
-            background: '#080808',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-          }}
-        >
-          {NAV_LINKS.map((l, i) => (
+        <div className="fixed inset-0 z-[99] flex flex-col bg-ink pt-[72px] lg:hidden">
+          <Adire variant="field" color="#E3B23C" opacity={0.07} />
+          <div className="site-shell relative flex flex-1 flex-col justify-center gap-1">
+            {NAV_LINKS.map((l, i) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  'font-display text-[44px] leading-[1.15] no-underline',
+                  isActive(pathname, l.href) ? 'text-gold' : 'text-ivory'
+                )}
+                style={{ animation: `fadeUp 0.45s ease ${i * 0.05}s both` }}
+              >
+                {l.label}
+              </Link>
+            ))}
             <Link
-              key={l.href}
-              href={l.href}
+              href="/contact?inquiry=booking"
               onClick={() => setOpen(false)}
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(28px,7vw,48px)',
-                fontStyle: 'italic',
-                fontWeight: 600,
-                color: pathname === l.href ? '#C9A84C' : 'rgba(245,240,232,0.35)',
-                textDecoration: 'none',
-                padding: '12px 0',
-                animation: `fadeUp 0.4s ease ${i * 0.05}s both`,
-              }}
+              className="mt-10 self-start rounded-full bg-gold px-8 py-4 font-body text-base font-semibold text-night no-underline"
             >
-              {l.label}
+              Book BeeJay
             </Link>
-          ))}
-          <Link
-            href="/contact"
-            onClick={() => setOpen(false)}
-            style={{
-              marginTop: 32,
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: '#080808',
-              background: '#C9A84C',
-              padding: '14px 36px',
-              textDecoration: 'none',
-            }}
-          >
-            Book BeeJay
-          </Link>
+          </div>
+          <Adire variant="band" color="#E3B23C" opacity={0.6} height={36} />
         </div>
       )}
     </>

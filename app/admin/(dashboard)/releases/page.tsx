@@ -26,9 +26,9 @@ export default async function AdminReleasesPage() {
         {releases.map((release) => (
           <div
             key={release.id}
-            className="group border border-[#1E1E1E] bg-[#0F0F0F] transition hover:border-[#C9A84C]"
+            className="group border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] transition hover:border-[#E3B23C]"
           >
-            <div className="relative aspect-square overflow-hidden bg-[#161616]">
+            <div className="relative aspect-square overflow-hidden bg-[#20255A]">
               {release.coverImage ? (
                 <Image
                   src={release.coverImage}
@@ -37,7 +37,7 @@ export default async function AdminReleasesPage() {
                   className="object-cover transition duration-500 group-hover:scale-105"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-[#C9A84C]" style={{ fontSize: 48 }}>
+                <div className="flex h-full w-full items-center justify-center text-[#E3B23C]" style={{ fontSize: 48 }}>
                   ♪
                 </div>
               )}
@@ -49,8 +49,8 @@ export default async function AdminReleasesPage() {
                   fontSize: 9,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  background: 'rgba(201,168,76,0.9)',
-                  color: '#080808',
+                  background: 'rgba(227,178,60,0.9)',
+                  color: '#11142F',
                   padding: '2px 6px',
                   fontWeight: 600,
                 }}
@@ -64,9 +64,9 @@ export default async function AdminReleasesPage() {
                     top: 8,
                     right: 8,
                     fontSize: 9,
-                    background: 'rgba(8,8,8,0.8)',
-                    color: '#C9A84C',
-                    border: '1px solid rgba(201,168,76,0.4)',
+                    background: 'rgba(17,20,47,0.8)',
+                    color: '#E3B23C',
+                    border: '1px solid rgba(227,178,60,0.4)',
                     padding: '2px 6px',
                   }}
                 >
@@ -75,17 +75,16 @@ export default async function AdminReleasesPage() {
               )}
             </div>
             <div className="p-4">
-              <p style={{ fontSize: 14, color: '#F5F0E8', fontWeight: 500 }}>{release.title}</p>
+              <p style={{ fontSize: 14, color: '#F7F1E3', fontWeight: 500 }}>{release.title}</p>
               {release.releaseDate && (
-                <p style={{ fontSize: 12, color: '#555', marginTop: 2 }}>
+                <p style={{ fontSize: 12, color: 'rgba(247,241,227,0.55)', marginTop: 2 }}>
                   {new Date(release.releaseDate).getFullYear()}
                 </p>
               )}
               <div className="mt-3 flex gap-2">
                 <Link
                   href={`/admin/releases/${release.id}/edit`}
-                  className="border border-[#2A2A2A] px-3 py-1.5 text-xs text-white transition hover:border-[#C9A84C] hover:text-[#C9A84C]"
-                  style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}
+                  className="rounded-full border border-[rgba(247,241,227,0.2)] px-4 py-1.5 text-sm text-[#F7F1E3] transition hover:border-[#E3B23C] hover:text-[#E3B23C]"
                 >
                   Edit
                 </Link>
@@ -96,8 +95,8 @@ export default async function AdminReleasesPage() {
         ))}
 
         {releases.length === 0 && (
-          <div className="col-span-4 border border-[#1E1E1E] bg-[#0F0F0F] p-16 text-center">
-            <p style={{ color: '#444', fontSize: 14 }}>No releases yet.</p>
+          <div className="col-span-4 border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-16 text-center">
+            <p style={{ color: 'rgba(247,241,227,0.45)', fontSize: 14 }}>No releases yet.</p>
           </div>
         )}
       </div>

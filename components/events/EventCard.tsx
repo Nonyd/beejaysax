@@ -1,230 +1,139 @@
 'use client'
 
-import type { CSSProperties } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Event } from '@prisma/client'
 import { format } from 'date-fns'
+import Adire from '@/components/ui/Adire'
+import { cn } from '@/lib/utils'
 
+/**
+ * Event as a paper ticket: ivory body, dashed tear line with punched notches, gold stub.
+ * `notchColor` must match the section background so the notches read as cut-outs.
+ */
 export default function EventCard({
   event,
   showViewButton,
   dimmed,
   wide,
+  notchColor = '#11142F',
 }: {
   event: Event
   showViewButton?: boolean
   dimmed?: boolean
-  /** Horizontal layout (poster beside details) for a lone event spanning the full container. */
+  /** Horizontal layout (poster, details, stub side by side) for a lone event spanning the container. */
   wide?: boolean
+  notchColor?: string
 }) {
   const router = useRouter()
-  const day = format(event.eventDate, 'd')
-  const monthYear = `${format(event.eventDate, 'MMM')} ${format(event.eventDate, 'yyyy')}`
+  const href = `/events/${event.id}`
+  const cta = showViewButton ? 'View event' : event.isFree ? 'Register free' : 'Get tickets'
+  const price = event.isFree ? 'Free' : `₦${(event.ticketPrice ?? 0).toLocaleString()}`
+  const statusBadge = event.status === 'CANCELLED' ? 'Cancelled' : event.status === 'PAST' ? 'Past event' : null
 
-  const badgeStyle: CSSProperties = {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    fontFamily: 'var(--font-sans)',
-    fontSize: 9,
-    fontWeight: 600,
-    letterSpacing: '0.15em',
-    textTransform: 'uppercase',
-    padding: '4px 10px',
-    ...(event.status === 'CANCELLED'
-      ? { background: 'rgba(127,29,29,0.85)', color: '#fecaca' }
-      : event.status === 'PAST'
-        ? { background: '#1E1E1E', color: '#4A4A4A' }
-        : { background: '#C9A84C', color: '#080808' }),
-  }
-
-  const badgeLabel =
-    event.status === 'CANCELLED' ? 'CANCELLED' : event.status === 'PAST' ? 'PAST' : 'UPCOMING'
-
-  const cta = showViewButton ? 'View Event' : event.isFree ? 'Register' : 'Get Tickets'
+  const notch = 'absolute h-6 w-6 rounded-full'
 
   return (
     <div
       role="link"
       tabIndex={0}
-      className={wide ? 'flex w-full flex-col md:flex-row' : 'flex w-full flex-col'}
-      style={{
-        background: '#0F0F0F',
-        border: '1px solid #1E1E1E',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        transition: 'all 300ms ease',
-        opacity: dimmed ? 0.6 : 1,
-      }}
-      onMouseEnter={(e) => {
-        ;(e.currentTarget as HTMLDivElement).style.borderColor = '#C9A84C'
-        ;(e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)'
-      }}
-      onMouseLeave={(e) => {
-        ;(e.currentTarget as HTMLDivElement).style.borderColor = '#1E1E1E'
-        ;(e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'
-      }}
-      onClick={() => router.push(`/events/${event.id}`)}
+      onClick={() => router.push(href)}
       onKeyDown={(e) => {
-        if (e.key === 'Enter') router.push(`/events/${event.id}`)
+        if (e.key === 'Enter') router.push(href)
       }}
+      className={cn(
+        'group relative flex w-full cursor-pointer flex-col bg-ivory text-ink shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1',
+        wide && 'md:flex-row',
+        dimmed && 'opacity-60'
+      )}
     >
-      <div
-        className={wide ? 'md:w-1/2' : undefined}
-        style={{ position: 'relative', overflow: 'hidden', aspectRatio: '16/9', flexShrink: 0 }}
-      >
+      {/* poster */}
+      <div className={cn('relative aspect-[16/10] shrink-0 overflow-hidden bg-ink', wide && 'md:aspect-auto md:w-[38%]')}>
         {event.posterImage ? (
           <Image
             src={event.posterImage}
-            alt={`${event.title} — event poster`}
+            alt={`${event.title} poster`}
             fill
             style={{ objectFit: 'cover' }}
-            sizes={wide ? '(max-width:768px) 100vw, 600px' : '(max-width:768px) 100vw, 33vw'}
+            sizes={wide ? '(max-width:768px) 100vw, 460px' : '(max-width:768px) 100vw, 400px'}
           />
         ) : (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(135deg, #0d0a02, #161616)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <span style={{ fontSize: 36, opacity: 0.12 }} aria-hidden>
-              🎷
-            </span>
-          </div>
+          <>
+            <Adire variant="field" color="#E3B23C" opacity={0.22} />
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{ background: 'radial-gradient(circle at 30% 30%, rgba(196,88,58,0.45), transparent 60%)' }}
+            />
+          </>
         )}
-
-        <span style={badgeStyle}>{badgeLabel}</span>
-
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            background: 'rgba(8,8,8,0.9)',
-            padding: '10px 16px',
-            borderTop: '1px solid #2A2A2A',
-            borderRight: '1px solid #2A2A2A',
-          }}
-        >
-          <p
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 32,
-              fontWeight: 700,
-              color: '#C9A84C',
-              lineHeight: 1,
-              margin: 0,
-            }}
-          >
-            {day}
-          </p>
-          <p
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 9,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#555',
-              margin: '3px 0 0',
-            }}
-          >
-            {monthYear}
-          </p>
-        </div>
+        {statusBadge && (
+          <span className="absolute top-4 left-4 rounded-full bg-night/85 px-3 py-1 font-body text-xs font-semibold text-ivory">
+            {statusBadge}
+          </span>
+        )}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
-      <div style={{ padding: wide ? '32px 32px 0' : '20px 20px 0', flex: 1 }}>
+      {/* details */}
+      <div className={cn('flex flex-1 flex-col p-6', wide && 'md:p-10')}>
+        <p className="font-body text-sm font-semibold text-clay">{format(event.eventDate, 'EEEE, d MMMM yyyy')}</p>
         <h3
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: wide ? 'clamp(22px, 2.4vw, 30px)' : 18,
-            fontWeight: 600,
-            lineHeight: 1.3,
-            color: '#F5F0E8',
-            margin: '0 0 8px',
-            overflow: 'hidden',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-          }}
+          // size before leading: tailwind-merge drops a leading-* that precedes a text-size class
+          className={cn(
+            'mt-2 font-display text-ink',
+            wide ? 'text-[clamp(28px,3.2vw,44px)]' : 'text-[28px]',
+            'leading-[1.05]'
+          )}
         >
           {event.title}
         </h3>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: wide ? 14 : 12, color: 'rgba(245,240,232,0.55)', margin: 0 }}>
-          {event.venue} · {event.city}
+        <p className="mt-3 font-body text-[15px] text-ink/70">
+          {event.venue}, {event.city}
+          {event.eventTime ? <span className="block">Doors {event.eventTime}</span> : null}
         </p>
-        {event.eventTime && (
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: wide ? 13 : 11, color: 'rgba(245,240,232,0.4)', marginTop: 4 }}>
-            {event.eventTime}
-          </p>
-        )}
         {wide && event.description && (
-          <p
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 15,
-              lineHeight: 1.7,
-              color: 'rgba(245,240,232,0.65)',
-              marginTop: 20,
-              maxWidth: 460,
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: 'vertical',
-            }}
-          >
-            {event.description}
-          </p>
+          <p className="mt-5 line-clamp-3 max-w-[52ch] font-body text-base leading-relaxed text-ink/75">{event.description}</p>
         )}
       </div>
 
+      {/* tear line + notches */}
       <div
-        style={{
-          padding: wide ? '20px 32px' : '16px 20px',
-          marginTop: 16,
-          borderTop: '1px solid #141414',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
+        aria-hidden
+        className={cn(
+          'relative mx-6 border-t-2 border-dashed border-ink/25',
+          wide && 'md:mx-0 md:my-6 md:border-t-0 md:border-l-2'
+        )}
       >
+        <span className={cn(notch, '-top-3 -left-9', wide && 'md:-top-9 md:-left-3')} style={{ background: notchColor }} />
         <span
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 20,
-            fontWeight: 700,
-            color: '#C9A84C',
-          }}
-        >
-          {event.isFree ? 'FREE' : `₦${(event.ticketPrice ?? 0).toLocaleString()}`}
-        </span>
-        <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex' }}>
-          <Link
-            href={`/events/${event.id}`}
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 10,
-              fontWeight: 600,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#C9A84C',
-              border: '1px solid rgba(201,168,76,0.3)',
-              padding: '8px 16px',
-              textDecoration: 'none',
-            }}
-          >
-            {cta}
-          </Link>
-        </span>
+          className={cn(notch, '-top-3 -right-9', wide && 'md:top-auto md:right-auto md:-bottom-9 md:-left-3')}
+          style={{ background: notchColor }}
+        />
       </div>
+
+      {/* stub */}
+      <div
+        className={cn(
+          'flex items-center justify-between gap-4 bg-gold p-6',
+          wide && 'md:w-[260px] md:flex-col md:items-start md:justify-center md:gap-6 md:p-8'
+        )}
+      >
+        <div className="leading-none text-night">
+          <span className="block font-display text-[44px]">{format(event.eventDate, 'd')}</span>
+          <span className="mt-1 block font-body text-sm font-semibold">{format(event.eventDate, 'MMM yyyy')}</span>
+        </div>
+        <div className={cn('flex flex-col items-end gap-3', wide && 'md:items-start')}>
+          <span className="font-display text-2xl text-night">{price}</span>
+          <span onClick={(e) => e.stopPropagation()}>
+            <Link
+              href={href}
+              className="inline-flex rounded-full bg-night px-5 py-2.5 font-body text-sm font-semibold text-ivory no-underline transition-colors group-hover:bg-ink"
+            >
+              {cta}
+            </Link>
+          </span>
+        </div>
       </div>
     </div>
   )

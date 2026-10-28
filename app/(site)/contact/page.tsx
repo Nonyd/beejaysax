@@ -17,7 +17,7 @@ export default function ContactPage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-7xl px-8 py-24 font-sans text-bjs-muted" role="status">
+        <div className="site-shell py-24 font-body text-ivory/60" role="status">
           Loading…
         </div>
       }

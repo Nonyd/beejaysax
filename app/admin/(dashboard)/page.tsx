@@ -57,27 +57,27 @@ export default async function AdminDashboard() {
           <div
             key={stat.label}
             style={{
-              border: '1px solid #1E1E1E',
-              background: '#0F0F0F',
+              border: '1px solid rgba(247,241,227,0.12)',
+              background: '#1B1F4B',
               padding: '24px 28px',
               transition: 'border-color 200ms, box-shadow 200ms',
               boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
             }}
-            className="hover:border-[#2A2A2A]"
+            className="hover:border-[rgba(247,241,227,0.2)]"
           >
             <SectionLabel className="mb-3">{stat.label}</SectionLabel>
             <p
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: stat.isText ? 30 : 44,
-                color: '#C9A84C',
+                color: '#E3B23C',
                 lineHeight: 1,
                 fontWeight: 700,
               }}
             >
               {stat.value}
             </p>
-            <p style={{ fontFamily: 'var(--font-sans)', color: '#666', fontSize: 13, marginTop: 10 }}>{stat.sub}</p>
+            <p style={{ fontFamily: 'var(--font-sans)', color: 'rgba(247,241,227,0.6)', fontSize: 13, marginTop: 10 }}>{stat.sub}</p>
           </div>
         ))}
       </div>
@@ -98,23 +98,23 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <div style={{ border: '1px solid #1E1E1E', background: '#0F0F0F', overflow: 'hidden' }}>
-          <div style={{ borderBottom: '1px solid #1E1E1E', padding: '20px 24px' }}>
+        <div style={{ border: '1px solid rgba(247,241,227,0.12)', background: '#1B1F4B', overflow: 'hidden' }}>
+          <div style={{ borderBottom: '1px solid rgba(247,241,227,0.12)', padding: '20px 24px' }}>
             <SectionLabel>Recent Registrations</SectionLabel>
           </div>
-          <div className="divide-y divide-[#1E1E1E]">
+          <div className="divide-y divide-[rgba(247,241,227,0.12)]">
             {recentTickets.length === 0 && (
-              <p className="px-6 py-10 text-center" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555' }}>
+              <p className="px-6 py-10 text-center" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(247,241,227,0.55)' }}>
                 No tickets yet
               </p>
             )}
             {recentTickets.map((ticket) => (
               <div key={ticket.id} className="flex items-center justify-between px-6 py-4">
                 <div>
-                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: '#F5F0E8' }}>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: '#F7F1E3' }}>
                     {ticket.firstName} {ticket.lastName}
                   </p>
-                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'rgba(247,241,227,0.6)', marginTop: 4 }}>
                     {ticket.event.title}
                   </p>
                 </div>
@@ -136,20 +136,20 @@ export default async function AdminDashboard() {
               </div>
             ))}
           </div>
-          <div style={{ borderTop: '1px solid #1E1E1E', padding: '14px 24px' }}>
-            <Link href="/admin/events" style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#C9A84C' }}>
+          <div style={{ borderTop: '1px solid rgba(247,241,227,0.12)', padding: '14px 24px' }}>
+            <Link href="/admin/events" style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#E3B23C' }}>
               View all →
             </Link>
           </div>
         </div>
 
-        <div style={{ border: '1px solid #1E1E1E', background: '#0F0F0F', overflow: 'hidden' }}>
-          <div style={{ borderBottom: '1px solid #1E1E1E', padding: '20px 24px' }}>
+        <div style={{ border: '1px solid rgba(247,241,227,0.12)', background: '#1B1F4B', overflow: 'hidden' }}>
+          <div style={{ borderBottom: '1px solid rgba(247,241,227,0.12)', padding: '20px 24px' }}>
             <SectionLabel>Recent Messages</SectionLabel>
           </div>
-          <div className="divide-y divide-[#1E1E1E]">
+          <div className="divide-y divide-[rgba(247,241,227,0.12)]">
             {recentMessages.length === 0 && (
-              <p className="px-6 py-10 text-center" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555' }}>
+              <p className="px-6 py-10 text-center" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(247,241,227,0.55)' }}>
                 No messages yet
               </p>
             )}
@@ -157,31 +157,31 @@ export default async function AdminDashboard() {
               <div
                 key={msg.id}
                 className="px-6 py-4"
-                style={{ borderLeft: msg.isRead ? 'none' : '3px solid #C9A84C' }}
+                style={{ borderLeft: msg.isRead ? 'none' : '3px solid #E3B23C' }}
               >
                 <div className="flex items-center justify-between gap-4">
                   <p
                     style={{
                       fontFamily: 'var(--font-sans)',
                       fontSize: 15,
-                      color: '#F5F0E8',
+                      color: '#F7F1E3',
                       fontWeight: msg.isRead ? 400 : 600,
                     }}
                   >
                     {msg.name}
                   </p>
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#555', flexShrink: 0 }}>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(247,241,227,0.55)', flexShrink: 0 }}>
                     {new Date(msg.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#666', marginTop: 6 }} className="truncate">
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'rgba(247,241,227,0.6)', marginTop: 6 }} className="truncate">
                   {msg.subject}
                 </p>
               </div>
             ))}
           </div>
-          <div style={{ borderTop: '1px solid #1E1E1E', padding: '14px 24px' }}>
-            <Link href="/admin/messages" style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#C9A84C' }}>
+          <div style={{ borderTop: '1px solid rgba(247,241,227,0.12)', padding: '14px 24px' }}>
+            <Link href="/admin/messages" style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#E3B23C' }}>
               View all →
             </Link>
           </div>

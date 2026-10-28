@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
+import Adire from '@/components/ui/Adire'
+import ArchPhoto from '@/components/ui/ArchPhoto'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import SectionLabel from '@/components/ui/SectionLabel'
-import GoldButton from '@/components/ui/GoldButton'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { format } from 'date-fns'
@@ -56,199 +55,142 @@ export default async function EventDetailPage({ params }: Props) {
   const eventUrl = `${siteBase.replace(/\/$/, '')}/events/${event.id}`
   const waText = encodeURIComponent(`${event.title}\n${eventUrl}`)
 
+
+  const canBuy = event.status === 'UPCOMING' && (available === null || available > 0)
+  const soldOut = event.status === 'UPCOMING' && available === 0
+  const details: [string, string][] = [
+    ['Date', format(event.eventDate, 'EEEE, d MMMM yyyy')],
+    ...(event.eventTime ? ([['Doors', event.eventTime]] as [string, string][]) : []),
+    ['Venue', `${event.venue}, ${event.city}`],
+  ]
+
   return (
     <>
-      <section style={{ position: 'relative', minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: 64, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-          {event.posterImage ? (
-            <Image src={event.posterImage} alt={`${event.title} — event poster`} fill style={{ objectFit: 'cover' }} priority sizes="100vw" />
-          ) : (
-            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #0d0a02 0%, #1a1204 100%)' }} />
-          )}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(to top, #080808 0%, rgba(8,8,8,0.75) 45%, transparent 100%)',
-            }}
-          />
+      <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
+        <Adire variant="field" color="#E3B23C" opacity={0.06} />
+        <div className="site-shell relative grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.3fr_0.7fr]">
+          <div className="min-w-0">
+            <Link href="/events" className="font-body text-sm font-semibold text-gold no-underline hover:underline">
+              All events
+            </Link>
+            <p className="mt-8 font-body text-lg font-medium text-gold">{format(event.eventDate, 'EEEE, d MMMM yyyy')}</p>
+            <h1 className="mt-4 max-w-[16ch] font-display text-[clamp(48px,7vw,104px)] leading-[0.92] tracking-[-0.03em] text-ivory">
+              {event.title}
+            </h1>
+            <p className="mt-6 font-body text-lg text-ivory/75">
+              {event.venue}, {event.city}, {event.country}
+            </p>
+          </div>
+
+          <div className="mx-auto w-full max-w-[300px] lg:max-w-[340px]">
+            {event.posterImage ? (
+              <ArchPhoto src={event.posterImage} alt={`${event.title} poster`} sizes="340px" priority />
+            ) : (
+              // date seal stands in for a poster until one is uploaded
+              <div className="relative mx-auto aspect-square w-[78%]">
+                <svg aria-hidden viewBox="0 0 200 200" className="animate-halo absolute inset-[-12%] h-[124%] w-[124%]">
+                  <circle cx="100" cy="100" r="96" fill="none" stroke="#E3B23C" strokeWidth="2.2" strokeDasharray="0.1 7.6" strokeLinecap="round" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-gold text-night">
+                  <span className="font-display text-[clamp(72px,9vw,112px)] leading-none">{format(event.eventDate, 'd')}</span>
+                  <span className="mt-1 font-body text-lg font-semibold">{format(event.eventDate, 'MMMM yyyy')}</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="site-shell relative z-10 w-full">
-          <p
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              letterSpacing: '0.28em',
-              textTransform: 'uppercase',
-              color: '#C9A84C',
-              margin: 0,
-            }}
-          >
-            {format(event.eventDate, 'EEEE, MMMM d, yyyy')}
-          </p>
-          <h1
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(38px,6vw,80px)',
-              fontWeight: 600,
-              color: '#F5F0E8',
-              lineHeight: 1.05,
-              letterSpacing: '-0.01em',
-              margin: '16px 0 0',
-              maxWidth: '56rem',
-            }}
-          >
-            {event.title}
-          </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(245,240,232,0.55)', marginTop: 20 }}>
-            {event.venue} · {event.city}, {event.country}
-          </p>
-        </div>
+        <Adire variant="band" color="#E3B23C" opacity={0.6} height={32} />
       </section>
 
-      <section className="site-shell grid gap-12 py-16 md:grid-cols-5">
-        <div className="space-y-8 md:col-span-3">
-          {event.description && (
-            <div>
-              {event.description.split('\n').map((p) => (
-                <p
-                  key={p.slice(0, 48)}
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 15,
-                    lineHeight: 1.75,
-                    color: 'rgba(245,240,232,0.85)',
-                    marginBottom: 16,
-                  }}
-                >
-                  {p}
-                </p>
-              ))}
-            </div>
-          )}
-          <span
-            style={{
-              display: 'inline-flex',
-              border: '1px solid #C9A84C',
-              background: 'rgba(201,168,76,0.08)',
-              padding: '8px 16px',
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#C9A84C',
-            }}
-          >
-            Featuring BeeJay Sax Live
-          </span>
-          {mapsSrc && (
-            <div style={{ position: 'relative', aspectRatio: '16/9', overflow: 'hidden', border: '1px solid #1E1E1E' }}>
-              <iframe title="Map" src={mapsSrc} style={{ width: '100%', height: '100%', border: 'none' }} loading="lazy" />
-            </div>
-          )}
-        </div>
-
-        <aside className="md:col-span-2">
-          <div
-            className="sticky"
-            style={{
-              top: 96,
-              border: '1px solid #C9A84C',
-              background: '#0F0F0F',
-              padding: 32,
-            }}
-          >
-            <SectionLabel style={{ marginBottom: 8 }}>Secure Your Seat</SectionLabel>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 20, color: '#F5F0E8', margin: '12px 0 0' }}>{event.title}</p>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', margin: '8px 0 0' }}>
-              {format(event.eventDate, 'MMM d, yyyy')}
-              {event.eventTime ? ` · ${event.eventTime}` : ''}
-            </p>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', margin: '4px 0 0' }}>{event.venue}</p>
-
-            <div style={{ marginTop: 24, borderTop: '1px solid #1E1E1E', paddingTop: 24 }}>
-              {event.isFree ? (
-                <p style={{ fontFamily: 'var(--font-serif)', fontSize: 28, color: '#C9A84C', margin: 0 }}>FREE ENTRY</p>
-              ) : (
-                <p style={{ fontFamily: 'var(--font-serif)', fontSize: 28, color: '#C9A84C', margin: 0 }}>
-                  ₦{event.ticketPrice?.toLocaleString() ?? '—'}
-                </p>
-              )}
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#555', margin: '12px 0 0' }}>
-                {available === null ? 'Open registration' : `${available} spots left`}
-              </p>
-            </div>
-
-            {event.status === 'UPCOMING' && (available === null || available > 0) ? (
-              <>
-                <div style={{ marginTop: 24, width: '100%' }}>
-                  <GoldButton href={`/events/${event.id}/purchase`} className="w-full justify-center">
-                    {event.isFree ? 'Register free' : 'Get tickets'}
-                  </GoldButton>
-                </div>
-                <Link
-                  href="/contact?inquiry=booking"
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    marginTop: 16,
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 11,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: '#555',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Book / Enquire
-                </Link>
-              </>
-            ) : event.status === 'UPCOMING' && available === 0 ? (
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#555', textAlign: 'center', marginTop: 24 }}>
-                Sold out
-              </p>
-            ) : (
-              <div style={{ marginTop: 24 }}>
-                <GoldButton href="/contact?inquiry=booking" className="w-full justify-center">
-                  Book / Enquire
-                </GoldButton>
+      <section className="bg-night py-16 md:py-24">
+        <div className="site-shell grid gap-14 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+          <div className="min-w-0 space-y-12">
+            {event.description && (
+              <div className="max-w-[62ch] space-y-5 font-body text-lg leading-relaxed text-ivory/85">
+                {event.description.split('\n').filter(Boolean).map((p) => (
+                  <p key={p.slice(0, 48)}>{p}</p>
+                ))}
               </div>
             )}
 
-            <div
-              style={{
-                marginTop: 32,
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 12,
-                borderTop: '1px solid #1E1E1E',
-                paddingTop: 24,
-                fontFamily: 'var(--font-sans)',
-                fontSize: 11,
-              }}
-            >
-              <Link href={`https://wa.me/?text=${waText}`} style={{ color: '#C9A84C' }} target="_blank" rel="noopener noreferrer">
-                WhatsApp
-              </Link>
-              <span style={{ color: '#1E1E1E' }}>|</span>
-              <Link
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${event.title} ${eventUrl}`)}`}
-                style={{ color: '#C9A84C' }}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Share
-              </Link>
+            <div>
+              <h2 className="font-display text-4xl text-ivory">Getting there</h2>
+              <p className="mt-3 font-body text-base text-ivory/70">
+                {[event.venue, event.address, event.city, event.country].filter(Boolean).join(', ')}
+              </p>
+              {mapsSrc && (
+                <div className="mt-6 aspect-video overflow-hidden rounded-[24px] border border-line">
+                  <iframe title={`Map to ${event.venue}`} src={mapsSrc} className="h-full w-full border-0" loading="lazy" />
+                </div>
+              )}
             </div>
           </div>
-        </aside>
-      </section>
 
-      <div className="site-shell pb-16">
-        <Link href="/events" style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#C9A84C', textDecoration: 'none' }}>
-          ← All events
-        </Link>
-      </div>
+          <aside className="min-w-0">
+            <div className="sticky top-24 bg-ivory text-ink shadow-[0_30px_80px_rgba(0,0,0,0.4)]">
+              <div className="p-8">
+                <p className="font-body text-sm font-semibold text-clay">Your seat</p>
+                <p className="mt-2 font-display text-[28px] leading-[1.1]">{event.title}</p>
+                <dl className="mt-6 space-y-3 font-body text-[15px]">
+                  {details.map(([k, v]) => (
+                    <div key={k} className="grid grid-cols-[72px_1fr] gap-3">
+                      <dt className="text-ink/55">{k}</dt>
+                      <dd className="font-medium">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div aria-hidden className="relative mx-8 border-t-2 border-dashed border-ink/25">
+                <span className="absolute -top-3 -left-11 h-6 w-6 rounded-full bg-night" />
+                <span className="absolute -top-3 -right-11 h-6 w-6 rounded-full bg-night" />
+              </div>
+
+              <div className="p-8">
+                <div className="flex items-baseline justify-between gap-4">
+                  <p className="font-display text-4xl">
+                    {event.isFree ? 'Free entry' : `₦${event.ticketPrice?.toLocaleString() ?? '—'}`}
+                  </p>
+                  <p className="font-body text-sm text-ink/60">
+                    {available === null ? 'Tickets available' : soldOut ? 'Sold out' : `${available} left`}
+                  </p>
+                </div>
+
+                {canBuy ? (
+                  <Link
+                    href={`/events/${event.id}/purchase`}
+                    className="mt-6 flex w-full justify-center rounded-full bg-ink px-8 py-4 font-body text-base font-semibold text-ivory no-underline transition-colors hover:bg-night"
+                  >
+                    {event.isFree ? 'Register free' : 'Get tickets'}
+                  </Link>
+                ) : (
+                  <Link
+                    href="/contact?inquiry=booking"
+                    className="mt-6 flex w-full justify-center rounded-full border border-ink/30 px-8 py-4 font-body text-base font-semibold text-ink no-underline hover:border-ink"
+                  >
+                    {soldOut ? 'Ask about tickets' : 'Book BeeJay for your event'}
+                  </Link>
+                )}
+
+                <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-ink/15 pt-5 font-body text-sm">
+                  <span className="text-ink/55">Share</span>
+                  <a href={`https://wa.me/?text=${waText}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-clay-deep hover:underline">
+                    WhatsApp
+                  </a>
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${event.title} ${eventUrl}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-clay-deep hover:underline"
+                  >
+                    X (Twitter)
+                  </a>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
     </>
   )
 }

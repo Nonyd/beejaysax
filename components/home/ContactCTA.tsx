@@ -1,106 +1,53 @@
 import Link from 'next/link'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import Adire from '@/components/ui/Adire'
 
 export default function ContactCTA() {
   return (
-    <section style={{ background: '#080808', borderTop: '1px solid #1E1E1E', paddingTop: 120, paddingBottom: 120 }}>
-      <div className="site-shell" style={{ textAlign: 'center' }}>
-        <p
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: '#C9A84C',
-            marginBottom: 16,
-          }}
-        >
-          Get In Touch
-        </p>
-
-        <h2
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(40px,7vw,96px)',
-            fontWeight: 700,
-            lineHeight: 0.92,
-            letterSpacing: '-0.02em',
-            margin: '0 0 12px',
-          }}
-        >
-          <span style={{ display: 'block', color: '#F5F0E8' }}>Let&apos;s Create</span>
-          <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Something Sacred.</span>
+    <section className="relative overflow-hidden bg-clay-deep py-24 text-ivory md:py-32">
+      <Adire variant="field" color="#F7F1E3" opacity={0.09} />
+      <div className="site-shell relative">
+        <h2 className="max-w-[14ch] font-display text-[clamp(48px,7.5vw,112px)] leading-[0.92] tracking-[-0.025em]">
+          Bring the sound to your event
         </h2>
-
-        <div style={{ width: 48, height: 2, background: '#C9A84C', margin: '28px auto', opacity: 0.65 }} />
-
-        <p
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 17,
-            lineHeight: 1.75,
-            color: 'rgba(245,240,232,0.62)',
-            maxWidth: 560,
-            margin: '0 auto 40px',
-          }}
-        >
-          Available for concerts, corporate events, gospel conferences, and collaborations — within Nigeria and
-          internationally.
+        <p className="mt-8 max-w-[52ch] font-body text-lg leading-relaxed text-ivory/85">
+          Concerts, church services, conferences, weddings and corporate events, in Nigeria and abroad. Tell us the date
+          and we&apos;ll take it from there.
         </p>
 
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/contact?inquiry=booking"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: '#080808',
-              background: '#C9A84C',
-              padding: '16px 40px',
-              textDecoration: 'none',
-              display: 'inline-block',
-              minWidth: 200,
-            }}
+            className="inline-flex justify-center rounded-full bg-night px-8 py-4 font-body text-base font-semibold text-ivory no-underline transition-colors hover:bg-ink"
           >
             Book BeeJay
           </Link>
           <Link
             href="/contact"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: '#F5F0E8',
-              background: 'transparent',
-              border: '1px solid rgba(245,240,232,0.35)',
-              padding: '16px 40px',
-              textDecoration: 'none',
-              display: 'inline-block',
-              minWidth: 200,
-            }}
+            className="inline-flex justify-center rounded-full border border-ivory/50 px-8 py-4 font-body text-base font-semibold text-ivory no-underline transition-colors hover:border-ivory hover:bg-ivory/10"
           >
-            Send a Message
+            Send a message
           </Link>
         </div>
 
-        <div style={{ display: 'flex', gap: 40, justifyContent: 'center', flexWrap: 'wrap' }}>
-          {[
-            { Icon: MapPin, text: 'Lagos, Nigeria' },
-            { Icon: Phone, text: '+234 80 5898 2828' },
-            { Icon: Mail, text: 'booking@beejaysax.com' },
-          ].map(({ Icon, text }) => (
-            <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <Icon style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
-              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(245,240,232,0.6)' }}>{text}</span>
-            </div>
-          ))}
-        </div>
+        <ul className="mt-14 flex flex-col gap-4 border-t border-ivory/25 pt-8 font-body text-base sm:flex-row sm:flex-wrap sm:gap-x-10">
+          <li className="flex items-center gap-3">
+            <MapPin className="h-4 w-4 text-gold" aria-hidden />
+            Lagos, Nigeria
+          </li>
+          <li>
+            <a href="tel:+2348058982828" className="flex items-center gap-3 text-ivory no-underline hover:underline">
+              <Phone className="h-4 w-4 text-gold" aria-hidden />
+              +234 80 5898 2828
+            </a>
+          </li>
+          <li>
+            <a href="mailto:booking@beejaysax.com" className="flex items-center gap-3 text-ivory no-underline hover:underline">
+              <Mail className="h-4 w-4 text-gold" aria-hidden />
+              booking@beejaysax.com
+            </a>
+          </li>
+        </ul>
       </div>
     </section>
   )

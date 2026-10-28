@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
 import TicketActionsBar from '@/components/tickets/TicketActionsBar'
+import Adire from '@/components/ui/Adire'
 import { prisma } from '@/lib/prisma'
 
 type Props = { params: Promise<{ token: string }> }
@@ -64,123 +65,113 @@ export default async function TicketViewPage({ params }: Props) {
         }}
       />
 
-      <div className="ticket-print-root mx-auto max-w-md px-6 py-16 pb-32">
-        <div className="no-print mb-10 text-center">
-          <Link href={`/events/${ev.id}`} className="font-sans text-sm text-bjs-gold hover:underline">
-            ← Event details
-          </Link>
+      <section className="relative -mt-[72px] overflow-hidden bg-night pt-[72px]">
+        <Adire variant="field" color="#E3B23C" opacity={0.05} />
+        <div className="ticket-print-root relative mx-auto max-w-[480px] px-6 py-16 pb-28">
+          <div className="no-print mb-8 text-center">
+            <Link href={`/events/${ev.id}`} className="font-body text-sm font-semibold text-gold no-underline hover:underline">
+              Event details
+            </Link>
+          </div>
+
+          <article className="bg-ivory text-ink shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+            <header className="bg-gold text-night">
+              <div className="px-8 pt-7 pb-5 text-center">
+                <p className="font-display text-[34px] leading-none">BeeJay Sax Live</p>
+                <p className="mt-2 font-body text-sm font-semibold">
+                  Official ticket{ticket.quantity > 1 ? `, admits ${ticket.quantity}` : ''}
+                </p>
+              </div>
+              <Adire variant="band" color="#11142F" opacity={0.55} height={22} />
+            </header>
+
+            <div className="space-y-6 p-8">
+              <div className="flex gap-4">
+                {ev.posterImage ? (
+                  <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-[12px]">
+                    <Image src={ev.posterImage} alt={`${ev.title} poster`} fill className="object-cover" sizes="72px" />
+                  </div>
+                ) : null}
+                <h1 className="min-w-0 flex-1 font-display text-[30px] leading-[1.05]">{ev.title}</h1>
+              </div>
+
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-4 font-body text-[15px]">
+                <div>
+                  <dt className="text-sm text-ink/55">Date</dt>
+                  <dd className="mt-0.5 font-semibold">{format(ev.eventDate, 'd MMM yyyy')}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-ink/55">Doors</dt>
+                  <dd className="mt-0.5 font-semibold">{ev.eventTime || 'To be announced'}</dd>
+                </div>
+                <div className="col-span-2">
+                  <dt className="text-sm text-ink/55">Venue</dt>
+                  <dd className="mt-0.5 font-semibold">
+                    {ev.venue}, {ev.city}, {ev.country}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-ink/55">Ticket</dt>
+                  <dd className="mt-1">
+                    <span className="inline-flex rounded-full bg-ink px-3 py-1 text-sm font-semibold text-ivory">{typeLabel(ticket.ticketType)}</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-ink/55">Ticket number</dt>
+                  <dd className="mt-0.5 font-semibold tabular-nums">{ticket.ticketNumber}</dd>
+                </div>
+              </dl>
+
+              <div className="border-t border-ink/15 pt-5 font-body">
+                <p className="text-sm text-ink/55">Attendee</p>
+                <p className="mt-0.5 text-lg font-semibold">
+                  {ticket.firstName} {ticket.lastName}
+                </p>
+                <p className="text-sm text-ink/65">{ticket.email}</p>
+              </div>
+            </div>
+
+            <div aria-hidden className="relative mx-8 border-t-2 border-dashed border-ink/25">
+              <span className="absolute -top-3 -left-11 h-6 w-6 rounded-full bg-night" />
+              <span className="absolute -top-3 -right-11 h-6 w-6 rounded-full bg-night" />
+            </div>
+
+            <div className="px-8 pt-7 pb-8 text-center">
+              <div className="relative mx-auto w-[212px] rounded-[16px] bg-white p-4">
+                <Image src={ticket.qrCode} alt="Ticket QR code" width={180} height={180} unoptimized className="mx-auto h-[180px] w-[180px]" />
+                {ticket.isUsed ? (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-[16px] bg-ivory/85">
+                    <span className="-rotate-12 rounded-[8px] border-4 border-clay px-4 py-1 font-body text-xl font-bold text-clay">Used</span>
+                  </div>
+                ) : null}
+              </div>
+              <p className="mt-4 font-body text-sm text-ink/65">Show this code at the entrance</p>
+              <p className="mt-1 font-body text-xs text-ink/45 tabular-nums">{tokenTail}</p>
+            </div>
+
+            <footer
+              className={
+                ticket.isUsed
+                  ? 'bg-clay-deep px-6 py-4 text-center font-body text-sm font-semibold text-ivory'
+                  : 'bg-[#2f6b4f] px-6 py-4 text-center font-body text-sm font-semibold text-ivory'
+              }
+            >
+              {ticket.isUsed
+                ? `This ticket was used${ticket.usedAt ? ` on ${format(ticket.usedAt, 'd MMM yyyy, h:mm a')}` : ''}`
+                : 'Valid ticket'}
+            </footer>
+          </article>
+
+          <TicketActionsBar
+            token={token}
+            eventTitle={ev.title}
+            venue={ev.venue}
+            city={ev.city}
+            country={ev.country}
+            ticketPageUrl={ticketPageUrl}
+          />
         </div>
-
-        <article className="overflow-hidden border-2 border-bjs-gold shadow-[0_0_60px_rgba(201,168,76,0.15)]">
-          <div className="bg-bjs-gold px-6 py-5 text-center text-bjs-black">
-            <p className="font-serif text-[clamp(22px,5vw,28px)] italic leading-tight">
-              {/* Upright "BeeJay": Playfair's italic J is a swash that reads as a 3 */}
-              <span className="not-italic">BeeJay</span> Sax Live
-            </p>
-            <p className="mt-2 font-sans text-[10px] font-semibold uppercase tracking-[0.35em]">Official ticket</p>
-          </div>
-
-          <div className="relative border-t-2 border-dashed border-bjs-gold/40 bg-bjs-surface">
-            <span className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-bjs-black" aria-hidden />
-            <span className="absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-bjs-black" aria-hidden />
-          </div>
-
-          <div className="space-y-6 bg-bjs-surface p-8">
-            <div className="flex gap-4">
-              {ev.posterImage ? (
-                <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden border border-bjs-border">
-                  <Image src={ev.posterImage} alt={`${ev.title} — event poster`} fill className="object-cover" sizes="72px" />
-                </div>
-              ) : null}
-              <div className="min-w-0 flex-1">
-                <h1 className="font-serif text-[22px] leading-snug text-bjs-white">{ev.title}</h1>
-              </div>
-            </div>
-
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-3 font-sans text-[13px]">
-              <div>
-                <dt className="text-[10px] uppercase tracking-wider text-bjs-muted">Date</dt>
-                <dd className="mt-1 text-bjs-white">{format(ev.eventDate, 'MMM d, yyyy')}</dd>
-              </div>
-              <div>
-                <dt className="text-[10px] uppercase tracking-wider text-bjs-muted">Time</dt>
-                <dd className="mt-1 text-bjs-white">{ev.eventTime || '—'}</dd>
-              </div>
-              <div className="col-span-2">
-                <dt className="text-[10px] uppercase tracking-wider text-bjs-muted">Venue</dt>
-                <dd className="mt-1 text-bjs-white">{ev.venue}</dd>
-              </div>
-              <div className="col-span-2">
-                <dt className="text-[10px] uppercase tracking-wider text-bjs-muted">City</dt>
-                <dd className="mt-1 text-bjs-white">
-                  {ev.city}, {ev.country}
-                </dd>
-              </div>
-            </dl>
-
-            <span className="inline-flex border border-bjs-gold bg-bjs-gold-dim px-4 py-1.5 font-sans text-[11px] font-medium uppercase tracking-wide text-bjs-gold">
-              {typeLabel(ticket.ticketType)}
-            </span>
-
-            <div className="border-t border-bjs-border pt-6 font-sans">
-              <p className="text-[10px] uppercase tracking-wider text-bjs-muted">Attendee</p>
-              <p className="mt-2 text-lg text-bjs-white">
-                {ticket.firstName} {ticket.lastName}
-              </p>
-              <p className="mt-1 text-sm text-bjs-muted">{ticket.email}</p>
-              <p className="mt-6 font-mono text-[13px] text-bjs-muted"># {ticket.ticketNumber}</p>
-            </div>
-          </div>
-
-          <div className="relative border-t-2 border-dashed border-bjs-gold/40 bg-bjs-surface">
-            <span className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-bjs-black" aria-hidden />
-            <span className="absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-bjs-black" aria-hidden />
-          </div>
-
-          <div className="relative bg-bjs-surface px-8 pb-8 pt-6">
-            <div className="relative mx-auto flex w-[200px] justify-center bg-bjs-white p-3">
-              <Image
-                src={ticket.qrCode}
-                alt="Ticket QR code"
-                width={180}
-                height={180}
-                unoptimized
-                className="h-[180px] w-[180px]"
-              />
-              {ticket.isUsed ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-bjs-black/80">
-                  <span className="-rotate-12 border-4 border-red-500 px-4 py-2 font-sans text-xl font-bold uppercase tracking-widest text-red-400">
-                    Used
-                  </span>
-                </div>
-              ) : null}
-            </div>
-            <p className="mt-4 text-center font-sans text-[11px] text-bjs-muted">Scan at entrance</p>
-            <p className="mt-1 text-center font-mono text-[10px] text-bjs-muted/80">{tokenTail}</p>
-          </div>
-
-          <footer
-            className={
-              ticket.isUsed
-                ? 'border-t border-red-900/50 bg-red-950/30 px-6 py-4 text-center font-sans text-sm text-red-300/90'
-                : 'border-t border-emerald-900/50 bg-emerald-950/25 px-6 py-4 text-center font-sans text-sm text-emerald-300/90'
-            }
-          >
-            {ticket.isUsed
-              ? `This ticket was used${ticket.usedAt ? ` · ${format(ticket.usedAt, 'MMM d, yyyy · h:mm a')}` : ''}`
-              : '✓ Valid ticket'}
-          </footer>
-        </article>
-
-        <TicketActionsBar
-          token={token}
-          eventTitle={ev.title}
-          venue={ev.venue}
-          city={ev.city}
-          country={ev.country}
-          ticketPageUrl={ticketPageUrl}
-        />
-      </div>
+      </section>
     </>
   )
 }

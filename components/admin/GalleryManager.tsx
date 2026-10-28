@@ -101,7 +101,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="Cloudinary URL"
-                  className="mt-2 w-full border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2 text-xs text-white focus:border-[#C9A84C] focus:outline-none"
+                  className="mt-2 w-full border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] px-4 py-2 text-xs text-white focus:border-[#E3B23C] focus:outline-none"
                 />
               )}
             </AdminFormField>
@@ -112,7 +112,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                   fontSize: 10,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: '#C9A84C',
+                  color: '#E3B23C',
                   display: 'block',
                   marginBottom: 6,
                 }}
@@ -123,7 +123,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
                 placeholder="Optional caption..."
-                className="w-full border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
+                className="w-full border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] px-4 py-2.5 text-sm text-white focus:border-[#E3B23C] focus:outline-none"
               />
             </div>
             <div>
@@ -132,7 +132,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                   fontSize: 10,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: '#C9A84C',
+                  color: '#E3B23C',
                   display: 'block',
                   marginBottom: 6,
                 }}
@@ -142,7 +142,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
+                className="w-full border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] px-4 py-2.5 text-sm text-white focus:border-[#E3B23C] focus:outline-none"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -156,13 +156,13 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
               type="button"
               onClick={handleAddImage}
               disabled={uploading || !imageUrl.trim()}
-              className="bg-[#C9A84C] px-6 py-2.5 font-semibold text-[#080808] transition hover:bg-[#E8C96D] disabled:opacity-40"
+              className="bg-[#E3B23C] px-6 py-2.5 font-semibold text-[#11142F] transition hover:bg-[#F0C75E] disabled:opacity-40"
               style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
             >
               {uploading ? 'Adding...' : 'Add Image'}
             </button>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', margin: 0 }}>
-              Folder: <code style={{ color: '#888' }}>beejaysax/gallery</code>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'rgba(247,241,227,0.55)', margin: 0 }}>
+              Folder: <code style={{ color: 'rgba(247,241,227,0.7)' }}>beejaysax/gallery</code>
             </p>
           </AdminSectionCard>
         </div>
@@ -174,13 +174,13 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
             key={cat}
             type="button"
             onClick={() => setFilter(cat)}
-            className="border border-[#2A2A2A] px-4 py-2 transition"
+            className="border border-[rgba(247,241,227,0.2)] px-4 py-2 transition"
             style={{
               fontSize: 10,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              background: filter === cat ? '#C9A84C' : 'transparent',
-              color: filter === cat ? '#080808' : '#555',
+              background: filter === cat ? '#E3B23C' : 'transparent',
+              color: filter === cat ? '#11142F' : 'rgba(247,241,227,0.55)',
               marginLeft: cat === 'ALL' ? 0 : -1,
             }}
           >
@@ -193,7 +193,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
         {filtered.map((image) => (
           <div
             key={image.id}
-            className="group relative border border-[#1E1E1E] bg-[#0F0F0F] transition hover:border-[#C9A84C]"
+            className="group relative border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] transition hover:border-[#E3B23C]"
           >
             <div className="relative aspect-square overflow-hidden">
               <Image src={image.imagePath} alt={image.caption ?? 'Gallery image'} fill className="object-cover" />
@@ -201,8 +201,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                 <button
                   type="button"
                   onClick={() => handleDelete(image.id)}
-                  className="bg-red-900/80 px-3 py-1.5 text-xs text-white transition hover:bg-red-800"
-                  style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}
+                  className="rounded-full bg-red-900/80 px-4 py-1.5 text-sm text-white transition hover:bg-red-800"
                 >
                   Delete
                 </button>
@@ -214,10 +213,10 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                   fontSize: 9,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: '#C9A84C',
-                  background: 'rgba(201,168,76,0.1)',
+                  color: '#E3B23C',
+                  background: 'rgba(227,178,60,0.1)',
                   padding: '1px 6px',
-                  border: '1px solid rgba(201,168,76,0.2)',
+                  border: '1px solid rgba(227,178,60,0.2)',
                 }}
               >
                 {image.category}
@@ -226,15 +225,15 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                 defaultValue={image.caption ?? ''}
                 onBlur={(e) => handleUpdateCaption(image.id, e.target.value)}
                 placeholder="Add caption..."
-                className="mt-2 w-full border-none bg-transparent text-xs text-[#888] placeholder:text-[#333] focus:text-white focus:outline-none"
+                className="mt-2 w-full border-none bg-transparent text-xs text-[rgba(247,241,227,0.7)] placeholder:text-[rgba(247,241,227,0.35)] focus:text-white focus:outline-none"
               />
             </div>
           </div>
         ))}
 
         {filtered.length === 0 && (
-          <div className="col-span-4 border border-[#1E1E1E] bg-[#0F0F0F] p-12 text-center">
-            <p style={{ color: '#444', fontSize: 14 }}>No images in this category yet.</p>
+          <div className="col-span-4 border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-12 text-center">
+            <p style={{ color: 'rgba(247,241,227,0.45)', fontSize: 14 }}>No images in this category yet.</p>
           </div>
         )}
       </div>

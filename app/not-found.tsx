@@ -1,88 +1,32 @@
-import type { CSSProperties } from 'react'
 import Link from 'next/link'
+import Adire from '@/components/ui/Adire'
 
 export default function NotFound() {
-  const labelStyle: CSSProperties = {
-    fontFamily: 'var(--font-sans)',
-    fontSize: 10,
-    fontWeight: 500,
-    letterSpacing: '0.3em',
-    textTransform: 'uppercase',
-    color: '#C9A84C',
-    marginBottom: 24,
-  }
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#080808] px-4">
-      <div className="max-w-lg text-center">
-        <p
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(120px, 20vw, 220px)',
-            color: '#C9A84C',
-            lineHeight: 1,
-            opacity: 0.08,
-            userSelect: 'none',
-            marginBottom: -40,
-          }}
-        >
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-6">
+      <Adire variant="field" color="#E3B23C" opacity={0.06} />
+      <div className="relative max-w-lg text-center">
+        <p className="font-display text-[clamp(120px,22vw,240px)] leading-none text-gold/25 select-none" aria-hidden>
           404
         </p>
-
-        <p style={labelStyle}>Page not found</p>
-
-        <h1
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(40px, 7vw, 80px)',
-            color: '#F5F0E8',
-            lineHeight: 0.9,
-            marginBottom: 24,
-          }}
-        >
-          This page
-          <br />
-          <em style={{ color: '#C9A84C' }}>doesn&apos;t exist.</em>
-        </h1>
-
-        <p
-          style={{
-            color: '#555',
-            fontSize: 14,
-            lineHeight: 1.7,
-            marginBottom: 40,
-            maxWidth: 360,
-            margin: '0 auto 40px',
-          }}
-        >
-          The page you&apos;re looking for may have been moved, deleted, or never existed. Let&apos;s get you back to the music.
+        <h1 className="-mt-6 font-display text-[clamp(40px,7vw,72px)] leading-[0.95] text-ivory">This page isn&apos;t here</h1>
+        <p className="mx-auto mt-6 max-w-[40ch] font-body text-lg text-ivory/75">
+          The link may be old or mistyped. Try the home page, or find the next concert.
         </p>
-
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             href="/"
-            className="bg-[#C9A84C] px-6 py-3 font-semibold text-[#080808] transition hover:bg-[#E8C96D]"
-            style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+            className="rounded-full bg-gold px-7 py-3.5 font-body text-[15px] font-semibold text-night no-underline transition-colors hover:bg-gold-lt"
           >
-            Go Home
+            Go to home page
           </Link>
           <Link
             href="/events"
-            className="border border-[#2A2A2A] px-6 py-3 text-white transition hover:border-[#C9A84C]"
-            style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+            className="rounded-full border border-ivory/40 px-7 py-3.5 font-body text-[15px] font-semibold text-ivory no-underline transition-colors hover:border-gold hover:text-gold"
           >
-            View Events
-          </Link>
-          <Link
-            href="/releases"
-            className="border border-[#2A2A2A] px-6 py-3 text-white transition hover:border-[#C9A84C]"
-            style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
-          >
-            Listen Now
+            See upcoming events
           </Link>
         </div>
-
-        <p style={{ fontSize: 64, marginTop: 60, opacity: 0.06 }}>🎷</p>
       </div>
     </div>
   )

@@ -14,7 +14,7 @@ export default function AdminFormField({ label, children, optional }: AdminFormF
           fontWeight: 600,
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
-          color: '#C9A84C',
+          color: '#E3B23C',
           display: 'block',
           marginBottom: 8,
         }}
@@ -23,7 +23,7 @@ export default function AdminFormField({ label, children, optional }: AdminFormF
         {optional && (
           <span
             style={{
-              color: '#444',
+              color: 'rgba(247,241,227,0.45)',
               marginLeft: 8,
               letterSpacing: 0,
               textTransform: 'none',

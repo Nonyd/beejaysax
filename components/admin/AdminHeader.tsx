@@ -29,8 +29,8 @@ export default function AdminHeader() {
       className="flex min-h-[72px] items-stretch justify-between gap-6"
       style={{
         flexShrink: 0,
-        borderBottom: '1px solid #1E1E1E',
-        background: 'rgba(10,10,10,0.92)',
+        borderBottom: '1px solid rgba(247,241,227,0.12)',
+        background: 'rgba(17,20,47,0.92)',
         backdropFilter: 'blur(12px)',
         paddingLeft: 32,
         paddingRight: 32,
@@ -46,7 +46,7 @@ export default function AdminHeader() {
             fontWeight: 600,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            color: '#C9A84C',
+            color: '#E3B23C',
             marginBottom: 4,
           }}
         >
@@ -56,7 +56,7 @@ export default function AdminHeader() {
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(22px,2.5vw,28px)',
-            color: '#F5F0E8',
+            color: '#F7F1E3',
             fontWeight: 600,
             margin: 0,
             lineHeight: 1.2,
@@ -69,15 +69,15 @@ export default function AdminHeader() {
         className="hidden shrink-0 sm:block"
         style={{
           alignSelf: 'center',
-          borderLeft: '1px solid #1E1E1E',
+          borderLeft: '1px solid rgba(247,241,227,0.12)',
           paddingLeft: 24,
           textAlign: 'right',
         }}
       >
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: '#666', margin: 0, letterSpacing: '0.06em' }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(247,241,227,0.6)', margin: 0, letterSpacing: '0.06em' }}>
           Today
         </p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#A8A8A8', margin: '6px 0 0' }}>{today}</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(247,241,227,0.8)', margin: '6px 0 0' }}>{today}</p>
       </div>
     </header>
   )

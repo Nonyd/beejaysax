@@ -15,114 +15,44 @@ export default async function UpcomingEvents() {
   )
 
   return (
-    <section style={{ background: '#080808', paddingTop: 120, paddingBottom: 120 }}>
+    <section className="bg-ink py-24 md:py-32">
       <div className="site-shell">
-        <div
-          className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:items-end"
-          style={{ marginBottom: 48, borderBottom: '1px solid #1E1E1E', paddingBottom: 32 }}
-        >
-          <div style={{ minWidth: 0 }}>
-            <p
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: '0.28em',
-                textTransform: 'uppercase',
-                color: '#C9A84C',
-                marginBottom: 12,
-              }}
-            >
-              On Stage
-            </p>
-            <h2
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(36px,6.5vw,80px)',
-                fontWeight: 700,
-                lineHeight: 0.95,
-                margin: 0,
-              }}
-            >
-              <span style={{ display: 'block', color: '#F5F0E8' }}>Catch BeeJay</span>
-              <span style={{ display: 'block', color: '#C9A84C', fontStyle: 'italic' }}>Live.</span>
-            </h2>
-          </div>
+        <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
+          <h2 className="font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.02em] text-ivory">
+            <span className="block">Catch BeeJay</span>
+            <span className="block">live</span>
+          </h2>
           <Link
             href="/events"
-            className="hidden md:inline-flex"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: '#C9A84C',
-              textDecoration: 'none',
-              border: '1px solid rgba(201,168,76,0.35)',
-              padding: '14px 28px',
-              alignSelf: 'end',
-              whiteSpace: 'nowrap',
-            }}
+            className="self-start font-body text-base font-semibold text-gold underline decoration-gold/40 underline-offset-[6px] transition-colors hover:decoration-gold md:self-auto"
           >
-            View All Events →
+            See all events
           </Link>
         </div>
 
         {events.length === 1 ? (
-          <EventCard event={events[0]} wide />
+          <EventCard event={events[0]} wide notchColor="#1B1F4B" />
         ) : events.length > 1 ? (
-          // auto-fit collapses empty tracks, so 2 or 3 cards always share the full container width
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-              gap: 24,
-              alignItems: 'stretch',
-            }}
-          >
+          // auto-fit collapses empty tracks, so 2 or 3 tickets always share the full container width
+          <div className="grid gap-8" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))' }}>
             {events.map((e) => (
-              <EventCard key={e.id} event={e} />
+              <EventCard key={e.id} event={e} notchColor="#1B1F4B" />
             ))}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            <p
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 26,
-                fontStyle: 'italic',
-                color: 'rgba(245,240,232,0.25)',
-                marginBottom: 16,
-              }}
+          <div className="rounded-[28px] border border-dashed border-line px-6 py-16 text-center">
+            <p className="font-display text-3xl text-ivory">New dates are coming</p>
+            <p className="mx-auto mt-3 max-w-[44ch] font-body text-base text-ivory/65">
+              Follow BeeJay on social media to hear first, or get in touch to book him for your event.
+            </p>
+            <Link
+              href="/contact?inquiry=booking"
+              className="mt-8 inline-flex rounded-full bg-gold px-6 py-3 font-body text-sm font-semibold text-night no-underline hover:bg-gold-lt"
             >
-              No upcoming events
-            </p>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: '#555' }}>
-              New dates coming soon. Stay tuned.
-            </p>
+              Book BeeJay
+            </Link>
           </div>
         )}
-
-        <div className="md:hidden" style={{ textAlign: 'center', marginTop: 40 }}>
-          <Link
-            href="/events"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: '#C9A84C',
-              textDecoration: 'none',
-              border: '1px solid rgba(201,168,76,0.35)',
-              padding: '14px 28px',
-              display: 'inline-block',
-            }}
-          >
-            View All Events →
-          </Link>
-        </div>
       </div>
     </section>
   )

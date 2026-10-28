@@ -5,14 +5,17 @@ import Image from 'next/image'
 import type { GalleryImage } from '@prisma/client'
 import { GalleryCategory } from '@prisma/client'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import FilterPills from '@/components/ui/FilterPills'
 
-const FILTERS: { label: string; value: 'ALL' | GalleryCategory }[] = [
-  { label: 'All', value: 'ALL' },
-  { label: 'Performance', value: 'PERFORMANCE' },
-  { label: 'Portrait', value: 'PORTRAIT' },
-  { label: 'Events', value: 'EVENTS' },
-  { label: 'Backstage', value: 'BACKSTAGE' },
-]
+const CATEGORY_LABEL: Record<GalleryCategory, string> = {
+  PERFORMANCE: 'Performance',
+  PORTRAIT: 'Portraits',
+  EVENTS: 'Events',
+  BACKSTAGE: 'Backstage',
+}
+
+const lightboxBtn =
+  'absolute flex h-12 w-12 items-center justify-center rounded-full border border-line bg-night/60 text-ivory transition-colors hover:border-gold hover:text-gold'
 
 export default function GalleryView({ images }: { images: GalleryImage[] }) {
   const [filter, setFilter] = useState<'ALL' | GalleryCategory>('ALL')
@@ -20,21 +23,14 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
 
   const filtered = filter === 'ALL' ? images : images.filter((img) => img.category === filter)
 
-  const openAt = useCallback((index: number) => setLightbox(index), [])
   const close = useCallback(() => setLightbox(null), [])
 
   const goPrev = useCallback(() => {
-    setLightbox((i) => {
-      if (i === null || filtered.length === 0) return i
-      return (i - 1 + filtered.length) % filtered.length
-    })
+    setLightbox((i) => (i === null || filtered.length === 0 ? i : (i - 1 + filtered.length) % filtered.length))
   }, [filtered.length])
 
   const goNext = useCallback(() => {
-    setLightbox((i) => {
-      if (i === null || filtered.length === 0) return i
-      return (i + 1) % filtered.length
-    })
+    setLightbox((i) => (i === null || filtered.length === 0 ? i : (i + 1) % filtered.length))
   }, [filtered.length])
 
   useEffect(() => {
@@ -50,177 +46,118 @@ export default function GalleryView({ images }: { images: GalleryImage[] }) {
 
   const current = lightbox !== null ? filtered[lightbox] : null
 
+  const categories = (Object.keys(CATEGORY_LABEL) as GalleryCategory[]).filter((c) => images.some((i) => i.category === c))
+  const options = [
+    { label: 'All', value: 'ALL' as const, count: images.length },
+    ...categories.map((c) => ({
+      label: CATEGORY_LABEL[c],
+      value: c,
+      count: images.filter((i) => i.category === c).length,
+    })),
+  ]
+
   return (
     <>
-      <div
-        className="sticky z-30 border-b"
-        style={{ top: 72, background: '#080808', borderColor: '#1E1E1E' }}
-      >
-        <div className="site-shell flex flex-wrap" style={{ columnGap: 32 }}>
-          {FILTERS.map((f) => (
-            <button
-              key={f.label}
-              type="button"
-              onClick={() => {
-                setFilter(f.value)
+      <section className="bg-night py-16 md:py-24">
+        <div className="site-shell">
+          {images.length > 0 && (
+            <FilterPills
+              label="Filter photos"
+              options={options}
+              value={filter}
+              onChange={(v) => {
+                setFilter(v)
                 setLightbox(null)
               }}
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                padding: '16px 2px',
-                border: 'none',
-                borderBottom: filter === f.value ? '2px solid #C9A84C' : '2px solid transparent',
-                background: 'transparent',
-                color: filter === f.value ? '#C9A84C' : 'rgba(245,240,232,0.45)',
-                cursor: 'pointer',
-              }}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
+            />
+          )}
 
-      <section className="site-shell py-16">
-        <div className="columns-2 gap-3 md:columns-3 lg:columns-4">
-          {filtered.map((img, i) => (
-            <button
-              key={img.id}
-              type="button"
-              onClick={() => openAt(i)}
-              className="mb-3 block w-full cursor-zoom-in break-inside-avoid border-0 bg-transparent p-0 text-left"
-            >
-              <div
-                style={{ position: 'relative', overflow: 'hidden' }}
-                className="transition-transform duration-300 hover:scale-[1.03] hover:brightness-110"
+          <div className="mt-12 columns-2 gap-4 md:columns-3 lg:columns-4">
+            {filtered.map((img, i) => (
+              <button
+                key={img.id}
+                type="button"
+                onClick={() => setLightbox(i)}
+                className="group mb-4 block w-full cursor-zoom-in break-inside-avoid border-0 bg-transparent p-0 text-left"
               >
-                <Image
-                  src={img.imagePath}
-                  alt={img.caption ?? 'BeeJay Sax — gallery photo'}
-                  width={800}
-                  height={1000}
-                  style={{ width: '100%', height: 'auto', objectFit: 'cover', display: 'block' }}
-                  sizes="25vw"
-                />
-              </div>
-              {img.caption && (
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#555', marginTop: 8 }}>{img.caption}</p>
-              )}
-            </button>
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '96px 0' }}>
-            <p
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 26,
-                fontStyle: 'italic',
-                color: 'rgba(245,240,232,0.3)',
-                marginBottom: 12,
-              }}
-            >
-              No photos here yet
-            </p>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(245,240,232,0.45)' }}>
-              New moments are added after every event. Check back soon.
-            </p>
+                <span className={`relative block overflow-hidden ${i % 5 === 0 ? 'arch' : 'rounded-[20px]'}`}>
+                  <Image
+                    src={img.imagePath}
+                    alt={img.caption ?? 'BeeJay Sax gallery photo'}
+                    width={800}
+                    height={1000}
+                    className="block h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    sizes="(max-width:768px) 50vw, 25vw"
+                  />
+                </span>
+                {img.caption && <span className="mt-2 block font-body text-sm text-ivory/60">{img.caption}</span>}
+              </button>
+            ))}
           </div>
-        )}
+
+          {filtered.length === 0 && (
+            <div className="rounded-[28px] border border-dashed border-line px-6 py-20 text-center">
+              <p className="font-display text-3xl text-ivory">No photos here yet</p>
+              <p className="mx-auto mt-3 max-w-[44ch] font-body text-base text-ivory/65">
+                New moments are added after every event. Check back soon.
+              </p>
+            </div>
+          )}
+        </div>
       </section>
 
       {current && lightbox !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          style={{ background: 'rgba(8,8,8,0.95)', backdropFilter: 'blur(8px)' }}
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-night/95 backdrop-blur-md"
           role="dialog"
           aria-modal
-          aria-label="Image preview"
+          aria-label="Photo viewer"
+          onClick={close}
         >
-          <button
-            type="button"
-            style={{
-              position: 'absolute',
-              right: 24,
-              top: 24,
-              width: 44,
-              height: 44,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '1px solid #2A2A2A',
-              background: 'transparent',
-              color: '#F5F0E8',
-              cursor: 'pointer',
-            }}
-            onClick={close}
-            aria-label="Close"
-          >
-            <X style={{ width: 20, height: 20 }} />
+          <button type="button" className={`${lightboxBtn} top-5 right-5`} onClick={close} aria-label="Close">
+            <X className="h-5 w-5" />
           </button>
-          <button
-            type="button"
-            style={{
-              position: 'absolute',
-              left: 16,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: 44,
-              height: 44,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '1px solid #2A2A2A',
-              background: 'transparent',
-              color: '#F5F0E8',
-              cursor: 'pointer',
-            }}
-            onClick={goPrev}
-            aria-label="Previous"
-          >
-            <ChevronLeft style={{ width: 24, height: 24 }} />
-          </button>
-          <button
-            type="button"
-            style={{
-              position: 'absolute',
-              right: 16,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: 44,
-              height: 44,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '1px solid #2A2A2A',
-              background: 'transparent',
-              color: '#F5F0E8',
-              cursor: 'pointer',
-            }}
-            onClick={goNext}
-            aria-label="Next"
-          >
-            <ChevronRight style={{ width: 24, height: 24 }} />
-          </button>
-          <div style={{ display: 'flex', maxHeight: '85vh', maxWidth: '90vw', flexDirection: 'column', alignItems: 'center', padding: '0 64px' }}>
-            <div style={{ position: 'relative', maxHeight: '80vh', width: '100%', maxWidth: '90vw' }}>
-              <Image
-                src={current.imagePath}
-                alt={current.caption ?? ''}
-                width={1600}
-                height={1200}
-                style={{ maxHeight: '80vh', width: 'auto', maxWidth: '100%', objectFit: 'contain', margin: '0 auto', display: 'block' }}
-              />
-            </div>
-            {current.caption && (
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: '#555', marginTop: 16, textAlign: 'center' }}>
-                {current.caption}
-              </p>
-            )}
-          </div>
+          {filtered.length > 1 && (
+            <>
+              <button
+                type="button"
+                className={`${lightboxBtn} top-1/2 left-4 -translate-y-1/2`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  goPrev()
+                }}
+                aria-label="Previous photo"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              <button
+                type="button"
+                className={`${lightboxBtn} top-1/2 right-4 -translate-y-1/2`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  goNext()
+                }}
+                aria-label="Next photo"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </>
+          )}
+          <figure className="flex max-h-[88vh] max-w-[90vw] flex-col items-center px-16" onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={current.imagePath}
+              alt={current.caption ?? ''}
+              width={1600}
+              height={1200}
+              className="mx-auto block max-h-[80vh] w-auto max-w-full rounded-[12px] object-contain"
+            />
+            <figcaption className="mt-4 text-center font-body text-sm text-ivory/70">
+              {current.caption ? `${current.caption}  ` : ''}
+              <span className="text-ivory/45">
+                {lightbox + 1} of {filtered.length}
+              </span>
+            </figcaption>
+          </figure>
         </div>
       )}
     </>

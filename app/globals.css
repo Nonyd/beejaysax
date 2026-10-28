@@ -1,59 +1,85 @@
 @import 'tailwindcss';
 
+/*
+  "Afro-Gospel Modern"
+  ink (indigo ground) · night (deep indigo) · gold · clay (terracotta) · ivory
+  Display: Gloock · Body: Hanken Grotesk
+*/
 @theme inline {
-  --color-bjs-black: #080808;
-  --color-bjs-surface: #0f0f0f;
-  --color-bjs-surface2: #141414;
-  --color-bjs-surface3: #1e1e1e;
-  --color-bjs-border: #1e1e1e;
-  --color-bjs-border-lt: #2a2a2a;
-  --color-bjs-white: #f5f0e8;
-  --color-bjs-white-dim: rgba(245, 240, 232, 0.5);
-  --color-bjs-gold: #c9a84c;
-  --color-bjs-gold-lt: #e8c96d;
-  --color-bjs-gold-dim: rgba(201, 168, 76, 0.08);
-  --color-bjs-gold-glow: rgba(201, 168, 76, 0.25);
-  --color-bjs-muted: #4a4a4a;
+  --color-ink: #1b1f4b;
+  --color-ink-2: #232861;
+  --color-night: #11142f;
+  --color-gold: #e3b23c;
+  --color-gold-lt: #f0c75e;
+  --color-clay: #c4583a;
+  --color-clay-deep: #a9452c;
+  --color-ivory: #f7f1e3;
+  --color-ivory-2: #ede4cf;
+  --color-line: rgba(247, 241, 227, 0.14);
 
-  --font-serif: var(--font-playfair), Georgia, serif;
-  --font-sans: var(--font-dm), system-ui, sans-serif;
+  /* Legacy names (admin + shared components) mapped onto the new palette */
+  --color-bjs-black: #11142f;
+  --color-bjs-surface: #1b1f4b;
+  --color-bjs-surface2: #20255a;
+  --color-bjs-surface3: #2a3068;
+  --color-bjs-border: rgba(247, 241, 227, 0.14);
+  --color-bjs-border-lt: rgba(247, 241, 227, 0.24);
+  --color-bjs-white: #f7f1e3;
+  --color-bjs-white-dim: rgba(247, 241, 227, 0.62);
+  --color-bjs-gold: #e3b23c;
+  --color-bjs-gold-lt: #f0c75e;
+  --color-bjs-gold-dim: rgba(227, 178, 60, 0.12);
+  --color-bjs-gold-glow: rgba(227, 178, 60, 0.3);
+  --color-bjs-muted: rgba(247, 241, 227, 0.5);
+
+  --font-display: var(--font-gloock), Georgia, serif;
+  --font-body: var(--font-hanken), system-ui, sans-serif;
+  --font-serif: var(--font-gloock), Georgia, serif;
+  --font-sans: var(--font-hanken), system-ui, sans-serif;
 
   --animate-marquee: marquee 50s linear infinite;
   --animate-marquee-fast: marquee 40s linear infinite;
   --animate-marquee-slow: marquee 60s linear infinite;
+  --animate-halo: spin 90s linear infinite;
 }
 
 /* No global `* { margin: 0; padding: 0 }` here: Tailwind's preflight already resets
    inside @layer base, and an unlayered reset overrides every p-/m-/space- utility. */
 
 html {
-  background: #080808;
-  color: #f5f0e8;
+  background: #11142f;
+  color: #f7f1e3;
   scroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
+  /* Gloock ships one weight; never fake-bold it */
+  font-synthesis-weight: none;
 }
 
 body {
-  font-family: var(--font-sans, 'DM Sans', sans-serif);
-  background: #080808;
+  font-family: var(--font-hanken), system-ui, sans-serif;
+  background: #11142f;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: #c9a84c;
-  color: #080808;
+  background: #e3b23c;
+  color: #11142f;
 }
 
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #11142f;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c9a84c;
+  background: #e3b23c;
 }
 
 :focus-visible {
-  outline: 1px solid #c9a84c;
+  outline: 2px solid #e3b23c;
   outline-offset: 3px;
 }
 
@@ -102,11 +128,33 @@ body {
   }
 }
 
-/* Public site: consistent centered column (replaces ad-hoc max-w + px combos) */
+/* Hero entrance: the page's one orchestrated motion moment */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Public site: consistent centered column */
 .site-shell {
   box-sizing: border-box;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1240px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 24px;
@@ -136,6 +184,28 @@ body {
     padding-left: 48px;
     padding-right: 48px;
   }
+}
+
+/* Admin: buttons and button-styled links as sentence-case pills, matching the public site.
+   !important only where components set these inline; switches keep their own shape. */
+.admin-ui button:not([role='switch']),
+.admin-ui a[style*='padding'],
+.admin-ui td a[class*='px-'] {
+  border-radius: 999px;
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+  font-size: 14px !important;
+}
+
+.admin-ui input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.admin-ui select,
+.admin-ui textarea {
+  border-radius: 12px;
+}
+
+/* Church-window arch used for portrait frames */
+.arch {
+  border-radius: 999px 999px 0 0;
 }
 
 @media print {

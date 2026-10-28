@@ -10,9 +10,10 @@ export default function AdminSectionCard({
   return (
     <section
       style={{
-        border: '1px solid #1E1E1E',
-        background: '#0F0F0F',
-        padding: '22px 26px',
+        border: '1px solid rgba(247,241,227,0.12)',
+        background: '#1B1F4B',
+        borderRadius: 20,
+        padding: '24px 28px',
         marginBottom: 20,
         boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
       }}
@@ -22,7 +23,7 @@ export default function AdminSectionCard({
           fontFamily: 'var(--font-serif)',
           fontSize: 20,
           fontWeight: 600,
-          color: '#F5F0E8',
+          color: '#F7F1E3',
           margin: '0 0 6px',
           lineHeight: 1.25,
         }}
@@ -35,7 +36,7 @@ export default function AdminSectionCard({
             fontFamily: 'var(--font-sans)',
             fontSize: 14,
             lineHeight: 1.5,
-            color: '#777',
+            color: 'rgba(247,241,227,0.65)',
             margin: '0 0 20px',
             maxWidth: 560,
           }}

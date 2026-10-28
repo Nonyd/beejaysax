@@ -47,7 +47,7 @@ export default function TicketListClient({ tickets, eventId }: { tickets: Ticket
 
   return (
     <div>
-      <div className="mb-6 inline-flex gap-0 border border-[#2A2A2A]">
+      <div className="mb-6 inline-flex gap-0 border border-[rgba(247,241,227,0.2)]">
         {(['list', 'scanner'] as const).map((tab) => (
           <button
             key={tab}
@@ -59,8 +59,8 @@ export default function TicketListClient({ tickets, eventId }: { tickets: Ticket
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
               fontWeight: 500,
-              background: activeTab === tab ? '#C9A84C' : 'transparent',
-              color: activeTab === tab ? '#080808' : '#555',
+              background: activeTab === tab ? '#E3B23C' : 'transparent',
+              color: activeTab === tab ? '#11142F' : 'rgba(247,241,227,0.55)',
             }}
           >
             {tab === 'list' ? 'Ticket List' : 'QR Scanner'}
@@ -75,22 +75,22 @@ export default function TicketListClient({ tickets, eventId }: { tickets: Ticket
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name, email, or ticket number..."
-              className="min-w-[200px] flex-1 border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
+              className="min-w-[200px] flex-1 border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] px-4 py-2.5 text-sm text-white focus:border-[#E3B23C] focus:outline-none"
             />
             <button
               type="button"
               onClick={exportCSV}
-              className="border border-[#2A2A2A] px-4 py-2.5 text-xs text-white transition hover:border-[#C9A84C]"
+              className="border border-[rgba(247,241,227,0.2)] px-4 py-2.5 text-xs text-white transition hover:border-[#E3B23C]"
               style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}
             >
               Export CSV
             </button>
           </div>
 
-          <div className="overflow-hidden border border-[#1E1E1E] bg-[#0F0F0F]">
+          <div className="overflow-hidden border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B]">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#1E1E1E]">
+                <tr className="border-b border-[rgba(247,241,227,0.12)]">
                   {['Ticket #', 'Name', 'Email', 'Type', 'Amount', 'Status', 'Date'].map((h) => (
                     <th
                       key={h}
@@ -99,7 +99,7 @@ export default function TicketListClient({ tickets, eventId }: { tickets: Ticket
                         fontSize: 10,
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
-                        color: '#555',
+                        color: 'rgba(247,241,227,0.55)',
                         fontWeight: 500,
                       }}
                     >
@@ -108,30 +108,30 @@ export default function TicketListClient({ tickets, eventId }: { tickets: Ticket
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1E1E1E]">
+              <tbody className="divide-y divide-[rgba(247,241,227,0.12)]">
                 {filtered.map((ticket) => (
-                  <tr key={ticket.id} className="transition hover:bg-[#161616]">
-                    <td className="px-4 py-3 font-mono text-xs text-[#C9A84C]">{ticket.ticketNumber}</td>
-                    <td className="px-4 py-3 text-sm text-[#F5F0E8]">
+                  <tr key={ticket.id} className="transition hover:bg-[#20255A]">
+                    <td className="px-4 py-3 font-mono text-xs text-[#E3B23C]">{ticket.ticketNumber}</td>
+                    <td className="px-4 py-3 text-sm text-[#F7F1E3]">
                       {ticket.firstName} {ticket.lastName}
                     </td>
-                    <td className="px-4 py-3 text-xs text-[#888]">{ticket.email}</td>
+                    <td className="px-4 py-3 text-xs text-[rgba(247,241,227,0.7)]">{ticket.email}</td>
                     <td className="px-4 py-3">
                       <span
                         style={{
                           fontSize: 10,
                           letterSpacing: '0.08em',
                           textTransform: 'uppercase',
-                          color: '#C9A84C',
-                          background: 'rgba(201,168,76,0.1)',
-                          border: '1px solid rgba(201,168,76,0.3)',
+                          color: '#E3B23C',
+                          background: 'rgba(227,178,60,0.1)',
+                          border: '1px solid rgba(227,178,60,0.3)',
                           padding: '2px 6px',
                         }}
                       >
                         {ticket.ticketType}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-[#F5F0E8]">
+                    <td className="px-4 py-3 text-sm text-[#F7F1E3]">
                       {ticket.totalAmount === 0 ? 'Free' : `₦${ticket.totalAmount.toLocaleString()}`}
                     </td>
                     <td className="px-4 py-3">
@@ -149,12 +149,12 @@ export default function TicketListClient({ tickets, eventId }: { tickets: Ticket
                         {ticket.isUsed ? 'Used' : 'Valid'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-[#555]">{new Date(ticket.createdAt).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-xs text-[rgba(247,241,227,0.55)]">{new Date(ticket.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-8 text-center text-sm" style={{ color: '#444' }}>
+                    <td colSpan={7} className="px-4 py-8 text-center text-sm" style={{ color: 'rgba(247,241,227,0.45)' }}>
                       No tickets found
                     </td>
                   </tr>

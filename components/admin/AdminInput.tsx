@@ -4,7 +4,7 @@ export default function AdminInput({ className = '', ...props }: AdminInputProps
   return (
     <input
       {...props}
-      className={`w-full border border-[#1E1E1E] bg-[#0F0F0F] px-4 py-3 text-sm text-[#F5F0E8] transition-colors placeholder:text-[#444] focus:border-[#C9A84C] focus:outline-none ${className}`}
+      className={`w-full rounded-[12px] border border-[rgba(247,241,227,0.16)] bg-[#11142F] px-4 py-3 text-sm text-[#F7F1E3] transition-colors placeholder:text-[rgba(247,241,227,0.45)] focus:border-[#E3B23C] focus:outline-none ${className}`}
     />
   )
 }

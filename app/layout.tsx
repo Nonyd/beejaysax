@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { playfair, dmSans } from '@/lib/fonts'
+import { gloock, hanken } from '@/lib/fonts'
 
 export const metadata: Metadata = {
   title: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${dmSans.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${gloock.variable} ${hanken.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-bjs-black font-sans text-bjs-white antialiased">{children}</body>
     </html>
   )

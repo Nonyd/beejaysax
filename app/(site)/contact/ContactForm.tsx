@@ -2,42 +2,26 @@
 
 import { useSearchParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import type { CSSProperties } from 'react'
 import { Loader2, Mail, MapPin, Phone } from 'lucide-react'
-import Link from 'next/link'
+import Adire from '@/components/ui/Adire'
+import { cn } from '@/lib/utils'
 
-const INQUIRY = ['BOOKING', 'COLLABORATION', 'MEDIA', 'GENERAL'] as const
+const INQUIRY = [
+  { value: 'BOOKING', label: 'Booking' },
+  { value: 'COLLABORATION', label: 'Collaboration' },
+  { value: 'MEDIA', label: 'Media' },
+  { value: 'GENERAL', label: 'Something else' },
+] as const
 
-const labelStyle: CSSProperties = {
-  fontFamily: 'var(--font-sans)',
-  fontSize: 10,
-  fontWeight: 500,
-  letterSpacing: '0.25em',
-  textTransform: 'uppercase',
-  color: '#C9A84C',
-  marginBottom: 8,
-  display: 'block',
-}
-
-const inputStyle: CSSProperties = {
-  width: '100%',
-  fontFamily: 'var(--font-sans)',
-  fontSize: 14,
-  lineHeight: 1.5,
-  color: '#F5F0E8',
-  background: '#0F0F0F',
-  border: '1px solid #1E1E1E',
-  padding: '14px 16px',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
+const label = 'mb-2 block font-body text-sm font-semibold text-ink'
+const input =
+  'w-full rounded-[14px] border border-ink/20 bg-white/70 px-4 py-3.5 font-body text-base text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-clay focus:bg-white'
 
 export default function ContactForm() {
   const searchParams = useSearchParams()
   const initialInquiry = useMemo(() => {
     const q = searchParams.get('inquiry')?.toUpperCase()
-    if (q === 'BOOKING' || q === 'COLLABORATION' || q === 'MEDIA' || q === 'GENERAL') return q
-    return 'GENERAL'
+    return INQUIRY.some((i) => i.value === q) ? (q as string) : 'GENERAL'
   }, [searchParams])
 
   const [firstName, setFirstName] = useState('')
@@ -50,280 +34,189 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<{ ok: boolean; text: string } | null>(null)
 
-  const submit = async () => {
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setLoading(true)
     setToast(null)
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          inquiryType,
-          subject,
-          message,
-        }),
+        body: JSON.stringify({ firstName, lastName, email, phone, inquiryType, subject, message }),
       })
       const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error((data as { error?: string }).error ?? 'Failed to send')
-      setToast({ ok: true, text: 'Message sent! We’ll be in touch.' })
+      if (!res.ok) throw new Error((data as { error?: string }).error ?? 'Your message was not sent. Try again.')
+      setToast({ ok: true, text: 'Message sent. The team will reply by email, usually within two working days.' })
       setFirstName('')
       setLastName('')
       setEmail('')
       setPhone('')
       setSubject('')
       setMessage('')
-    } catch (e) {
-      setToast({ ok: false, text: e instanceof Error ? e.message : 'Something went wrong.' })
+    } catch (err) {
+      setToast({ ok: false, text: err instanceof Error ? err.message : 'Your message was not sent. Try again.' })
     } finally {
       setLoading(false)
     }
   }
 
-  const focusGold = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    e.currentTarget.style.borderColor = '#C9A84C'
-  }
-  const blurBorder = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    e.currentTarget.style.borderColor = '#1E1E1E'
-  }
-
   return (
-    <div
-      className="site-shell grid grid-cols-1 gap-16 py-24 lg:grid-cols-2 lg:gap-16"
-      style={{ paddingTop: 80 }}
-    >
-      <div>
-        <p style={labelStyle}>Reach Out</p>
-        <h1
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(48px,7vw,88px)',
-            fontWeight: 700,
-            lineHeight: 0.92,
-            color: '#F5F0E8',
-            margin: '0 0 24px',
-          }}
-        >
-          <span style={{ display: 'block' }}>Let&apos;s Talk.</span>
-        </h1>
-        <div style={{ width: 40, height: 1, background: '#C9A84C', marginBottom: 32 }} />
-
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <li style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <span
-              style={{
-                display: 'flex',
-                width: 36,
-                height: 36,
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px solid #1E1E1E',
-                flexShrink: 0,
-              }}
-            >
-              <MapPin style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
-            </span>
-            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#F5F0E8' }}>Lagos, Nigeria</span>
-          </li>
-          <li style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <span
-              style={{
-                display: 'flex',
-                width: 36,
-                height: 36,
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px solid #1E1E1E',
-                flexShrink: 0,
-              }}
-            >
-              <Phone style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
-            </span>
-            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#F5F0E8' }}>+234 80 5898 2828</span>
-          </li>
-          <li style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <span
-              style={{
-                display: 'flex',
-                width: 36,
-                height: 36,
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px solid #1E1E1E',
-                flexShrink: 0,
-              }}
-            >
-              <Mail style={{ width: 14, height: 14, color: '#C9A84C' }} aria-hidden />
-            </span>
-            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: '#F5F0E8' }}>booking@beejaysax.com</span>
-          </li>
-        </ul>
-
-        <div style={{ marginTop: 32, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          <Link
-            href="https://instagram.com/beejaysax"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 10,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: 'rgba(245,240,232,0.6)',
-              textDecoration: 'none',
-              border: '1px solid #2A2A2A',
-              padding: '10px 16px',
-            }}
-          >
-            Instagram
-          </Link>
-          <Link
-            href="https://youtube.com/@beejaysax"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 10,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: 'rgba(245,240,232,0.6)',
-              textDecoration: 'none',
-              border: '1px solid #2A2A2A',
-              padding: '10px 16px',
-            }}
-          >
-            YouTube
-          </Link>
-        </div>
-
-        <div
-          style={{
-            marginTop: 40,
-            borderLeft: '2px solid #C9A84C',
-            background: 'rgba(201,168,76,0.03)',
-            padding: '16px 20px',
-          }}
-        >
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, lineHeight: 1.7, color: 'rgba(245,240,232,0.5)', margin: 0 }}>
-            For international bookings, include your country, event type, and preferred dates.
+    <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
+      <Adire variant="field" color="#E3B23C" opacity={0.06} />
+      <div className="site-shell relative grid gap-14 py-16 md:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+        <div className="min-w-0">
+          <h1 className="font-display text-[clamp(56px,8vw,112px)] leading-[0.9] tracking-[-0.03em] text-ivory">
+            <span className="block">Let&apos;s</span>
+            <span className="block">talk</span>
+          </h1>
+          <p className="mt-8 max-w-[44ch] font-body text-lg leading-relaxed text-ivory/75">
+            Booking BeeJay for a concert, service or event? Planning a collaboration or interview? Send the details and the
+            team will get back to you.
           </p>
-        </div>
-      </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <label style={{ display: 'block' }}>
-            <span style={labelStyle}>First name</span>
-            <input
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              style={inputStyle}
-              onFocus={focusGold}
-              onBlur={blurBorder}
-            />
-          </label>
-          <label style={{ display: 'block' }}>
-            <span style={labelStyle}>Last name</span>
-            <input
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              style={inputStyle}
-              onFocus={focusGold}
-              onBlur={blurBorder}
-            />
-          </label>
-        </div>
+          <ul className="mt-12 space-y-5 font-body text-base text-ivory">
+            <li className="flex items-center gap-4">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-clay">
+                <MapPin className="h-4 w-4" aria-hidden />
+              </span>
+              Lagos, Nigeria
+            </li>
+            <li>
+              <a href="tel:+2348058982828" className="flex items-center gap-4 text-ivory no-underline hover:text-gold">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-clay">
+                  <Phone className="h-4 w-4" aria-hidden />
+                </span>
+                +234 80 5898 2828
+              </a>
+            </li>
+            <li>
+              <a href="mailto:booking@beejaysax.com" className="flex items-center gap-4 text-ivory no-underline hover:text-gold">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-clay">
+                  <Mail className="h-4 w-4" aria-hidden />
+                </span>
+                booking@beejaysax.com
+              </a>
+            </li>
+          </ul>
 
-        <label style={{ display: 'block' }}>
-          <span style={labelStyle}>Email</span>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={inputStyle}
-            onFocus={focusGold}
-            onBlur={blurBorder}
-          />
-        </label>
+          <p className="mt-12 max-w-[44ch] border-l-2 border-gold pl-5 font-body text-base leading-relaxed text-ivory/70">
+            For international bookings, include your country, the type of event and your preferred dates.
+          </p>
 
-        <label style={{ display: 'block' }}>
-          <span style={labelStyle}>Phone (optional)</span>
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} style={inputStyle} onFocus={focusGold} onBlur={blurBorder} />
-        </label>
-
-        <label style={{ display: 'block' }}>
-          <span style={labelStyle}>Inquiry type</span>
-          <select
-            value={inquiryType}
-            onChange={(e) => setInquiryType(e.target.value)}
-            style={{ ...inputStyle, cursor: 'pointer' }}
-            onFocus={focusGold}
-            onBlur={blurBorder}
-          >
-            {INQUIRY.map((t) => (
-              <option key={t} value={t}>
-                {t === 'MEDIA' ? 'Media / Press' : t.charAt(0) + t.slice(1).toLowerCase()}
-              </option>
+          <div className="mt-10 flex flex-wrap gap-3">
+            {[
+              ['Instagram', 'https://instagram.com/beejaysax'],
+              ['YouTube', 'https://youtube.com/@beejaysax'],
+            ].map(([name, href]) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-line px-5 py-2.5 font-body text-sm font-semibold text-ivory/80 no-underline transition-colors hover:border-gold hover:text-gold"
+              >
+                {name}
+              </a>
             ))}
-          </select>
-        </label>
+          </div>
+        </div>
 
-        <label style={{ display: 'block' }}>
-          <span style={labelStyle}>Subject</span>
-          <input value={subject} onChange={(e) => setSubject(e.target.value)} style={inputStyle} onFocus={focusGold} onBlur={blurBorder} />
-        </label>
+        <form onSubmit={submit} className="min-w-0 rounded-[32px] bg-ivory p-6 text-ink shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-10">
+          <fieldset>
+            <legend className={label}>What is this about?</legend>
+            <div className="flex flex-wrap gap-2">
+              {INQUIRY.map((t) => (
+                <label
+                  key={t.value}
+                  className={cn(
+                    'cursor-pointer rounded-full border px-4 py-2 font-body text-sm font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-clay',
+                    inquiryType === t.value ? 'border-ink bg-ink text-ivory' : 'border-ink/25 text-ink hover:border-ink'
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="inquiryType"
+                    value={t.value}
+                    checked={inquiryType === t.value}
+                    onChange={() => setInquiryType(t.value)}
+                    className="sr-only"
+                  />
+                  {t.label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
-        <label style={{ display: 'block' }}>
-          <span style={labelStyle}>Message</span>
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            rows={6}
-            style={{ ...inputStyle, minHeight: 160, resize: 'none' }}
-            onFocus={focusGold}
-            onBlur={blurBorder}
-          />
-        </label>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            <div>
+              <label htmlFor="c-first" className={label}>
+                First name
+              </label>
+              <input id="c-first" required autoComplete="given-name" value={firstName} onChange={(e) => setFirstName(e.target.value)} className={input} />
+            </div>
+            <div>
+              <label htmlFor="c-last" className={label}>
+                Last name
+              </label>
+              <input id="c-last" required autoComplete="family-name" value={lastName} onChange={(e) => setLastName(e.target.value)} className={input} />
+            </div>
+            <div>
+              <label htmlFor="c-email" className={label}>
+                Email
+              </label>
+              <input id="c-email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={input} />
+            </div>
+            <div>
+              <label htmlFor="c-phone" className={label}>
+                Phone <span className="font-normal text-ink/55">(optional)</span>
+              </label>
+              <input id="c-phone" type="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={input} />
+            </div>
+          </div>
 
-        <button
-          type="button"
-          disabled={loading}
-          onClick={submit}
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            width: '100%',
-            padding: '16px 24px',
-            background: '#C9A84C',
-            color: '#080808',
-            border: 'none',
-            cursor: loading ? 'wait' : 'pointer',
-            opacity: loading ? 0.7 : 1,
-            marginTop: 8,
-          }}
-        >
-          {loading ? (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-              <Loader2 style={{ width: 16, height: 16, animation: 'spin 0.8s linear infinite', display: 'inline-block' }} aria-hidden />
-              Sending…
-            </span>
-          ) : (
-            'Send Message'
+          <div className="mt-5">
+            <label htmlFor="c-subject" className={label}>
+              Subject
+            </label>
+            <input
+              id="c-subject"
+              required
+              placeholder={inquiryType === 'BOOKING' ? 'e.g. Church anniversary, 14 March 2027' : ''}
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className={input}
+            />
+          </div>
+
+          <div className="mt-5">
+            <label htmlFor="c-message" className={label}>
+              Message
+            </label>
+            <textarea id="c-message" required rows={6} value={message} onChange={(e) => setMessage(e.target.value)} className={cn(input, 'resize-y')} />
+          </div>
+
+          {toast && (
+            <p
+              role="status"
+              className={cn(
+                'mt-6 rounded-[14px] px-4 py-3 font-body text-sm',
+                toast.ok ? 'bg-[#2f6b4f]/10 text-[#24563f]' : 'bg-clay/10 text-clay-deep'
+              )}
+            >
+              {toast.text}
+            </p>
           )}
-        </button>
 
-        {toast && (
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: toast.ok ? '#4ade80' : '#f87171', margin: 0 }}>
-            {toast.text}
-          </p>
-        )}
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-8 py-4 font-body text-base font-semibold text-ivory transition-colors hover:bg-night disabled:opacity-60"
+          >
+            {loading && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
+            {loading ? 'Sending' : 'Send message'}
+          </button>
+        </form>
       </div>
-    </div>
+    </section>
   )
 }

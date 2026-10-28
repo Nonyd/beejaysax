@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import EventsPageContent from '@/components/events/EventsPageContent'
+import PageHero from '@/components/ui/PageHero'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 
@@ -40,62 +40,11 @@ export default async function EventsPage() {
 
   return (
     <>
-      <section
-        style={{
-          height: 320,
-          position: 'relative',
-          overflow: 'hidden',
-          background: '#0F0F0F',
-          borderBottom: '1px solid #1E1E1E',
-        }}
-      >
-        <div style={{ position: 'absolute', bottom: 48, left: 0, right: 0 }}>
-          <div className="site-shell">
-            <p
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: '0.3em',
-                textTransform: 'uppercase',
-                color: '#C9A84C',
-                marginBottom: 12,
-              }}
-            >
-              Events
-            </p>
-            <h1
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(48px,8vw,96px)',
-                fontWeight: 700,
-                lineHeight: 0.92,
-                letterSpacing: '-0.02em',
-                color: '#F5F0E8',
-                margin: 0,
-              }}
-            >
-              <span style={{ display: 'block' }}>On Stage.</span>
-            </h1>
-          </div>
-        </div>
-      </section>
-
+      <PageHero
+        title={['On stage']}
+        intro="Concerts and worship nights with BeeJay Sax. Buy your ticket here and it arrives by email with a QR code for the door."
+      />
       <EventsPageContent upcomingEvents={upcomingEvents} pastEvents={pastEvents} />
-
-      <div style={{ borderTop: '1px solid #1E1E1E', padding: '32px 0', textAlign: 'center' }}>
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 12,
-            color: '#C9A84C',
-            textDecoration: 'none',
-          }}
-        >
-          ← Home
-        </Link>
-      </div>
     </>
   )
 }

@@ -171,8 +171,8 @@ export default function QRScanner() {
   }, [stopCamera])
 
   return (
-    <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
-      <div className="border-b border-[#1E1E1E] px-6 py-4">
+    <div className="border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B]">
+      <div className="border-b border-[rgba(247,241,227,0.12)] px-6 py-4">
         <SectionLabel>QR Ticket Scanner</SectionLabel>
       </div>
 
@@ -180,10 +180,10 @@ export default function QRScanner() {
         {scanState === 'idle' && (
           <div className="mx-auto max-w-sm text-center">
             <div style={{ fontSize: 64, marginBottom: 16 }}>⬛</div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F5F0E8', marginBottom: 8 }}>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 24, color: '#F7F1E3', marginBottom: 8 }}>
               Ticket Scanner
             </h3>
-            <p style={{ color: '#555', fontSize: 14, marginBottom: 32 }}>
+            <p style={{ color: 'rgba(247,241,227,0.55)', fontSize: 14, marginBottom: 32 }}>
               Point camera at a guest&apos;s QR code to admit them
             </p>
 
@@ -205,16 +205,16 @@ export default function QRScanner() {
             <button
               type="button"
               onClick={startCamera}
-              className="mb-6 w-full bg-[#C9A84C] px-8 py-3 font-semibold text-[#080808] transition hover:bg-[#E8C96D]"
+              className="mb-6 w-full bg-[#E3B23C] px-8 py-3 font-semibold text-[#11142F] transition hover:bg-[#F0C75E]"
               style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase' }}
             >
               Start Camera Scanner
             </button>
 
-            <div style={{ borderTop: '1px solid #1E1E1E', paddingTop: 24 }}>
+            <div style={{ borderTop: '1px solid rgba(247,241,227,0.12)', paddingTop: 24 }}>
               <p
                 style={{
-                  color: '#444',
+                  color: 'rgba(247,241,227,0.45)',
                   fontSize: 12,
                   marginBottom: 12,
                   textTransform: 'uppercase',
@@ -229,13 +229,13 @@ export default function QRScanner() {
                   onChange={(e) => setManualToken(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && void handleManualVerify()}
                   placeholder="Paste QR token or URL..."
-                  className="flex-1 border border-[#2A2A2A] bg-[#161616] px-3 py-2.5 text-sm text-white focus:border-[#C9A84C] focus:outline-none"
+                  className="flex-1 border border-[rgba(247,241,227,0.2)] bg-[#20255A] px-3 py-2.5 text-sm text-white focus:border-[#E3B23C] focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => void handleManualVerify()}
                   disabled={!manualToken.trim()}
-                  className="border border-[#C9A84C] px-4 py-2.5 text-xs text-[#C9A84C] transition hover:bg-[#C9A84C] hover:text-[#080808] disabled:opacity-40"
+                  className="border border-[#E3B23C] px-4 py-2.5 text-xs text-[#E3B23C] transition hover:bg-[#E3B23C] hover:text-[#11142F] disabled:opacity-40"
                   style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}
                 >
                   Verify
@@ -257,17 +257,17 @@ export default function QRScanner() {
                   style={{
                     width: 32,
                     height: 32,
-                    borderTop: i < 2 ? '3px solid #C9A84C' : 'none',
-                    borderBottom: i >= 2 ? '3px solid #C9A84C' : 'none',
-                    borderLeft: i % 2 === 0 ? '3px solid #C9A84C' : 'none',
-                    borderRight: i % 2 === 1 ? '3px solid #C9A84C' : 'none',
+                    borderTop: i < 2 ? '3px solid #E3B23C' : 'none',
+                    borderBottom: i >= 2 ? '3px solid #E3B23C' : 'none',
+                    borderLeft: i % 2 === 0 ? '3px solid #E3B23C' : 'none',
+                    borderRight: i % 2 === 1 ? '3px solid #E3B23C' : 'none',
                   }}
                 />
               ))}
             </div>
             <p
               style={{
-                color: '#C9A84C',
+                color: '#E3B23C',
                 fontSize: 13,
                 marginTop: 16,
                 letterSpacing: '0.15em',
@@ -282,7 +282,7 @@ export default function QRScanner() {
                 stopCamera()
                 setScanState('idle')
               }}
-              className="mt-4 border border-[#2A2A2A] px-6 py-2 text-xs text-[#555] transition hover:border-[#555] hover:text-white"
+              className="mt-4 border border-[rgba(247,241,227,0.2)] px-6 py-2 text-xs text-[rgba(247,241,227,0.55)] transition hover:border-[rgba(247,241,227,0.55)] hover:text-white"
               style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}
             >
               Stop Scanner
@@ -311,12 +311,12 @@ export default function QRScanner() {
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 40, color: '#4ade80', margin: '16px 0 8px' }}>
               ADMIT
             </h3>
-            <p style={{ fontSize: 20, color: '#F5F0E8', fontWeight: 600 }}>{result.attendee}</p>
-            <p style={{ fontSize: 14, color: '#888', marginTop: 4 }}>
+            <p style={{ fontSize: 20, color: '#F7F1E3', fontWeight: 600 }}>{result.attendee}</p>
+            <p style={{ fontSize: 14, color: 'rgba(247,241,227,0.7)', marginTop: 4 }}>
               {result.ticketType} · {result.ticketNumber}
             </p>
-            <p style={{ fontSize: 12, color: '#555', marginTop: 4 }}>{result.eventTitle}</p>
-            <p style={{ fontSize: 12, color: '#444', marginTop: 24 }}>Next scan in {countdown}...</p>
+            <p style={{ fontSize: 12, color: 'rgba(247,241,227,0.55)', marginTop: 4 }}>{result.eventTitle}</p>
+            <p style={{ fontSize: 12, color: 'rgba(247,241,227,0.45)', marginTop: 24 }}>Next scan in {countdown}...</p>
           </div>
         )}
 
@@ -341,13 +341,13 @@ export default function QRScanner() {
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, color: '#f87171', margin: '16px 0 8px' }}>
               ALREADY ADMITTED
             </h3>
-            <p style={{ fontSize: 16, color: '#F5F0E8' }}>{result.attendee}</p>
+            <p style={{ fontSize: 16, color: '#F7F1E3' }}>{result.attendee}</p>
             {result.usedAt && (
-              <p style={{ fontSize: 13, color: '#888', marginTop: 4 }}>
+              <p style={{ fontSize: 13, color: 'rgba(247,241,227,0.7)', marginTop: 4 }}>
                 Admitted at: {new Date(result.usedAt).toLocaleString('en-NG')}
               </p>
             )}
-            <p style={{ fontSize: 12, color: '#444', marginTop: 24 }}>Next scan in {countdown}...</p>
+            <p style={{ fontSize: 12, color: 'rgba(247,241,227,0.45)', marginTop: 24 }}>Next scan in {countdown}...</p>
           </div>
         )}
 
@@ -372,8 +372,8 @@ export default function QRScanner() {
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, color: '#f59e0b', margin: '16px 0 8px' }}>
               INVALID TICKET
             </h3>
-            <p style={{ fontSize: 14, color: '#888' }}>{result.reason ?? 'This QR code is not valid'}</p>
-            <p style={{ fontSize: 12, color: '#444', marginTop: 24 }}>Next scan in {countdown}...</p>
+            <p style={{ fontSize: 14, color: 'rgba(247,241,227,0.7)' }}>{result.reason ?? 'This QR code is not valid'}</p>
+            <p style={{ fontSize: 12, color: 'rgba(247,241,227,0.45)', marginTop: 24 }}>Next scan in {countdown}...</p>
           </div>
         )}
       </div>

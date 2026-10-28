@@ -1,11 +1,20 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import PlatformStreamPills from '@/components/home/PlatformStreamPills'
+import RecordSleeve from '@/components/ui/RecordSleeve'
+
+const TYPE_LABEL: Record<string, string> = { ALBUM: 'Album', SINGLE: 'Single', EP: 'EP' }
 
 export default async function FeaturedRelease() {
-  const release = await safeDb(() => prisma.release.findFirst({ where: { isFeatured: true } }), null)
+  const release = await safeDb(
+    () =>
+      prisma.release.findFirst({
+        where: { isFeatured: true },
+        orderBy: [{ releaseDate: 'desc' }, { createdAt: 'desc' }],
+      }),
+    null
+  )
   if (!release) return null
 
   const platforms = [
@@ -17,177 +26,41 @@ export default async function FeaturedRelease() {
   ].filter((p): p is { label: string; url: string } => Boolean(p.url))
 
   return (
-    <section
-      style={{
-        background: '#0F0F0F',
-        borderTop: '1px solid #1E1E1E',
-        borderBottom: '1px solid #1E1E1E',
-        paddingTop: 120,
-        paddingBottom: 120,
-      }}
-    >
-      <div className="site-shell">
-        <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <p
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.28em',
-              textTransform: 'uppercase',
-              color: '#C9A84C',
-              marginBottom: 12,
-            }}
-          >
-            Latest Release
+    <section className="bg-night py-24 md:py-32">
+      <div className="site-shell grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
+        <RecordSleeve
+          title={release.title}
+          coverImage={release.coverImage}
+          sizes="(max-width:1024px) 80vw, 480px"
+          className="mx-auto w-full max-w-[560px]"
+        />
+
+        <div className="min-w-0">
+          <p className="font-body text-base font-medium text-gold">
+            Latest {TYPE_LABEL[release.releaseType]?.toLowerCase() ?? 'release'}
           </p>
-          <div style={{ height: 1, maxWidth: 120, background: '#C9A84C', margin: '0 auto', opacity: 0.5 }} />
-        </div>
+          <h2 className="mt-4 font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.02em] text-ivory">
+            {release.title}
+          </h2>
+          {release.description && (
+            <p className="mt-6 max-w-[50ch] font-body text-lg leading-relaxed text-ivory/75">{release.description}</p>
+          )}
 
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="flex justify-center">
-            <div
-              style={{
-                position: 'relative',
-                overflow: 'hidden',
-                aspectRatio: '1/1',
-                width: '100%',
-                maxWidth: 420,
-                border: '1px solid #2A2A2A',
-                boxShadow: '0 28px 100px rgba(0,0,0,0.35)',
-              }}
-            >
-              {release.coverImage ? (
-                <Image
-                  src={release.coverImage}
-                  alt={release.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="(max-width:1024px) 100vw, 420px"
-                />
-              ) : (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    background: 'linear-gradient(145deg, #1a1204, #0d0a02)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 32,
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: 10,
-                      letterSpacing: '0.28em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(201,168,76,0.45)',
-                      marginBottom: 16,
-                    }}
-                  >
-                    {release.releaseType}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: 'clamp(22px,3vw,30px)',
-                      fontStyle: 'italic',
-                      color: '#C9A84C',
-                      textAlign: 'center',
-                      margin: 0,
-                    }}
-                  >
-                    {release.title}
-                  </p>
-                </div>
-              )}
+          {platforms.length > 0 ? (
+            <div className="mt-10">
+              <p className="mb-4 font-body text-sm text-ivory/60">Listen on</p>
+              <PlatformStreamPills platforms={platforms} />
             </div>
-          </div>
+          ) : (
+            <p className="mt-8 font-body text-sm text-ivory/60">Streaming links are on the way.</p>
+          )}
 
-          <div style={{ minWidth: 0, textAlign: 'left' }}>
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#C9A84C',
-                border: '1px solid rgba(201,168,76,0.35)',
-                padding: '6px 14px',
-                display: 'inline-block',
-                marginBottom: 18,
-              }}
-            >
-              {release.releaseType}
-            </span>
-
-            <h2
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(30px,4.5vw,48px)',
-                fontWeight: 600,
-                lineHeight: 1.1,
-                color: '#F5F0E8',
-                margin: '0 0 18px',
-              }}
-            >
-              {release.title}
-            </h2>
-
-            <div style={{ width: 48, height: 2, background: '#C9A84C', marginBottom: 22 }} />
-
-            {release.description && (
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 17,
-                  lineHeight: 1.75,
-                  color: 'rgba(245,240,232,0.72)',
-                  marginBottom: 28,
-                  maxWidth: 560,
-                }}
-              >
-                {release.description}
-              </p>
-            )}
-
-            {platforms.length > 0 && (
-              <div style={{ marginBottom: 28 }}>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 10,
-                    letterSpacing: '0.28em',
-                    textTransform: 'uppercase',
-                    color: '#C9A84C',
-                    marginBottom: 14,
-                  }}
-                >
-                  Stream Now
-                </p>
-                <PlatformStreamPills platforms={platforms} />
-              </div>
-            )}
-
-            <Link
-              href={`/releases/${release.slug}`}
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: '#C9A84C',
-                textDecoration: 'none',
-              }}
-            >
-              More About This Release →
-            </Link>
-          </div>
+          <Link
+            href={`/releases/${release.slug}`}
+            className="mt-10 inline-block font-body text-base font-semibold text-gold underline decoration-gold/40 underline-offset-[6px] transition-colors hover:decoration-gold"
+          >
+            About this release
+          </Link>
         </div>
       </div>
     </section>
