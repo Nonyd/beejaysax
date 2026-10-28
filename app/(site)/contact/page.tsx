@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import ContactForm from './ContactForm'
+import { getContent } from '@/lib/content/store'
 
 export const metadata: Metadata = {
   title: { absolute: 'Contact — BeeJay Sax' },
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
   },
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const [c, site] = await Promise.all([getContent('contact'), getContent('site')])
   return (
     <Suspense
       fallback={
@@ -22,7 +24,7 @@ export default function ContactPage() {
         </div>
       }
     >
-      <ContactForm />
+      <ContactForm content={c} site={site} />
     </Suspense>
   )
 }

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
-import { SITE_IMAGES } from '@/lib/site-images'
+import { getContent } from '@/lib/content/store'
 
 /** Alternating arch and rounded frames, drifting slowly like a procession. */
 export default async function GalleryStrip() {
@@ -10,20 +10,21 @@ export default async function GalleryStrip() {
     () => prisma.galleryImage.findMany({ take: 16, orderBy: { sortOrder: 'asc' } }),
     []
   )
-  const images = dbImages.length >= 4 ? dbImages.map((i) => i.imagePath) : SITE_IMAGES.moments
+  const c = await getContent('homeSections')
+  const images = dbImages.length >= 4 ? dbImages.map((i) => i.imagePath) : c.momentsFallback.map((m) => m.url).filter(Boolean)
   const doubled = [...images, ...images]
 
   return (
     <section className="overflow-hidden bg-ink py-24 md:py-32">
       <div className="site-shell mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
         <h2 className="font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.02em] text-ivory">
-          Moments
+          {c.momentsTitle}
         </h2>
         <Link
           href="/gallery"
           className="self-start font-body text-base font-semibold text-gold underline decoration-gold/40 underline-offset-[6px] transition-colors hover:decoration-gold md:self-auto"
         >
-          Open the gallery
+          {c.momentsLink}
         </Link>
       </div>
 

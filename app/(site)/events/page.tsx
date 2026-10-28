@@ -3,6 +3,7 @@ import EventsPageContent from '@/components/events/EventsPageContent'
 import PageHero from '@/components/ui/PageHero'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
+import { getContent } from '@/lib/content/store'
 
 export const metadata: Metadata = {
   title: { absolute: 'Events — BeeJay Sax' },
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function EventsPage() {
+  const h = await getContent('pageHeaders')
   const [upcomingEvents, pastEvents] = await Promise.all([
     safeDb(
       () =>
@@ -41,8 +43,8 @@ export default async function EventsPage() {
   return (
     <>
       <PageHero
-        title={['On stage']}
-        intro="Concerts and worship nights with BeeJay Sax. Buy your ticket here and it arrives by email with a QR code for the door."
+        title={[h.eventsTitle]}
+        intro={h.eventsIntro}
       />
       <EventsPageContent upcomingEvents={upcomingEvents} pastEvents={pastEvents} />
     </>

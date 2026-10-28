@@ -7,11 +7,12 @@ import GoldButton from '@/components/ui/GoldButton'
 import OutlineButton from '@/components/ui/OutlineButton'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
-import { SITE_IMAGES } from '@/lib/site-images'
+import { getContent } from '@/lib/content/store'
 
 const rise = (delay: number) => ({ animation: `rise 0.9s cubic-bezier(.2,.7,.2,1) ${delay}s both` })
 
 export default async function Hero() {
+  const c = await getContent('homeHero')
   const next = await safeDb(
     () => prisma.event.findFirst({ where: { status: 'UPCOMING' }, orderBy: { eventDate: 'asc' } }),
     null
@@ -30,28 +31,31 @@ export default async function Hero() {
       <div className="site-shell relative grid min-h-[calc(100svh-72px-40px)] items-center gap-14 py-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10 lg:py-20">
         <div className="min-w-0">
           <p className="font-body text-base font-medium text-gold md:text-lg" style={rise(0.05)}>
-            Gospel saxophonist and music minister
+            {c.kicker}
           </p>
           <h1
             className="mt-5 font-display text-[clamp(76px,13vw,176px)] leading-[0.86] tracking-[-0.03em] text-ivory"
             style={rise(0.15)}
           >
-            <span className="block">BeeJay</span>
-            <span className="block pl-[0.5em]">Sax</span>
+            {c.titleLines.map((line, i) => (
+              <span key={i} className={i === 1 ? 'block pl-[0.5em]' : 'block'}>
+                {line}
+              </span>
+            ))}
           </h1>
           <p className="mt-8 font-display text-[clamp(24px,2.6vw,34px)] leading-tight text-gold" style={rise(0.3)}>
-            Blessed &amp; Highly Favoured.
+            {c.tagline}
           </p>
           <p className="mt-4 max-w-[46ch] font-body text-[17px] leading-relaxed text-ivory/75" style={rise(0.38)}>
-            Spirit-filled saxophone from Lagos to London. Concerts, worship nights and ministry on three continents.
+            {c.intro}
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style={rise(0.46)}>
             <GoldButton href="/events" className="w-full sm:w-auto">
-              Get concert tickets
+              {c.primaryLabel}
             </GoldButton>
             <OutlineButton href="/releases" className="w-full sm:w-auto">
-              Listen to the music
+              {c.secondaryLabel}
             </OutlineButton>
           </div>
 
@@ -76,12 +80,12 @@ export default async function Hero() {
 
         <div className="mx-auto w-full max-w-[300px] pt-6 sm:max-w-[360px] lg:max-w-[440px] lg:pt-0" style={rise(0.25)}>
           <ArchPhoto
-            src={SITE_IMAGES.hero}
-            alt="BeeJay Sax playing the saxophone on stage"
+            src={c.image}
+            alt={c.imageAlt}
             sizes="(max-width:1024px) 360px, 440px"
             priority
             halo
-            objectPosition={SITE_IMAGES.heroPosition}
+            objectPosition={c.imagePosition}
           />
         </div>
       </div>

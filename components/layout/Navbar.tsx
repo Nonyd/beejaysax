@@ -27,7 +27,7 @@ export function Wordmark({ className }: { className?: string }) {
   )
 }
 
-export default function Navbar() {
+export default function Navbar({ bookLabel = 'Book BeeJay' }: { bookLabel?: string }) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -87,7 +87,7 @@ export default function Navbar() {
             href="/contact?inquiry=booking"
             className="hidden rounded-full bg-gold px-6 py-2.5 font-body text-sm font-semibold text-night no-underline transition-colors hover:bg-gold-lt lg:inline-flex"
           >
-            Book BeeJay
+            {bookLabel}
           </Link>
 
           <button
@@ -130,7 +130,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="mt-10 self-start rounded-full bg-gold px-8 py-4 font-body text-base font-semibold text-night no-underline"
             >
-              Book BeeJay
+              {bookLabel}
             </Link>
           </div>
           <Adire variant="band" color="#E3B23C" opacity={0.6} height={36} />

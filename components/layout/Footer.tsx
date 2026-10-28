@@ -1,14 +1,7 @@
 import Link from 'next/link'
 import Adire from '@/components/ui/Adire'
 import { Wordmark } from '@/components/layout/Navbar'
-
-const SOCIAL = [
-  { label: 'Instagram', href: 'https://instagram.com/beejaysax' },
-  { label: 'YouTube', href: 'https://youtube.com/@beejaysax' },
-  { label: 'Facebook', href: 'https://facebook.com/beejaysax' },
-  { label: 'Spotify', href: 'https://open.spotify.com' },
-  { label: 'TikTok', href: 'https://tiktok.com/@beejaysax' },
-]
+import { getContent } from '@/lib/content/store'
 
 const NAV = [
   { label: 'Music', href: '/releases' },
@@ -18,7 +11,8 @@ const NAV = [
   { label: 'Contact', href: '/contact' },
 ]
 
-export default function Footer() {
+export default async function Footer() {
+  const site = await getContent('site')
   return (
     <footer className="bg-night">
       <Adire variant="band" color="#E3B23C" opacity={0.55} height={40} />
@@ -29,13 +23,13 @@ export default function Footer() {
             <Wordmark className="text-[34px]" />
           </Link>
           <p className="mt-4 max-w-[34ch] font-body text-base leading-relaxed text-ivory/65">
-            Gospel saxophonist and music minister from Lagos, Nigeria. Blessed and highly favoured.
+            {site.footerBlurb}
           </p>
           <Link
             href="/contact?inquiry=booking"
             className="mt-8 inline-flex rounded-full bg-gold px-6 py-3 font-body text-sm font-semibold text-night no-underline transition-colors hover:bg-gold-lt"
           >
-            Book BeeJay
+            {site.bookLabel}
           </Link>
         </div>
 
@@ -55,10 +49,10 @@ export default function Footer() {
         <div>
           <p className="mb-4 font-body text-sm font-semibold text-gold">Follow</p>
           <ul className="space-y-2.5">
-            {SOCIAL.map((s) => (
-              <li key={s.label}>
+            {site.socials.map((s) => (
+              <li key={s.url || s.label}>
                 <a
-                  href={s.href}
+                  href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-body text-[15px] text-ivory/75 no-underline transition-colors hover:text-gold"

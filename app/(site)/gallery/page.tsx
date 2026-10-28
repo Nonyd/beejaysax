@@ -3,6 +3,7 @@ import GalleryView from '@/components/gallery/GalleryView'
 import PageHero from '@/components/ui/PageHero'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
+import { getContent } from '@/lib/content/store'
 
 export const metadata: Metadata = {
   title: { absolute: 'Gallery — BeeJay Sax' },
@@ -17,11 +18,12 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function GalleryPage() {
+  const h = await getContent('pageHeaders')
   const images = await safeDb(() => prisma.galleryImage.findMany({ orderBy: { sortOrder: 'asc' } }), [])
 
   return (
     <>
-      <PageHero title={['Moments']} intro="On stage, backstage and in worship. Tap any photo to see it full size." />
+      <PageHero title={[h.galleryTitle]} intro={h.galleryIntro} />
       <GalleryView images={images} />
     </>
   )

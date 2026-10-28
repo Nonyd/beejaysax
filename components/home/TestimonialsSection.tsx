@@ -1,34 +1,20 @@
-const QUOTES = [
-  {
-    quote: 'BeeJay Sax carries a rare gift. When he plays, heaven draws near.',
-    name: 'Pastor',
-    role: 'Night of Worship',
-  },
-  {
-    quote: "One of the most spirit-led saxophonists we've hosted at The Experience.",
-    name: 'Event organiser',
-    role: 'The Experience',
-  },
-  {
-    quote: "His Online Praise Party became our family's weekly sanctuary during lockdown.",
-    name: 'Audience member',
-    role: 'United Kingdom',
-  },
-]
+import { getContent } from '@/lib/content/store'
 
-export default function TestimonialsSection() {
+export default async function TestimonialsSection() {
+  const c = await getContent('homeTestimonials')
+  if (c.items.length === 0) return null
   return (
     <section className="bg-ivory py-24 text-ink md:py-32">
       <div className="site-shell">
         <h2 className="max-w-[16ch] font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.02em]">
-          What people say after the music
+          {c.title}
         </h2>
 
         <div className="mt-14 grid gap-10 md:mt-20 md:grid-cols-3 md:gap-0">
-          {QUOTES.map((q, i) => (
+          {c.items.map((q, i) => (
             <figure
-              key={q.name}
-              className={`flex flex-col ${i > 0 ? 'md:border-l md:border-ink/15 md:pl-10' : ''} ${i < QUOTES.length - 1 ? 'md:pr-10' : ''}`}
+              key={i}
+              className={`flex flex-col ${i > 0 ? 'md:border-l md:border-ink/15 md:pl-10' : ''} ${i < c.items.length - 1 ? 'md:pr-10' : ''}`}
             >
               <span aria-hidden className="block h-12 font-display text-[96px] leading-[0.9] text-clay">
                 &ldquo;

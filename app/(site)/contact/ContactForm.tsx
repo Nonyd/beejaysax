@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { Loader2, Mail, MapPin, Phone } from 'lucide-react'
 import Adire from '@/components/ui/Adire'
 import { cn } from '@/lib/utils'
+import type { ContentOf } from '@/lib/content/registry'
 
 const INQUIRY = [
   { value: 'BOOKING', label: 'Booking' },
@@ -17,7 +18,9 @@ const label = 'mb-2 block font-body text-sm font-semibold text-ink'
 const input =
   'w-full rounded-[14px] border border-ink/20 bg-white/70 px-4 py-3.5 font-body text-base text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-clay focus:bg-white'
 
-export default function ContactForm() {
+export default function ContactForm({ content, site }: { content: ContentOf<'contact'>; site: ContentOf<'site'> }) {
+  const tel = site.phone.replace(/[^\d+]/g, '')
+  const socials = site.socials.filter((s) => /instagram|youtube/i.test(s.label + s.url))
   const searchParams = useSearchParams()
   const initialInquiry = useMemo(() => {
     const q = searchParams.get('inquiry')?.toUpperCase()
@@ -46,7 +49,7 @@ export default function ContactForm() {
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error((data as { error?: string }).error ?? 'Your message was not sent. Try again.')
-      setToast({ ok: true, text: 'Message sent. The team will reply by email, usually within two working days.' })
+      setToast({ ok: true, text: content.thanks })
       setFirstName('')
       setLastName('')
       setEmail('')
@@ -66,12 +69,14 @@ export default function ContactForm() {
       <div className="site-shell relative grid gap-14 py-16 md:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div className="min-w-0">
           <h1 className="font-display text-[clamp(56px,8vw,112px)] leading-[0.9] tracking-[-0.03em] text-ivory">
-            <span className="block">Let&apos;s</span>
-            <span className="block">talk</span>
+            {content.titleLines.map((l, i) => (
+              <span key={i} className="block">
+                {l}
+              </span>
+            ))}
           </h1>
           <p className="mt-8 max-w-[44ch] font-body text-lg leading-relaxed text-ivory/75">
-            Booking BeeJay for a concert, service or event? Planning a collaboration or interview? Send the details and the
-            team will get back to you.
+            {content.intro}
           </p>
 
           <ul className="mt-12 space-y-5 font-body text-base text-ivory">
@@ -79,35 +84,32 @@ export default function ContactForm() {
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-clay">
                 <MapPin className="h-4 w-4" aria-hidden />
               </span>
-              Lagos, Nigeria
+              {site.location}
             </li>
             <li>
-              <a href="tel:+2348058982828" className="flex items-center gap-4 text-ivory no-underline hover:text-gold">
+              <a href={`tel:${tel}`} className="flex items-center gap-4 text-ivory no-underline hover:text-gold">
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-clay">
                   <Phone className="h-4 w-4" aria-hidden />
                 </span>
-                +234 80 5898 2828
+                {site.phone}
               </a>
             </li>
             <li>
-              <a href="mailto:booking@beejaysax.com" className="flex items-center gap-4 text-ivory no-underline hover:text-gold">
+              <a href={`mailto:${site.email}`} className="flex items-center gap-4 text-ivory no-underline hover:text-gold">
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-clay">
                   <Mail className="h-4 w-4" aria-hidden />
                 </span>
-                booking@beejaysax.com
+                {site.email}
               </a>
             </li>
           </ul>
 
           <p className="mt-12 max-w-[44ch] border-l-2 border-gold pl-5 font-body text-base leading-relaxed text-ivory/70">
-            For international bookings, include your country, the type of event and your preferred dates.
+            {content.note}
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
-            {[
-              ['Instagram', 'https://instagram.com/beejaysax'],
-              ['YouTube', 'https://youtube.com/@beejaysax'],
-            ].map(([name, href]) => (
+            {socials.map(({ label: name, url: href }) => (
               <a
                 key={name}
                 href={href}

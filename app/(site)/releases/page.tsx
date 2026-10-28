@@ -3,6 +3,7 @@ import ReleasesView from '@/components/releases/ReleasesView'
 import PageHero from '@/components/ui/PageHero'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
+import { getContent } from '@/lib/content/store'
 
 export const metadata: Metadata = {
   title: { absolute: 'Music — BeeJay Sax' },
@@ -18,13 +19,14 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function ReleasesPage() {
+  const h = await getContent('pageHeaders')
   const releases = await safeDb(() => prisma.release.findMany({ where: { isHidden: false }, orderBy: { releaseDate: 'desc' } }), [])
 
   return (
     <>
       <PageHero
-        title={['The music']}
-        intro="Albums, singles and EPs of gospel saxophone. Stream them wherever you listen."
+        title={[h.musicTitle]}
+        intro={h.musicIntro}
       />
       <ReleasesView releases={releases} />
     </>

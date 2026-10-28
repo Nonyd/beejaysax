@@ -2,8 +2,10 @@ import Link from 'next/link'
 import EventCard from '@/components/events/EventCard'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
+import { getContent } from '@/lib/content/store'
 
 export default async function UpcomingEvents() {
+  const [c, site] = await Promise.all([getContent('homeSections'), getContent('site')])
   const events = await safeDb(
     () =>
       prisma.event.findMany({
@@ -19,14 +21,17 @@ export default async function UpcomingEvents() {
       <div className="site-shell">
         <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
           <h2 className="font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.02em] text-ivory">
-            <span className="block">Catch BeeJay</span>
-            <span className="block">live</span>
+            {c.eventsTitle.map((l, i) => (
+              <span key={i} className="block">
+                {l}
+              </span>
+            ))}
           </h2>
           <Link
             href="/events"
             className="self-start font-body text-base font-semibold text-gold underline decoration-gold/40 underline-offset-[6px] transition-colors hover:decoration-gold md:self-auto"
           >
-            See all events
+            {c.eventsLink}
           </Link>
         </div>
 
@@ -41,15 +46,15 @@ export default async function UpcomingEvents() {
           </div>
         ) : (
           <div className="rounded-[28px] border border-dashed border-line px-6 py-16 text-center">
-            <p className="font-display text-3xl text-ivory">New dates are coming</p>
+            <p className="font-display text-3xl text-ivory">{c.eventsEmptyTitle}</p>
             <p className="mx-auto mt-3 max-w-[44ch] font-body text-base text-ivory/65">
-              Follow BeeJay on social media to hear first, or get in touch to book him for your event.
+              {c.eventsEmptyText}
             </p>
             <Link
               href="/contact?inquiry=booking"
               className="mt-8 inline-flex rounded-full bg-gold px-6 py-3 font-body text-sm font-semibold text-night no-underline hover:bg-gold-lt"
             >
-              Book BeeJay
+              {site.bookLabel}
             </Link>
           </div>
         )}

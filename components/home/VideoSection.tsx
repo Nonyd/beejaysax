@@ -50,23 +50,36 @@ function VideoCard({ video, large = false }: { video: HomeVideo; large?: boolean
   )
 }
 
-export default function VideoSection({ videos: VIDEOS }: { videos: HomeVideo[] }) {
+export default function VideoSection({
+  videos: VIDEOS,
+  titleLines,
+  linkLabel,
+  linkUrl,
+}: {
+  videos: HomeVideo[]
+  titleLines: string[]
+  linkLabel: string
+  linkUrl: string
+}) {
   if (VIDEOS.length === 0) return null
   return (
     <section className="bg-night py-24 md:py-32">
       <div className="site-shell">
         <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
           <h2 className="font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.02em] text-ivory">
-            <span className="block">Watch him</span>
-            <span className="block">minister</span>
+            {titleLines.map((l, i) => (
+              <span key={i} className="block">
+                {l}
+              </span>
+            ))}
           </h2>
           <a
-            href="https://youtube.com/@beejaysax"
+            href={linkUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="self-start font-body text-base font-semibold text-gold underline decoration-gold/40 underline-offset-[6px] transition-colors hover:decoration-gold md:self-auto"
           >
-            More on YouTube
+            {linkLabel}
           </a>
         </div>
 

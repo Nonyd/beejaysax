@@ -395,3 +395,12 @@ model ReminderLog {
 
   @@unique([eventId, email, kind])
 }
+
+/// Editable website text and images, one row per section (see lib/content/registry.ts).
+/// Missing fields fall back to the defaults in the registry.
+model SiteContent {
+  key       String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import VideoSection, { type HomeVideo } from '@/components/home/VideoSection'
+import { getContent } from '@/lib/content/store'
 
 /** Shown until the YouTube channel has been synced. */
 const FALLBACK: HomeVideo[] = [{ id: '0jxRD456j_w', title: 'BeeJay Sax live in London, Indigo at The O2' }]
@@ -19,5 +20,6 @@ export default async function Videos() {
   const featured = rows.filter((r) => r.isFeatured)
   const pick = featured.length ? featured : rows.slice(0, 1)
   const videos = pick.length ? pick.map((v) => ({ id: v.youtubeId, title: v.title, thumbnail: v.thumbnailUrl })) : FALLBACK
-  return <VideoSection videos={videos} />
+  const c = await getContent('homeSections')
+  return <VideoSection videos={videos} titleLines={c.videosTitle} linkLabel={c.videosLink} linkUrl={c.videosUrl} />
 }
