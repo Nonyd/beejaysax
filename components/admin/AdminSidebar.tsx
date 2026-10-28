@@ -11,6 +11,7 @@ const navItems = [
   { href: '/admin/releases', label: 'Releases' },
   { href: '/admin/gallery', label: 'Gallery' },
   { href: '/admin/messages', label: 'Messages' },
+  { href: '/admin/settings', label: 'Settings' },
 ]
 
 export default function AdminSidebar({ username, width = 280 }: { username: string; width?: number }) {

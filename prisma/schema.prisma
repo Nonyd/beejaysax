@@ -143,6 +143,16 @@ enum InquiryType {
   GENERAL
 }
 
+/// Admin-managed configuration (payment keys, email providers, sync credentials).
+/// Secret values are AES-256-GCM encrypted; see lib/secret-box.ts.
+model SiteSetting {
+  key       String   @id
+  value     String
+  isSecret  Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
 model AdminUser {
   id           String    @id @default(cuid())
   username     String    @unique

@@ -8,6 +8,7 @@ const titles: Record<string, string> = {
   '/admin/releases': 'Releases',
   '/admin/gallery': 'Gallery',
   '/admin/messages': 'Messages',
+  '/admin/settings': 'Settings',
 }
 
 export default function AdminHeader() {
