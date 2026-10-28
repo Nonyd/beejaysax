@@ -9,27 +9,142 @@ datasource db {
 }
 
 model Event {
-  id           String      @id @default(cuid())
-  title        String
+  id                   String       @id @default(cuid())
+  title                String
+  /// Unique per event (enforced in lib/events/admin.ts uniqueSlug)
+  slug                 String?
+  excerpt              String?
+  description          String?
+  venue                String
+  address              String?
+  city                 String
+  country              String       @default("Nigeria")
+  eventDate            DateTime
+  /// Optional end time; eventDate is the start
+  endDate              DateTime?
+  eventTime            String?
+  /// Ticket sales close at this moment (defaults to the start time when null)
+  registrationDeadline DateTime?
+  currency             String       @default("NGN")
+  /// Legacy single price; events with tiers use TicketTier prices
+  ticketPrice          Float?
+  isFree               Boolean      @default(false)
+  totalTickets         Int?
+  posterImage          String?
+  isFeatured           Boolean      @default(false)
+  status               EventStatus  @default(UPCOMING)
+  /// scrypt hash of the volunteer check-in PIN (null = PIN check-in disabled)
+  checkInPinHash       String?
+  remindersEnabled     Boolean      @default(true)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  tickets              Ticket[]
+  tiers                TicketTier[]
+  orders               Order[]
+  coupons              Coupon[]
+
+  @@index([slug])
+}
+
+/// A purchasable ticket type for an event (Regular, VIP, Table for 10…)
+model TicketTier {
+  id           String    @id @default(cuid())
+  eventId      String
+  event        Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name         String
   description  String?
-  venue        String
-  address      String?
-  city         String
-  country      String      @default("Nigeria")
-  eventDate    DateTime
-  eventTime    String?
-  ticketPrice  Float?
-  isFree       Boolean     @default(false)
-  totalTickets Int?
-  posterImage  String?
-  isFeatured   Boolean     @default(false)
-  status       EventStatus @default(UPCOMING)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  price        Float     @default(0)
+  /// null = limited only by the event capacity
+  capacity     Int?
+  /// Admits this many people per ticket (e.g. a table for 10)
+  admits       Int       @default(1)
+  maxPerOrder  Int       @default(10)
+  saleStartsAt DateTime?
+  saleEndsAt   DateTime?
+  isVisible    Boolean   @default(true)
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   tickets      Ticket[]
+  orders       Order[]
+
+  @@index([eventId])
+}
+
+/// One checkout: groups the tickets bought together and tracks payment.
+model Order {
+  id         String      @id @default(cuid())
+  reference  String      @unique
+  eventId    String
+  event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tierId     String?
+  tier       TicketTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  firstName  String
+  lastName   String
+  email      String
+  phone      String?
+  quantity   Int
+  unitPrice  Float
+  subtotal   Float
+  discount   Float       @default(0)
+  total      Float
+  currency   String      @default("NGN")
+  couponId   String?
+  coupon     Coupon?     @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  status     OrderStatus @default(PENDING)
+  source     OrderSource @default(PUBLIC)
+  gateway    String?
+  gatewayRef String?
+  paidAt     DateTime?
+  /// Unpaid orders hold seats until this time, then expire
+  expiresAt  DateTime?
+  refundedAt DateTime?
+  refundRef  String?
+  note       String?
+  createdBy  String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  tickets    Ticket[]
+
+  @@index([eventId, status])
+  @@index([email])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FREE
+  FAILED
+  EXPIRED
+  CANCELLED
+  REFUNDED
+}
+
+enum OrderSource {
+  PUBLIC
+  COMPLIMENTARY
+  ADMIN
+}
+
+model Coupon {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  /// null = valid for every event
+  eventId    String?
+  event      Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  percentOff Int?
+  amountOff  Float?
+  maxUses    Int?
+  usedCount  Int       @default(0)
+  startsAt   DateTime?
+  endsAt     DateTime?
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  orders     Order[]
 }
 
 enum EventStatus {
+  DRAFT
   UPCOMING
   PAST
   CANCELLED
@@ -40,6 +155,12 @@ model Ticket {
   ticketNumber  String        @unique
   eventId       String
   event         Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  orderId       String?
+  order         Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  tierId        String?
+  tier          TicketTier?   @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  /// Tier name at time of purchase (kept if the tier is renamed or deleted)
+  tierName      String?
   firstName     String
   lastName      String
   email         String
@@ -54,8 +175,12 @@ model Ticket {
   usedByAdmin   String?
   paymentStatus PaymentStatus @default(PENDING)
   paymentRef    String?
+  cancelledAt   DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+
+  @@index([eventId])
+  @@index([orderId])
 }
 
 enum TicketType {

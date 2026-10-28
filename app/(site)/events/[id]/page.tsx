@@ -6,12 +6,14 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { format } from 'date-fns'
+import { getTierAvailability } from '@/lib/events/availability'
+import { currencySymbol } from '@/lib/events/editor-data'
 
 type Props = { params: Promise<{ id: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
-  const event = await safeDb(() => prisma.event.findUnique({ where: { id } }), null)
+  const event = await safeDb(() => prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } } }), null)
   if (!event) return { title: { absolute: 'Event Not Found — BeeJay Sax' } }
 
   const formattedDate = new Date(event.eventDate).toLocaleDateString('en-NG', {
@@ -36,17 +38,12 @@ export const dynamic = 'force-dynamic'
 
 export default async function EventDetailPage({ params }: Props) {
   const { id } = await params
-  const event = await safeDb(() => prisma.event.findUnique({ where: { id } }), null)
+  const event = await safeDb(() => prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } } }), null)
   if (!event) notFound()
 
-  const ticketCount = await safeDb(
-    () =>
-      prisma.ticket.count({
-        where: { eventId: id, paymentStatus: { not: 'REFUNDED' } },
-      }),
-    0
-  )
-  const available = event.totalTickets != null ? Math.max(0, event.totalTickets - ticketCount) : null
+  const avail = await safeDb(() => getTierAvailability(id), null)
+  const tiers = avail?.tiers ?? []
+  const sym = currencySymbol(event.currency)
 
   const mapsQuery = [event.address, event.city, event.country].filter(Boolean).join(', ')
   const mapsSrc = mapsQuery ? `https://www.google.com/maps?q=${encodeURIComponent(mapsQuery)}&output=embed` : null
@@ -56,8 +53,11 @@ export default async function EventDetailPage({ params }: Props) {
   const waText = encodeURIComponent(`${event.title}\n${eventUrl}`)
 
 
-  const canBuy = event.status === 'UPCOMING' && (available === null || available > 0)
-  const soldOut = event.status === 'UPCOMING' && available === 0
+  const canBuy = tiers.some((t) => t.state === 'on_sale')
+  const soldOut = tiers.length > 0 && tiers.every((t) => t.state === 'sold_out')
+  const allFree = tiers.length > 0 && tiers.every((t) => t.price === 0)
+  const price = (n: number) => (n === 0 ? 'Free' : `${sym}${n.toLocaleString()}`)
+  const stateLabel: Record<string, string> = { sold_out: 'Sold out', ended: 'Sales ended', not_started: 'Not on sale yet' }
   const details: [string, string][] = [
     ['Date', format(event.eventDate, 'EEEE, d MMMM yyyy')],
     ...(event.eventTime ? ([['Doors', event.eventTime]] as [string, string][]) : []),
@@ -147,21 +147,33 @@ export default async function EventDetailPage({ params }: Props) {
               </div>
 
               <div className="p-8">
-                <div className="flex items-baseline justify-between gap-4">
-                  <p className="font-display text-4xl">
-                    {event.isFree ? 'Free entry' : `₦${event.ticketPrice?.toLocaleString() ?? '—'}`}
-                  </p>
-                  <p className="font-body text-sm text-ink/60">
-                    {available === null ? 'Tickets available' : soldOut ? 'Sold out' : `${available} left`}
-                  </p>
-                </div>
+                {tiers.length === 0 ? (
+                  <p className="font-body text-base text-ink/70">Tickets aren’t on sale yet.</p>
+                ) : (
+                  <ul className="space-y-3">
+                    {tiers.map((t) => (
+                      <li key={t.id} className="flex items-start justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className="font-body text-base font-semibold">{t.name}</p>
+                          {t.description && <p className="font-body text-sm text-ink/60">{t.description}</p>}
+                          {t.state !== 'on_sale' ? (
+                            <p className="font-body text-sm font-semibold text-clay">{stateLabel[t.state]}</p>
+                          ) : t.remaining !== null && t.remaining <= 20 ? (
+                            <p className="font-body text-sm font-semibold text-clay">Only {t.remaining} left</p>
+                          ) : null}
+                        </div>
+                        <p className={`shrink-0 font-display text-2xl ${t.state === 'on_sale' ? '' : 'text-ink/40 line-through'}`}>{price(t.price)}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
                 {canBuy ? (
                   <Link
                     href={`/events/${event.id}/purchase`}
                     className="mt-6 flex w-full justify-center rounded-full bg-ink px-8 py-4 font-body text-base font-semibold text-ivory no-underline transition-colors hover:bg-night"
                   >
-                    {event.isFree ? 'Register free' : 'Get tickets'}
+                    {allFree ? 'Register free' : 'Get tickets'}
                   </Link>
                 ) : (
                   <Link

@@ -27,7 +27,8 @@ export default function AdminDeleteButton({
         toast.success('Deleted successfully')
         router.refresh()
       } else {
-        toast.error('Delete failed')
+        const data = await res.json().catch(() => ({}))
+        toast.error(data.error ?? 'Delete failed')
       }
     } catch {
       toast.error('Something went wrong')

@@ -1,65 +1,148 @@
-import { prisma } from '@/lib/prisma'
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import TicketListClient from '@/components/admin/TicketListClient'
-import SectionLabel from '@/components/ui/SectionLabel'
+import { notFound } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
+import RegistrationsClient, { type RegRow } from '@/components/admin/events/RegistrationsClient'
+import { currencySymbol } from '@/lib/events/editor-data'
+import { expireStaleOrders } from '@/lib/events/orders'
 
 export const dynamic = 'force-dynamic'
 
-export default async function EventTicketsPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EventRegistrationsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const event = await prisma.event.findUnique({ where: { id } })
+  await expireStaleOrders()
+  const event = await prisma.event.findUnique({
+    where: { id },
+    include: { tiers: { orderBy: { sortOrder: 'asc' } } },
+  })
   if (!event) notFound()
 
-  const tickets = await prisma.ticket.findMany({
-    where: { eventId: id },
-    orderBy: { createdAt: 'desc' },
+  const [tickets, orders] = await Promise.all([
+    prisma.ticket.findMany({
+      where: { eventId: id },
+      include: { order: { select: { reference: true, status: true, source: true } } },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.order.findMany({ where: { eventId: id }, select: { status: true, total: true, tierId: true, quantity: true } }),
+  ])
+
+  const sym = currencySymbol(event.currency)
+  const live = tickets.filter((t) => !t.cancelledAt && t.paymentStatus !== 'REFUNDED')
+  const paidOrders = orders.filter((o) => o.status === 'PAID')
+  const legacyRevenue = tickets.filter((t) => !t.orderId && t.paymentStatus === 'PAID').reduce((s, t) => s + t.totalAmount, 0)
+  const revenue = paidOrders.reduce((s, o) => s + o.total, 0) + legacyRevenue
+  const pending = orders.filter((o) => o.status === 'PENDING')
+
+  const tierStats = event.tiers.map((t) => {
+    const sold = live.filter((x) => x.tierId === t.id).length
+    return {
+      id: t.id,
+      name: t.name,
+      sold,
+      capacity: t.capacity,
+      revenue: paidOrders.filter((o) => o.tierId === t.id).reduce((s, o) => s + o.total, 0),
+      isVisible: t.isVisible,
+    }
   })
 
-  const usedCount = tickets.filter((t) => t.isUsed).length
-  const totalRevenue = tickets.reduce((sum, t) => sum + (t.totalAmount ?? 0), 0)
+  const rows: RegRow[] = tickets.map((t) => ({
+    id: t.id,
+    ticketNumber: t.ticketNumber,
+    name: `${t.firstName} ${t.lastName}`,
+    email: t.email,
+    phone: t.phone,
+    tier: t.tierName ?? t.ticketType,
+    tierId: t.tierId,
+    amount: t.totalAmount,
+    reference: t.order?.reference ?? t.paymentRef,
+    source: t.order?.source ?? 'PUBLIC',
+    isUsed: t.isUsed,
+    usedAt: t.usedAt?.toISOString() ?? null,
+    usedBy: t.usedByAdmin,
+    cancelled: Boolean(t.cancelledAt) || t.paymentStatus === 'REFUNDED',
+    qrToken: t.qrToken,
+    createdAt: t.createdAt.toISOString(),
+  }))
+
+  const stat = (label: string, value: string | number, hint?: string) => (
+    <div className="rounded-[18px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-5">
+      <p className="text-[13px] font-semibold text-[#E3B23C]">{label}</p>
+      <p className="mt-2 font-display text-[34px] leading-none text-[#F7F1E3]">{value}</p>
+      {hint && <p className="mt-2 text-[12px] text-[rgba(247,241,227,0.55)]">{hint}</p>}
+    </div>
+  )
 
   return (
     <div>
-      <nav
-        className="mb-8 flex flex-wrap items-center gap-2"
-        style={{ fontFamily: 'var(--font-sans)', fontSize: 13 }}
-      >
-        <Link href="/admin/events" style={{ color: 'rgba(247,241,227,0.65)', textDecoration: 'none' }}>
-          Events
-        </Link>
-        <span style={{ color: 'rgba(247,241,227,0.35)' }}>/</span>
-        <span style={{ color: '#E3B23C' }}>{event.title}</span>
+      <nav className="mb-8 text-[13px]">
+        <Link href="/admin/events" className="text-[rgba(247,241,227,0.65)] no-underline">Events</Link>
+        <span className="mx-2 text-[rgba(247,241,227,0.35)]">/</span>
+        <span className="text-[#E3B23C]">{event.title}</span>
       </nav>
-
       <AdminPageHeader
-        eyebrow="Tickets"
-        title="Registrations & scanner"
-        subtitle="View attendees, revenue, and verify QR codes at the door."
+        eyebrow="Registrations"
+        title={event.title}
+        subtitle="Everyone holding a ticket, sales by ticket type, and door check-in."
+        action={
+          <>
+            <Link href={`/admin/events/${id}/checkin`} className="bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F] no-underline">
+              Open door scanner
+            </Link>
+            <Link href={`/admin/events/${id}/edit`} className="border border-[rgba(247,241,227,0.25)] px-6 py-3 font-semibold text-[#F7F1E3] no-underline">
+              Edit event
+            </Link>
+          </>
+        }
       />
 
-      <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
-        {[
-          { label: 'Registered', value: tickets.length },
-          { label: 'Admitted', value: usedCount },
-          { label: 'Remaining', value: tickets.length - usedCount },
-          { label: 'Revenue', value: `₦${totalRevenue.toLocaleString()}` },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-5"
-            style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.2)' }}
-          >
-            <SectionLabel className="mb-2">{stat.label}</SectionLabel>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: 34, color: '#E3B23C', lineHeight: 1, fontWeight: 700 }}>
-              {stat.value}
-            </p>
-          </div>
-        ))}
+      <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {stat('Tickets issued', live.length, event.totalTickets ? `of ${event.totalTickets} capacity` : undefined)}
+        {stat('Checked in', live.filter((t) => t.isUsed).length, live.length ? `${Math.round((live.filter((t) => t.isUsed).length / live.length) * 100)}% of tickets` : undefined)}
+        {stat('Revenue', `${sym}${revenue.toLocaleString()}`, `${paidOrders.length} paid orders`)}
+        {stat('Awaiting payment', pending.length, pending.length ? 'Seats are held for 30 minutes' : 'No open checkouts')}
       </div>
 
-      <TicketListClient tickets={JSON.parse(JSON.stringify(tickets))} eventId={id} />
+      {tierStats.length > 0 && (
+        <div className="mb-10 rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6">
+          <p className="mb-4 font-display text-xl text-[#F7F1E3]">Sales by ticket type</p>
+          <ul className="space-y-4">
+            {tierStats.map((t) => {
+              const pct = t.capacity ? Math.min(100, Math.round((t.sold / t.capacity) * 100)) : null
+              return (
+                <li key={t.id}>
+                  <div className="flex flex-wrap items-baseline justify-between gap-2 text-[14px]">
+                    <span className="font-semibold text-[#F7F1E3]">
+                      {t.name}
+                      {!t.isVisible && <span className="ml-2 text-[12px] font-normal text-[#f0a35e]">hidden</span>}
+                    </span>
+                    <span className="text-[rgba(247,241,227,0.7)]">
+                      {t.sold}
+                      {t.capacity ? ` / ${t.capacity}` : ''} sold · {sym}
+                      {t.revenue.toLocaleString()}
+                    </span>
+                  </div>
+                  {pct !== null && (
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#11142F]">
+                      <div
+                        className={`h-full rounded-full ${pct >= 90 ? 'bg-[#f87171]' : pct >= 60 ? 'bg-[#f0a35e]' : 'bg-[#E3B23C]'}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )}
+
+      <RegistrationsClient
+        eventId={id}
+        rows={rows}
+        tiers={event.tiers.map((t) => ({ id: t.id, name: t.name }))}
+        currencySymbol={sym}
+        siteUrl={(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://beejaysax.com').replace(/\/$/, '')}
+      />
     </div>
   )
 }

@@ -1,0 +1,21 @@
+/** Event fields that are safe to expose publicly (no PIN hash or admin-only data). */
+export const PUBLIC_EVENT_SELECT = {
+  id: true,
+  title: true,
+  slug: true,
+  excerpt: true,
+  description: true,
+  venue: true,
+  address: true,
+  city: true,
+  country: true,
+  eventDate: true,
+  endDate: true,
+  eventTime: true,
+  currency: true,
+  ticketPrice: true,
+  isFree: true,
+  posterImage: true,
+  isFeatured: true,
+  status: true,
+} as const

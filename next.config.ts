@@ -20,6 +20,24 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   poweredByHeader: false,
+  // Security headers live here (not vercel.json) so they also apply on the VPS.
+  // For the same header, the later matching rule wins: the camera is allowed only for door check-in.
+  async headers() {
+    const camera = { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=()' }
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+      { source: '/checkin/:path*', headers: [camera] },
+      { source: '/admin/events/:id/checkin', headers: [camera] },
+    ]
+  },
   compress: true,
 }
 
