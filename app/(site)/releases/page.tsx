@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function ReleasesPage() {
-  const releases = await safeDb(() => prisma.release.findMany({ orderBy: { releaseDate: 'desc' } }), [])
+  const releases = await safeDb(() => prisma.release.findMany({ where: { isHidden: false }, orderBy: { releaseDate: 'desc' } }), [])
 
   return (
     <>

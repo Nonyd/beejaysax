@@ -176,6 +176,10 @@ model Ticket {
   paymentStatus PaymentStatus @default(PENDING)
   paymentRef    String?
   cancelledAt   DateTime?
+  /// Last ticket email: SENT | FAILED | SUPPRESSED (null = never sent)
+  emailStatus   String?
+  emailedAt     DateTime?
+  emailError    String?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -198,21 +202,29 @@ enum PaymentStatus {
 }
 
 model Release {
-  id            String      @id @default(cuid())
-  title         String
-  slug          String      @unique
-  releaseType   ReleaseType @default(SINGLE)
-  description   String?
-  coverImage    String?
-  spotifyUrl    String?
-  appleMusicUrl String?
-  youtubeUrl    String?
-  audiomackUrl  String?
-  boomplayUrl   String?
-  releaseDate   DateTime?
-  isFeatured    Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id             String      @id @default(cuid())
+  title          String
+  slug           String      @unique
+  releaseType    ReleaseType @default(SINGLE)
+  description    String?
+  coverImage     String?
+  spotifyUrl     String?
+  appleMusicUrl  String?
+  youtubeUrl     String?
+  audiomackUrl   String?
+  boomplayUrl    String?
+  releaseDate    DateTime?
+  isFeatured     Boolean     @default(false)
+  /// Set for releases imported from Spotify (unique; enforced in lib/sync/spotify.ts)
+  spotifyAlbumId String?
+  /// Fields an admin edited by hand; sync never overwrites these
+  lockedFields   String[]    @default([])
+  isHidden       Boolean     @default(false)
+  lastSyncedAt   DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([spotifyAlbumId])
 }
 
 enum ReleaseType {
@@ -240,13 +252,24 @@ enum GalleryCategory {
 }
 
 model Video {
-  id          String   @id @default(cuid())
-  title       String
-  youtubeId   String
-  description String?
-  isFeatured  Boolean  @default(false)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
+  id           String    @id @default(cuid())
+  title        String
+  youtubeId    String
+  description  String?
+  isFeatured   Boolean   @default(false)
+  /// Hidden by an admin; sync never un-hides
+  isHidden     Boolean   @default(false)
+  sortOrder    Int       @default(0)
+  thumbnailUrl String?
+  publishedAt  DateTime?
+  durationSec  Int?
+  /// "youtube" for synced videos, null for manually added ones
+  source       String?
+  lockedFields String[]  @default([])
+  lastSyncedAt DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([youtubeId])
 }
 
 model ContactMessage {
@@ -321,4 +344,54 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+/// Every email sent (or attempted), with provider, delivery status and retry state.
+model EmailLog {
+  id                String    @id @default(cuid())
+  to                String
+  subject           String
+  /// TICKET | REMINDER | BROADCAST | CONTACT | ADMIN | TEST
+  kind              String
+  /// QUEUED | SENT | DELIVERED | BOUNCED | COMPLAINED | FAILED | SUPPRESSED
+  status            String
+  provider          String?
+  providerMessageId String?
+  error             String?
+  attempts          Int       @default(0)
+  nextAttemptAt     DateTime?
+  /// Rendered message kept so a failed send can be retried
+  html              String?
+  text              String?
+  replyTo           String?
+  relatedType       String?
+  relatedId         String?
+  lastEventAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([providerMessageId])
+  @@index([status, nextAttemptAt])
+  @@index([relatedType, relatedId])
+  @@index([createdAt])
+}
+
+/// Addresses that hard-bounced or marked us as spam. Not emailed again until removed.
+model EmailSuppression {
+  email     String   @id
+  reason    String
+  provider  String?
+  createdAt DateTime @default(now())
+}
+
+/// One row per reminder sent, so each attendee gets each reminder once.
+model ReminderLog {
+  id      String   @id @default(cuid())
+  eventId String
+  email   String
+  /// WEEK | DAY | MORNING
+  kind    String
+  sentAt  DateTime @default(now())
+
+  @@unique([eventId, email, kind])
 }

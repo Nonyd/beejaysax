@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [events, releases] = await Promise.all([
     prisma.event.findMany({ where: { status: 'UPCOMING' }, select: { id: true, updatedAt: true } }),
-    prisma.release.findMany({ select: { slug: true, updatedAt: true } }),
+    prisma.release.findMany({ where: { isHidden: false }, select: { slug: true, updatedAt: true } }),
   ])
 
   const staticPages: MetadataRoute.Sitemap = [

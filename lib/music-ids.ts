@@ -16,3 +16,10 @@ export function parseYouTubeChannel(input: string | undefined): { id?: string; h
   if (handle) return { handle: handle[1] }
   return null
 }
+
+/** Pulls the 11-char video ID out of any YouTube link (watch, youtu.be, shorts, embed) or a bare ID. */
+export function parseYouTubeVideoId(input: string): string | null {
+  const s = input.trim()
+  const m = s.match(/(?:v=|youtu\.be\/|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/) ?? s.match(/^([\w-]{11})$/)
+  return m ? m[1] : null
+}

@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { Download, Loader2, Search, UserPlus, X } from 'lucide-react'
+import { Download, Loader2, Mail, Search, UserPlus, X } from 'lucide-react'
+import BroadcastDialog from '@/components/admin/events/BroadcastDialog'
 import AdminFormField from '@/components/admin/AdminFormField'
 import AdminInput from '@/components/admin/AdminInput'
 import AdminSelect from '@/components/admin/AdminSelect'
@@ -25,6 +26,8 @@ export type RegRow = {
   cancelled: boolean
   qrToken: string
   createdAt: string
+  emailStatus: string | null
+  emailError: string | null
 }
 
 type StatusFilter = 'all' | 'in' | 'out' | 'cancelled'
@@ -59,6 +62,8 @@ export default function RegistrationsClient({
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [busy, setBusy] = useState<Action | null>(null)
   const [compOpen, setCompOpen] = useState(false)
+  const [mailOpen, setMailOpen] = useState(false)
+  const recipients = new Set(rows.filter((r) => !r.cancelled).map((r) => r.email)).size
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase()
@@ -135,6 +140,9 @@ export default function RegistrationsClient({
         <a href={`/api/admin/events/${eventId}/export`} className="inline-flex items-center gap-2 border border-[rgba(247,241,227,0.2)] px-5 py-3 text-[14px] font-semibold text-[#F7F1E3] no-underline">
           <Download className="h-4 w-4" /> Export CSV
         </a>
+        <button type="button" onClick={() => setMailOpen(true)} className="inline-flex items-center gap-2 border border-[rgba(247,241,227,0.2)] px-5 py-3 text-[14px] font-semibold text-[#F7F1E3]">
+          <Mail className="h-4 w-4" /> Email attendees
+        </button>
         <button type="button" onClick={() => setCompOpen(true)} className="inline-flex items-center gap-2 bg-[#E3B23C] px-5 py-3 text-[14px] font-semibold text-[#11142F]">
           <UserPlus className="h-4 w-4" /> Add guest ticket
         </button>
@@ -216,6 +224,11 @@ export default function RegistrationsClient({
                     {r.tier}
                     {r.source === 'COMPLIMENTARY' && <span className="ml-2 text-[#a78bfa]">Guest</span>}
                   </p>
+                  {r.emailStatus && r.emailStatus !== 'SENT' && (
+                    <p className="text-[12px] font-semibold text-[#f87171]" title={r.emailError ?? undefined}>
+                      {r.emailStatus === 'SUPPRESSED' ? 'Email blocked (bounced before)' : 'Email not delivered'}
+                    </p>
+                  )}
                 </td>
                 <td className="px-3 py-3 text-[#F7F1E3]">{r.amount ? `${currencySymbol}${r.amount.toLocaleString()}` : 'Free'}</td>
                 <td className="px-3 py-3 text-[13px] text-[rgba(247,241,227,0.7)]">
@@ -244,6 +257,7 @@ export default function RegistrationsClient({
         )}
       </div>
 
+      {mailOpen && <BroadcastDialog eventId={eventId} recipients={recipients} onClose={() => setMailOpen(false)} />}
       {compOpen && <CompDialog eventId={eventId} tiers={tiers} onClose={() => setCompOpen(false)} onDone={() => router.refresh()} />}
     </div>
   )

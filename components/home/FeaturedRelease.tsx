@@ -10,7 +10,7 @@ export default async function FeaturedRelease() {
   const release = await safeDb(
     () =>
       prisma.release.findFirst({
-        where: { isFeatured: true },
+        where: { isFeatured: true, isHidden: false },
         orderBy: [{ releaseDate: 'desc' }, { createdAt: 'desc' }],
       }),
     null

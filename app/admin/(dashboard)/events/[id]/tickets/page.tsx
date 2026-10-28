@@ -62,6 +62,8 @@ export default async function EventRegistrationsPage({ params }: { params: Promi
     cancelled: Boolean(t.cancelledAt) || t.paymentStatus === 'REFUNDED',
     qrToken: t.qrToken,
     createdAt: t.createdAt.toISOString(),
+    emailStatus: t.emailStatus,
+    emailError: t.emailError,
   }))
 
   const stat = (label: string, value: string | number, hint?: string) => (

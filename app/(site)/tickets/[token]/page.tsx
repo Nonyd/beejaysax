@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { format } from 'date-fns'
+import { fmt } from '@/lib/time'
 import TicketActionsBar from '@/components/tickets/TicketActionsBar'
 import Adire from '@/components/ui/Adire'
 import { prisma } from '@/lib/prisma'
@@ -98,7 +98,7 @@ export default async function TicketViewPage({ params }: Props) {
               <dl className="grid grid-cols-2 gap-x-4 gap-y-4 font-body text-[15px]">
                 <div>
                   <dt className="text-sm text-ink/55">Date</dt>
-                  <dd className="mt-0.5 font-semibold">{format(ev.eventDate, 'd MMM yyyy')}</dd>
+                  <dd className="mt-0.5 font-semibold">{fmt(ev.eventDate, 'd MMM yyyy')}</dd>
                 </div>
                 <div>
                   <dt className="text-sm text-ink/55">Doors</dt>
@@ -157,7 +157,7 @@ export default async function TicketViewPage({ params }: Props) {
               }
             >
               {ticket.isUsed
-                ? `This ticket was used${ticket.usedAt ? ` on ${format(ticket.usedAt, 'd MMM yyyy, h:mm a')}` : ''}`
+                ? `This ticket was used${ticket.usedAt ? ` on ${fmt(ticket.usedAt, 'd MMM yyyy, h:mm a')}` : ''}`
                 : 'Valid ticket'}
             </footer>
           </article>

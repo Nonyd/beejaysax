@@ -4,11 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Play } from 'lucide-react'
 
-// 'z4saapf2BrA' (House on the Rock, TAPE 2022) was removed: YouTube returns 404 for it.
-// Add a replacement here once the client sends a live link.
-const VIDEOS = [{ id: '0jxRD456j_w', title: 'BeeJay Sax live in London, Indigo at The O2' }]
+export type HomeVideo = { id: string; title: string; thumbnail?: string | null }
 
-function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?: boolean }) {
+function VideoCard({ video, large = false }: { video: HomeVideo; large?: boolean }) {
   const [playing, setPlaying] = useState(false)
 
   return (
@@ -29,7 +27,7 @@ function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?
           aria-label={`Play video: ${video.title}`}
         >
           <Image
-            src={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
+            src={video.thumbnail ?? `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
             alt=""
             fill
             style={{ objectFit: 'cover' }}
@@ -52,7 +50,8 @@ function VideoCard({ video, large = false }: { video: (typeof VIDEOS)[0]; large?
   )
 }
 
-export default function VideoSection() {
+export default function VideoSection({ videos: VIDEOS }: { videos: HomeVideo[] }) {
+  if (VIDEOS.length === 0) return null
   return (
     <section className="bg-night py-24 md:py-32">
       <div className="site-shell">

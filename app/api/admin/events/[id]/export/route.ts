@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { format } from 'date-fns'
+import { fmt } from '@/lib/time'
 import { requireAdminApi } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
 
@@ -31,11 +31,11 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const rows = tickets.map((t) => [
     t.ticketNumber, t.firstName, t.lastName, t.email, t.phone, t.tierName ?? t.ticketType, t.totalAmount,
     t.order?.reference ?? t.paymentRef, t.order?.status ?? t.paymentStatus, t.order?.source ?? 'PUBLIC', t.order?.coupon?.code,
-    t.isUsed ? 'Yes' : 'No', t.usedAt ? format(t.usedAt, 'yyyy-MM-dd HH:mm') : '', t.usedByAdmin,
-    t.cancelledAt ? 'Yes' : 'No', format(t.createdAt, 'yyyy-MM-dd HH:mm'),
+    t.isUsed ? 'Yes' : 'No', t.usedAt ? fmt(t.usedAt, 'yyyy-MM-dd HH:mm') : '', t.usedByAdmin,
+    t.cancelledAt ? 'Yes' : 'No', fmt(t.createdAt, 'yyyy-MM-dd HH:mm'),
   ])
   const csv = '﻿' + [header, ...rows].map((r) => r.map(csvCell).join(',')).join('\r\n')
-  const name = `${event.slug ?? 'event'}-attendees-${format(new Date(), 'yyyyMMdd')}.csv`
+  const name = `${event.slug ?? 'event'}-attendees-${fmt(new Date(), 'yyyyMMdd')}.csv`
   return new NextResponse(csv, {
     headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${name}"` },
   })

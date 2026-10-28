@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { format } from 'date-fns'
+import { fmt } from '@/lib/time'
 import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import EventRowActions from '@/components/admin/events/EventRowActions'
@@ -74,7 +74,7 @@ export default async function AdminEventsPage() {
                   {e.posterImage ? (
                     <Image src={e.posterImage} alt="" fill sizes="64px" style={{ objectFit: 'cover' }} />
                   ) : (
-                    <span className="flex h-full items-center justify-center font-display text-2xl text-[#E3B23C]">{format(e.eventDate, 'd')}</span>
+                    <span className="flex h-full items-center justify-center font-display text-2xl text-[#E3B23C]">{fmt(e.eventDate, 'd')}</span>
                   )}
                 </div>
                 <div className="min-w-[220px] flex-1">
@@ -82,7 +82,7 @@ export default async function AdminEventsPage() {
                     {e.title}
                   </Link>
                   <p className="text-[14px] text-[rgba(247,241,227,0.65)]">
-                    {format(e.eventDate, 'EEE d MMM yyyy, h:mm a')} · {e.venue}, {e.city}
+                    {fmt(e.eventDate, 'EEE d MMM yyyy, h:mm a')} · {e.venue}, {e.city}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-6 text-[14px]">

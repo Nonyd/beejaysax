@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
-import { format } from 'date-fns'
+import { fmt } from '@/lib/time'
 import { getTierAvailability } from '@/lib/events/availability'
 import { currencySymbol } from '@/lib/events/editor-data'
 
@@ -59,7 +59,7 @@ export default async function EventDetailPage({ params }: Props) {
   const price = (n: number) => (n === 0 ? 'Free' : `${sym}${n.toLocaleString()}`)
   const stateLabel: Record<string, string> = { sold_out: 'Sold out', ended: 'Sales ended', not_started: 'Not on sale yet' }
   const details: [string, string][] = [
-    ['Date', format(event.eventDate, 'EEEE, d MMMM yyyy')],
+    ['Date', fmt(event.eventDate, 'EEEE, d MMMM yyyy')],
     ...(event.eventTime ? ([['Doors', event.eventTime]] as [string, string][]) : []),
     ['Venue', `${event.venue}, ${event.city}`],
   ]
@@ -73,7 +73,7 @@ export default async function EventDetailPage({ params }: Props) {
             <Link href="/events" className="font-body text-sm font-semibold text-gold no-underline hover:underline">
               All events
             </Link>
-            <p className="mt-8 font-body text-lg font-medium text-gold">{format(event.eventDate, 'EEEE, d MMMM yyyy')}</p>
+            <p className="mt-8 font-body text-lg font-medium text-gold">{fmt(event.eventDate, 'EEEE, d MMMM yyyy')}</p>
             <h1 className="mt-4 max-w-[16ch] font-display text-[clamp(48px,7vw,104px)] leading-[0.92] tracking-[-0.03em] text-ivory">
               {event.title}
             </h1>
@@ -92,8 +92,8 @@ export default async function EventDetailPage({ params }: Props) {
                   <circle cx="100" cy="100" r="96" fill="none" stroke="#E3B23C" strokeWidth="2.2" strokeDasharray="0.1 7.6" strokeLinecap="round" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-gold text-night">
-                  <span className="font-display text-[clamp(72px,9vw,112px)] leading-none">{format(event.eventDate, 'd')}</span>
-                  <span className="mt-1 font-body text-lg font-semibold">{format(event.eventDate, 'MMMM yyyy')}</span>
+                  <span className="font-display text-[clamp(72px,9vw,112px)] leading-none">{fmt(event.eventDate, 'd')}</span>
+                  <span className="mt-1 font-body text-lg font-semibold">{fmt(event.eventDate, 'MMMM yyyy')}</span>
                 </div>
               </div>
             )}

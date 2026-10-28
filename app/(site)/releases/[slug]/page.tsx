@@ -6,13 +6,13 @@ import PlatformStreamPills from '@/components/home/PlatformStreamPills'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
-import { format } from 'date-fns'
+import { fmt } from '@/lib/time'
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const release = await safeDb(() => prisma.release.findUnique({ where: { slug } }), null)
+  const release = await safeDb(() => prisma.release.findFirst({ where: { slug, isHidden: false } }), null)
   if (!release) return { title: { absolute: 'Release Not Found — BeeJay Sax' } }
 
   return {
@@ -33,7 +33,7 @@ const TYPE_LABEL: Record<string, string> = { ALBUM: 'Album', SINGLE: 'Single', E
 
 export default async function ReleaseDetailPage({ params }: Props) {
   const { slug } = await params
-  const release = await safeDb(() => prisma.release.findUnique({ where: { slug } }), null)
+  const release = await safeDb(() => prisma.release.findFirst({ where: { slug, isHidden: false } }), null)
   if (!release) notFound()
 
   const links = [
@@ -65,7 +65,7 @@ export default async function ReleaseDetailPage({ params }: Props) {
           <div className="min-w-0">
             <p className="font-body text-lg font-medium text-gold">
               {TYPE_LABEL[release.releaseType] ?? 'Release'}
-              {release.releaseDate ? `, released ${format(release.releaseDate, 'd MMMM yyyy')}` : ''}
+              {release.releaseDate ? `, released ${fmt(release.releaseDate, 'd MMMM yyyy')}` : ''}
             </p>
             <h1 className="mt-4 font-display text-[clamp(52px,7vw,104px)] leading-[0.92] tracking-[-0.03em] text-ivory">
               {release.title}

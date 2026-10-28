@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { format } from 'date-fns'
+import { fmt } from '@/lib/time'
 import { Ticket } from 'lucide-react'
 import Adire from '@/components/ui/Adire'
 import ArchPhoto from '@/components/ui/ArchPhoto'
@@ -67,7 +67,7 @@ export default async function Hero() {
               <span className="min-w-0 font-body text-sm leading-snug">
                 <span className="block truncate font-semibold text-ivory group-hover:text-gold">{next.title}</span>
                 <span className="block truncate text-ivory/60">
-                  {format(next.eventDate, 'd MMMM yyyy')}, {next.venue}
+                  {fmt(next.eventDate, 'd MMMM yyyy')}, {next.venue}
                 </span>
               </span>
             </Link>
