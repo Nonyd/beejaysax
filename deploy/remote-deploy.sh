@@ -15,8 +15,9 @@ fail() { echo "::error::$*" >&2; exit 1; }
 load_env() {
   [ -f "$APP_DIR/.env" ] || fail "Missing $APP_DIR/.env. Create it in cPanel File Manager (see docs/DEPLOY.md, step 4)."
   set -a
-  # shellcheck disable=SC1091
-  . "$APP_DIR/.env"
+  # Strip Windows line endings (the file is usually edited in cPanel from a Windows PC).
+  # shellcheck disable=SC1090
+  . <(tr -d '\r' < "$APP_DIR/.env")
   set +a
   [ -n "${DATABASE_URL:-}" ] || fail "DATABASE_URL is not set in $APP_DIR/.env"
 }
