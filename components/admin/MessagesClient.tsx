@@ -24,6 +24,8 @@ const INQUIRY_COLORS: Record<string, string> = {
 export default function MessagesClient({ initialMessages }: { initialMessages: Message[] }) {
   const [messages, setMessages] = useState(initialMessages)
   const [selected, setSelected] = useState<Message | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [error, setError] = useState('')
 
   async function markRead(id: string) {
     await fetch(`/api/messages/${id}`, {
@@ -34,8 +36,23 @@ export default function MessagesClient({ initialMessages }: { initialMessages: M
     setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, isRead: true } : m)))
   }
 
+  async function handleDelete(msg: Message) {
+    if (!confirm(`Delete the message from ${msg.name}? This can’t be undone.`)) return
+    setDeleting(true)
+    setError('')
+    const res = await fetch(`/api/messages/${msg.id}`, { method: 'DELETE' }).catch(() => null)
+    setDeleting(false)
+    if (!res?.ok) {
+      setError('Couldn’t delete the message. Check your connection and try again.')
+      return
+    }
+    setMessages((prev) => prev.filter((m) => m.id !== msg.id))
+    setSelected(null)
+  }
+
   async function handleSelect(msg: Message) {
     setSelected(msg)
+    setError('')
     if (!msg.isRead) void markRead(msg.id)
   }
 
@@ -147,6 +164,20 @@ export default function MessagesClient({ initialMessages }: { initialMessages: M
                 >
                   Reply via Email
                 </a>
+                <button
+                  type="button"
+                  disabled={deleting}
+                  onClick={() => void handleDelete(selected)}
+                  className="ml-3 inline-block border border-[rgba(247,241,227,0.25)] px-6 py-2.5 text-[#F7F1E3] transition hover:border-[#f87171] hover:text-[#f87171] disabled:opacity-50"
+                  style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+                >
+                  {deleting ? 'Deleting…' : 'Delete'}
+                </button>
+                {error && (
+                  <p role="alert" style={{ color: '#f87171', fontSize: 13, marginTop: 12 }}>
+                    {error}
+                  </p>
+                )}
               </div>
             </div>
           )}
