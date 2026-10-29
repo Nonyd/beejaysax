@@ -56,6 +56,8 @@ export async function startCampaign(id: string) {
   if (!(await getSetting('resend.apiKey')) && !(await getSetting('brevo.apiKey'))) {
     throw new CampaignError('Add a Resend or Brevo API key in Settings → Email first.')
   }
+  // Read before the transaction: a settings lookup inside it would compete for the same connection.
+  const limit = Number(await getSetting('campaigns.maxRecipients'))
 
   return prisma.$transaction(async (tx) => {
     const claimed = await tx.campaign.updateMany({ where: { id, status: 'DRAFT' }, data: { status: 'SENDING', startedAt: new Date() } })
@@ -69,6 +71,13 @@ export async function startCampaign(id: string) {
         AND NOT EXISTS (SELECT 1 FROM "EmailSuppression" s WHERE s.email = c.email)
       ON CONFLICT DO NOTHING`
     if (inserted === 0) throw new CampaignError('Nobody on the list matches this audience.')
+    if (limit > 0 && inserted > limit) {
+      // Throwing rolls the whole start back: nothing is queued or sent.
+      throw new CampaignError(
+        `This campaign would go to ${inserted.toLocaleString()} people, but the campaign size limit is ${limit} (Settings → Email). ` +
+          'Pick a smaller tag, or set the limit to “No limit” after upgrading Resend to Pro.'
+      )
+    }
     await tx.campaign.update({ where: { id }, data: { recipients: inserted } })
     return inserted
   }, { timeout: 60_000 })

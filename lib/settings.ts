@@ -138,6 +138,18 @@ export const SETTINGS: SettingDef[] = [
     default: 'off',
   },
 
+  {
+    key: 'campaigns.maxRecipients',
+    label: 'Campaign size limit',
+    group: 'email',
+    options: [
+      { value: '100', label: 'Up to 100 people per campaign (Resend free plan)' },
+      { value: 'off', label: 'No limit (Resend Pro)' },
+    ],
+    default: '100',
+    help: 'The free Resend plan sends about 100 emails a day. Keep the limit until you upgrade, so a big campaign can’t use up the allowance ticket emails need.',
+  },
+
   // jobs
   {
     key: 'jobs.token',
