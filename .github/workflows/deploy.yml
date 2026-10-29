@@ -23,7 +23,7 @@ jobs:
       SSH_OPTS: -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o ServerAliveInterval=30
       REMOTE: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
       APP_DIR: ${{ secrets.APP_DIR }}
-      SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || secrets.NEXT_PUBLIC_SITE_URL }}
 
     steps:
       - uses: actions/checkout@v4
@@ -52,7 +52,7 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || secrets.NEXT_PUBLIC_SITE_URL }}
           NEXT_PUBLIC_BUILD_SHA: ${{ github.sha }}
           # Public pages render at request time, so the build never needs the real database.
           DATABASE_URL: postgresql://build:build@127.0.0.1:5432/build
