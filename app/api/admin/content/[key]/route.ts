@@ -12,12 +12,12 @@ function known(key: string): key is ContentKey {
 
 /** Save a content section; the whole public site is refreshed so changes show immediately. */
 export async function PUT(req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('content')
   if (gate instanceof NextResponse) return gate
   const { key } = await params
   if (!known(key)) return NextResponse.json({ error: 'Unknown section.' }, { status: 404 })
   try {
-    const values = await saveContent(key, await req.json(), gate.user?.name ?? undefined)
+    const values = await saveContent(key, await req.json(), gate.username)
     revalidatePath('/', 'layout')
     return NextResponse.json({ values })
   } catch (e) {
@@ -29,7 +29,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
 /** Restore the original text for a section. */
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('content')
   if (gate instanceof NextResponse) return gate
   const { key } = await params
   if (!known(key)) return NextResponse.json({ error: 'Unknown section.' }, { status: 404 })

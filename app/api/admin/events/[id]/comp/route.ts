@@ -5,7 +5,7 @@ import { sendTicketsEmail } from '@/lib/events/notify'
 
 /** Issue free complimentary/VIP tickets and email them to the guest. */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const b = (await req.json().catch(() => ({}))) as Record<string, unknown>
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       quantity,
       buyer: { firstName: s(b.firstName), lastName: s(b.lastName), email, phone: s(b.phone) || undefined },
       source: 'COMPLIMENTARY',
-      createdBy: gate.user?.name ?? undefined,
+      createdBy: gate.username,
       note: s(b.note) || undefined,
     })
     const mail = b.sendEmail === false ? null : await sendTicketsEmail(tickets.map((t) => t.id))

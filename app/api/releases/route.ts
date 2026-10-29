@@ -10,7 +10,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('releases')
   if (gate instanceof NextResponse) return gate
   try {
     const data = parseReleaseInput(await req.json())

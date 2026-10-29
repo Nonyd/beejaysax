@@ -21,7 +21,7 @@ function revalidate(id: string) {
 }
 
 export async function PUT(req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   if (!(await prisma.event.findUnique({ where: { id }, select: { id: true } }))) {
@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
 /** Quick status changes from the events list (publish, cancel, mark past). */
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const body = (await req.json().catch(() => ({}))) as { status?: string; isFeatured?: boolean }
@@ -54,7 +54,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const sold = await prisma.order.count({ where: { eventId: id, status: { in: ['PAID', 'FREE'] } } })

@@ -5,13 +5,13 @@ import { getSettingsForAdmin, saveSettings } from '@/lib/settings'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('settings')
   if (gate instanceof NextResponse) return gate
   return NextResponse.json({ settings: await getSettingsForAdmin() })
 }
 
 export async function PUT(req: NextRequest) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('settings')
   if (gate instanceof NextResponse) return gate
 
   const body = (await req.json().catch(() => null)) as { values?: Record<string, unknown>; clear?: unknown } | null
@@ -23,7 +23,7 @@ export async function PUT(req: NextRequest) {
   const clear = Array.isArray(body.clear) ? body.clear.filter((k): k is string => typeof k === 'string') : []
 
   try {
-    await saveSettings(values, clear, gate.user?.name ?? undefined)
+    await saveSettings(values, clear, gate.username)
   } catch (e) {
     console.error('[settings] save failed', e)
     return NextResponse.json({ error: 'Settings could not be saved. Try again.' }, { status: 500 })

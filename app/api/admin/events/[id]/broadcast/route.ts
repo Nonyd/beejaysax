@@ -8,7 +8,7 @@ export const maxDuration = 300
 
 /** Email everyone holding a ticket (venue change, timing, parking…). `testTo` sends one preview only. */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const b = (await req.json().catch(() => ({}))) as { subject?: string; message?: string; testTo?: string }

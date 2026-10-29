@@ -5,21 +5,19 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 
-const navItems = [
-  { href: '/admin', label: 'Dashboard' },
-  { href: '/admin/content', label: 'Website content' },
-  { href: '/admin/events', label: 'Events' },
-  { href: '/admin/releases', label: 'Releases' },
-  { href: '/admin/videos', label: 'Videos' },
-  { href: '/admin/gallery', label: 'Gallery' },
-  { href: '/admin/messages', label: 'Messages' },
-  { href: '/admin/contacts', label: 'Mailing list' },
-  { href: '/admin/campaigns', label: 'Campaigns' },
-  { href: '/admin/emails', label: 'Email log' },
-  { href: '/admin/settings', label: 'Settings' },
-]
+export type AdminNavItem = { href: string; label: string }
 
-export default function AdminSidebar({ username, width = 280 }: { username: string; width?: number }) {
+export default function AdminSidebar({
+  username,
+  roleLabel,
+  navItems,
+  width = 280,
+}: {
+  username: string
+  roleLabel: string
+  navItems: AdminNavItem[]
+  width?: number
+}) {
   const pathname = usePathname()
 
   function isActive(href: string) {
@@ -110,18 +108,22 @@ export default function AdminSidebar({ username, width = 280 }: { username: stri
           >
             {username.charAt(0).toUpperCase()}
           </div>
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 14,
-              color: '#F7F1E3',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {username}
-          </span>
+          <div style={{ minWidth: 0 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 14,
+                color: '#F7F1E3',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                display: 'block',
+              }}
+            >
+              {username}
+            </span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(247,241,227,0.55)' }}>{roleLabel}</span>
+          </div>
         </div>
         <button
           type="button"

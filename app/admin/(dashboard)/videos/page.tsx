@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import SyncPanel from '@/components/admin/SyncPanel'
@@ -8,6 +9,7 @@ import { getSyncStatus } from '@/lib/sync/run'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminVideosPage() {
+  await requireAdmin('videos')
   const [videos, status, key, channel] = await Promise.all([
     prisma.video.findMany({ orderBy: [{ isFeatured: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }] }),
     getSyncStatus('youtube'),

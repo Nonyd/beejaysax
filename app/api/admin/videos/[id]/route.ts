@@ -7,7 +7,7 @@ type Params = { params: Promise<{ id: string }> }
 
 /** Hide/show, feature, retitle (locks the title against sync), reorder. */
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('videos')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const v = await prisma.video.findUnique({ where: { id } })
@@ -27,7 +27,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('videos')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const v = await prisma.video.findUnique({ where: { id } })

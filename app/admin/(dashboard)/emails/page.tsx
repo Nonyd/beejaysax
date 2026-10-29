@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -23,6 +24,7 @@ const STATUS_CLS: Record<string, string> = {
 }
 
 export default async function AdminEmailsPage({ searchParams }: { searchParams: Promise<{ f?: string; q?: string }> }) {
+  await requireAdmin('emails')
   const { f = 'all', q = '' } = await searchParams
   const where = {
     ...(f === 'problems' ? { status: { in: ['FAILED', 'BOUNCED', 'COMPLAINED', 'SUPPRESSED'] } } : f === 'queued' ? { status: 'QUEUED' } : {}),

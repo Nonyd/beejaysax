@@ -9,7 +9,7 @@ const cell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v
 
 /** CSV of the contacts matching the list's current filters (same query string as the admin page). */
 export async function GET(req: NextRequest) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('mailing')
   if (gate instanceof NextResponse) return gate
   const p = req.nextUrl.searchParams
   const contacts = await prisma.contact.findMany({

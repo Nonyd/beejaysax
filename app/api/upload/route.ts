@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAdminApi } from '@/lib/admin-auth'
 import { saveUpload, UploadError } from '@/lib/uploads'
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const gate = await requireAdminApi()
+  if (gate instanceof NextResponse) return gate
 
   try {
     const form = await req.formData()

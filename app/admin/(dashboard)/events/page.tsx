@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import Image from 'next/image'
 import { fmt } from '@/lib/time'
@@ -16,6 +17,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 }
 
 export default async function AdminEventsPage() {
+  await requireAdmin('events')
   const events = await prisma.event.findMany({
     orderBy: { eventDate: 'desc' },
     include: {

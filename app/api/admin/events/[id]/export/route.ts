@@ -12,7 +12,7 @@ function csvCell(v: unknown) {
 
 /** Attendee list as CSV (opens in Excel / Google Sheets). */
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const event = await prisma.event.findUnique({ where: { id }, select: { title: true, slug: true } })

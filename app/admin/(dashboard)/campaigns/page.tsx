@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -14,6 +15,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 }
 
 export default async function AdminCampaignsPage() {
+  await requireAdmin('mailing')
   const [campaigns, subscribed, counts] = await Promise.all([
     prisma.campaign.findMany({ orderBy: { createdAt: 'desc' }, take: 100 }),
     prisma.contact.count({ where: { status: 'SUBSCRIBED' } }),

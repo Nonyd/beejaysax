@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
@@ -9,6 +10,7 @@ import { expireStaleOrders } from '@/lib/events/orders'
 export const dynamic = 'force-dynamic'
 
 export default async function EventRegistrationsPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin('events')
   const { id } = await params
   await expireStaleOrders()
   const event = await prisma.event.findUnique({

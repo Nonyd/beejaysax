@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import ReleaseForm from '@/components/admin/ReleaseForm'
@@ -6,6 +7,7 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader'
 export const dynamic = 'force-dynamic'
 
 export default async function EditReleasePage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin('releases')
   const { id } = await params
   const release = await prisma.release.findUnique({ where: { id } })
   if (!release) notFound()

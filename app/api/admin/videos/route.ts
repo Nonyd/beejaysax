@@ -6,7 +6,7 @@ import { parseYouTubeVideoId } from '@/lib/music-ids'
 
 /** Add a video by hand (e.g. from another channel). */
 export async function POST(req: NextRequest) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('videos')
   if (gate instanceof NextResponse) return gate
   const b = (await req.json().catch(() => ({}))) as { url?: string; title?: string }
   const youtubeId = parseYouTubeVideoId(String(b.url ?? ''))

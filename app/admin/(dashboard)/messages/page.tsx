@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
 import MessagesClient from '@/components/admin/MessagesClient'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -5,6 +6,7 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminMessagesPage() {
+  await requireAdmin('messages')
   const messages = await prisma.contactMessage.findMany({
     orderBy: { createdAt: 'desc' },
   })

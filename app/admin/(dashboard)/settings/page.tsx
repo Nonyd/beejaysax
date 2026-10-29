@@ -8,7 +8,7 @@ import { fmt } from '@/lib/time'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminSettingsPage() {
-  await requireAdmin()
+  await requireAdmin('settings')
   const settings = await getSettingsForAdmin()
   const lastRunRow = await prisma.siteSetting.findUnique({ where: { key: 'status.jobs.lastRun' } })
   const lastRun = lastRunRow ? (JSON.parse(lastRunRow.value) as { at: string }).at : null

@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
@@ -9,6 +10,7 @@ import { currencySymbol, toCouponRows, toEditorEvent } from '@/lib/events/editor
 export const dynamic = 'force-dynamic'
 
 export default async function EditEventPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin('events')
   const { id } = await params
   const event = await prisma.event.findUnique({
     where: { id },

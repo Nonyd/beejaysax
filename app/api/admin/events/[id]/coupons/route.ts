@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 type Params = { params: Promise<{ id: string }> }
 
 export async function GET(_req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const coupons = await prisma.coupon.findMany({ where: { eventId: id }, orderBy: { createdAt: 'desc' } })
@@ -13,7 +13,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 }
 
 export async function POST(req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const b = (await req.json().catch(() => ({}))) as Record<string, unknown>

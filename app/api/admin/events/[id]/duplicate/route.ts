@@ -3,7 +3,7 @@ import { requireAdminApi } from '@/lib/admin-auth'
 import { duplicateEvent } from '@/lib/events/admin'
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const copy = await duplicateEvent(id)

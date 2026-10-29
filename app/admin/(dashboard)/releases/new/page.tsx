@@ -1,7 +1,9 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import ReleaseForm from '@/components/admin/ReleaseForm'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 
-export default function NewReleasePage() {
+export default async function NewReleasePage() {
+  await requireAdmin('releases')
   return (
     <div>
       <AdminPageHeader

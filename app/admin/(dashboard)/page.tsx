@@ -2,10 +2,23 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import SectionLabel from '@/components/ui/SectionLabel'
 import AdminPageHeader, { adminOutlineLinkStyle, adminPrimaryLinkStyle } from '@/components/admin/AdminPageHeader'
+import { requireAdmin } from '@/lib/admin-auth'
+import { ADMIN_NAV, can } from '@/lib/permissions'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminDashboard() {
+export default async function AdminDashboard({ searchParams }: { searchParams: Promise<{ denied?: string }> }) {
+  const admin = await requireAdmin()
+  const { denied } = await searchParams
+  const show = {
+    events: can(admin, 'events'),
+    releases: can(admin, 'releases'),
+    gallery: can(admin, 'gallery'),
+    messages: can(admin, 'messages'),
+  }
+  // Each section's figures are only queried for admins who can open that section.
+  const when = <T,>(allowed: boolean, query: () => Promise<T>, fallback: T) => (allowed ? query() : Promise.resolve(fallback))
+
   const [
     upcomingEvents,
     totalTickets,
@@ -17,40 +30,63 @@ export default async function AdminDashboard() {
     recentTickets,
     recentMessages,
   ] = await Promise.all([
-    prisma.event.count({ where: { status: 'UPCOMING' } }),
-    prisma.ticket.count(),
-    prisma.ticket.count({ where: { isUsed: true } }),
-    prisma.ticket.aggregate({ _sum: { totalAmount: true } }),
-    prisma.release.count(),
-    prisma.galleryImage.count(),
-    prisma.contactMessage.count({ where: { isRead: false } }),
-    prisma.ticket.findMany({ orderBy: { createdAt: 'desc' }, take: 5, include: { event: true } }),
-    prisma.contactMessage.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }),
+    when(show.events, () => prisma.event.count({ where: { status: 'UPCOMING' } }), 0),
+    when(show.events, () => prisma.ticket.count(), 0),
+    when(show.events, () => prisma.ticket.count({ where: { isUsed: true } }), 0),
+    when(show.events, () => prisma.ticket.aggregate({ _sum: { totalAmount: true } }), { _sum: { totalAmount: 0 } }),
+    when(show.releases, () => prisma.release.count(), 0),
+    when(show.gallery, () => prisma.galleryImage.count(), 0),
+    when(show.messages, () => prisma.contactMessage.count({ where: { isRead: false } }), 0),
+    when(show.events, () => prisma.ticket.findMany({ orderBy: { createdAt: 'desc' }, take: 5, include: { event: true } }), []),
+    when(show.messages, () => prisma.contactMessage.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }), []),
   ])
 
   const totalRevenue = revenueData._sum.totalAmount ?? 0
 
   const stats = [
-    { label: 'Upcoming Events', value: upcomingEvents, sub: 'concerts scheduled' },
-    { label: 'Tickets Sold', value: totalTickets, sub: `${usedTickets} used at door` },
+    { label: 'Upcoming Events', value: upcomingEvents, sub: 'concerts scheduled', allowed: show.events },
+    { label: 'Tickets Sold', value: totalTickets, sub: `${usedTickets} used at door`, allowed: show.events },
     {
       label: 'Total Revenue',
       value: `₦${totalRevenue.toLocaleString()}`,
       sub: 'from ticket sales',
       isText: true,
+      allowed: show.events,
     },
-    { label: 'Unread Messages', value: unreadMessages, sub: 'awaiting reply' },
-    { label: 'Releases', value: releaseCount, sub: 'in discography' },
-    { label: 'Gallery Images', value: galleryCount, sub: 'uploaded' },
-  ]
+    { label: 'Unread Messages', value: unreadMessages, sub: 'awaiting reply', allowed: show.messages },
+    { label: 'Releases', value: releaseCount, sub: 'in discography', allowed: show.releases },
+    { label: 'Gallery Images', value: galleryCount, sub: 'uploaded', allowed: show.gallery },
+  ].filter((s) => s.allowed)
+
+  const quickLinks = ADMIN_NAV.filter((item) => item.href !== '/admin' && item.permission && can(admin, item.permission))
 
   return (
     <div>
       <AdminPageHeader
         eyebrow="Dashboard"
-        title="Welcome back"
-        subtitle={`Here's what's happening with BeeJay Sax — tickets, releases, and fan messages at a glance.`}
+        title={`Welcome back${admin.name ? `, ${admin.name.split(' ')[0]}` : ''}`}
+        subtitle={
+          stats.length
+            ? `Here's what's happening with BeeJay Sax — tickets, releases, and fan messages at a glance.`
+            : 'Pick a section from the menu to get started.'
+        }
       />
+
+      {denied && (
+        <p className="mb-8 rounded-[14px] border border-[#f0a35e]/40 px-4 py-3 text-[14px] text-[#f0a35e]">
+          Your account does not have access to that page. Ask a super admin if you need it.
+        </p>
+      )}
+
+      {stats.length === 0 && (
+        <div className="mb-10 flex flex-wrap gap-3">
+          {quickLinks.map((item) => (
+            <Link key={item.href} href={item.href} style={adminOutlineLinkStyle()}>
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
 
       <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map((stat) => (
@@ -82,22 +118,33 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <div className="mb-12 flex flex-wrap gap-3">
-        <Link href="/admin/events/new" style={adminPrimaryLinkStyle()}>
-          + New Event
-        </Link>
-        <Link href="/admin/releases/new" style={adminOutlineLinkStyle()}>
-          + New Release
-        </Link>
-        <Link href="/admin/gallery" style={adminOutlineLinkStyle()}>
-          Upload Photos
-        </Link>
-        <Link href="/admin/messages" style={adminOutlineLinkStyle()}>
-          View Messages
-        </Link>
-      </div>
+      {stats.length > 0 && (
+        <div className="mb-12 flex flex-wrap gap-3">
+          {show.events && (
+            <Link href="/admin/events/new" style={adminPrimaryLinkStyle()}>
+              + New Event
+            </Link>
+          )}
+          {show.releases && (
+            <Link href="/admin/releases/new" style={adminOutlineLinkStyle()}>
+              + New Release
+            </Link>
+          )}
+          {show.gallery && (
+            <Link href="/admin/gallery" style={adminOutlineLinkStyle()}>
+              Upload Photos
+            </Link>
+          )}
+          {show.messages && (
+            <Link href="/admin/messages" style={adminOutlineLinkStyle()}>
+              View Messages
+            </Link>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        {show.events && (
         <div style={{ border: '1px solid rgba(247,241,227,0.12)', background: '#1B1F4B', overflow: 'hidden' }}>
           <div style={{ borderBottom: '1px solid rgba(247,241,227,0.12)', padding: '20px 24px' }}>
             <SectionLabel>Recent Registrations</SectionLabel>
@@ -142,7 +189,9 @@ export default async function AdminDashboard() {
             </Link>
           </div>
         </div>
+        )}
 
+        {show.messages && (
         <div style={{ border: '1px solid rgba(247,241,227,0.12)', background: '#1B1F4B', overflow: 'hidden' }}>
           <div style={{ borderBottom: '1px solid rgba(247,241,227,0.12)', padding: '20px 24px' }}>
             <SectionLabel>Recent Messages</SectionLabel>
@@ -186,6 +235,7 @@ export default async function AdminDashboard() {
             </Link>
           </div>
         </div>
+        )}
       </div>
     </div>
   )

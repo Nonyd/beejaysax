@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -9,6 +10,7 @@ import { fmt } from '@/lib/time'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminCampaignPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdmin('mailing')
   const { id } = await params
   const c = await prisma.campaign.findUnique({ where: { id } })
   if (!c) notFound()

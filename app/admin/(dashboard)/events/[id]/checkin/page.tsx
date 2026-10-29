@@ -1,22 +1,36 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { can } from '@/lib/permissions'
 import CheckinScanner from '@/components/checkin/CheckinScanner'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminCheckinPage({ params }: { params: Promise<{ id: string }> }) {
+  const admin = await requireAdmin('checkin')
   const { id } = await params
   const event = await prisma.event.findUnique({ where: { id }, select: { id: true, title: true, checkInPinHash: true } })
   if (!event) notFound()
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://beejaysax.com').replace(/\/$/, '')
+  const fullEvents = can(admin, 'events')
 
   return (
     <div>
       <nav className="mb-8 flex flex-wrap items-center gap-2 text-[13px]">
-        <Link href="/admin/events" className="text-[rgba(247,241,227,0.65)] no-underline">Events</Link>
-        <span className="text-[rgba(247,241,227,0.35)]">/</span>
-        <Link href={`/admin/events/${id}/tickets`} className="text-[rgba(247,241,227,0.65)] no-underline">{event.title}</Link>
+        {fullEvents ? (
+          <>
+            <Link href="/admin/events" className="text-[rgba(247,241,227,0.65)] no-underline">Events</Link>
+            <span className="text-[rgba(247,241,227,0.35)]">/</span>
+            <Link href={`/admin/events/${id}/tickets`} className="text-[rgba(247,241,227,0.65)] no-underline">{event.title}</Link>
+          </>
+        ) : (
+          <>
+            <Link href="/admin/checkin" className="text-[rgba(247,241,227,0.65)] no-underline">Door check-in</Link>
+            <span className="text-[rgba(247,241,227,0.35)]">/</span>
+            <span className="text-[rgba(247,241,227,0.65)]">{event.title}</span>
+          </>
+        )}
         <span className="text-[rgba(247,241,227,0.35)]">/</span>
         <span className="text-[#E3B23C]">Check-in</span>
       </nav>

@@ -18,7 +18,7 @@ const bad = (error: string, status = 400) => NextResponse.json({ error }, { stat
  *   { action: 'delete', id }
  */
 export async function POST(req: NextRequest) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('mailing')
   if (gate instanceof NextResponse) return gate
 
   if (req.headers.get('content-type')?.includes('multipart/form-data')) {

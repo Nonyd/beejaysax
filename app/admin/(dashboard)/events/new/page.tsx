@@ -1,9 +1,11 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import EventEditor from '@/components/admin/events/EventEditor'
 import { BLANK_EVENT } from '@/lib/events/editor-data'
 
-export default function NewEventPage() {
+export default async function NewEventPage() {
+  await requireAdmin('events')
   return (
     <div>
       <nav className="mb-8 text-[13px]">

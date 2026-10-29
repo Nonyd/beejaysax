@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -27,6 +28,7 @@ const STATUS_LABEL: Record<string, string> = { SUBSCRIBED: 'Subscribed', UNSUBSC
 type SP = { q?: string; tag?: string; status?: string; page?: string }
 
 export default async function AdminContactsPage({ searchParams }: { searchParams: Promise<SP> }) {
+  await requireAdmin('mailing')
   const sp = await searchParams
   const f = { q: sp.q ?? '', tag: sp.tag ?? '', status: sp.status ?? '' }
   const page = Math.max(1, Number(sp.page) || 1)

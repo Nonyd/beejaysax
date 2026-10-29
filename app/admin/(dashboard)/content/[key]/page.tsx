@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -8,6 +9,7 @@ import { getContent } from '@/lib/content/store'
 export const dynamic = 'force-dynamic'
 
 export default async function EditContentPage({ params }: { params: Promise<{ key: string }> }) {
+  await requireAdmin('content')
   const { key } = await params
   if (!Object.prototype.hasOwnProperty.call(CONTENT, key)) notFound()
   const k = key as ContentKey

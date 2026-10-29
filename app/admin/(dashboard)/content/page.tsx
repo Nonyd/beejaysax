@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import Link from 'next/link'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { CONTENT, CONTENT_KEYS } from '@/lib/content/registry'
@@ -7,6 +8,7 @@ import { fmt } from '@/lib/time'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminContentPage() {
+  await requireAdmin('content')
   const edits = await contentEditTimes()
   const groups = new Map<string, typeof CONTENT_KEYS>()
   for (const k of CONTENT_KEYS) groups.set(CONTENT[k].group, [...(groups.get(CONTENT[k].group) ?? []), k])

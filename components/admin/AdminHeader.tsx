@@ -11,6 +11,11 @@ const titles: Record<string, string> = {
   '/admin/gallery': 'Gallery',
   '/admin/messages': 'Messages',
   '/admin/emails': 'Emails',
+  '/admin/contacts': 'Mailing list',
+  '/admin/campaigns': 'Campaigns',
+  '/admin/checkin': 'Door check-in',
+  '/admin/maintenance': 'Maintenance',
+  '/admin/users': 'Users',
   '/admin/settings': 'Settings',
 }
 

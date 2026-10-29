@@ -303,12 +303,21 @@ model SiteSetting {
   updatedBy String?
 }
 
+/// Admin accounts (Admin → Users). Roles and permission keys live in lib/permissions.ts.
 model AdminUser {
   id           String    @id @default(cuid())
   username     String    @unique
   email        String    @unique
   passwordHash String
   name         String?
+  /// SUPER_ADMIN | STAFF. Defaults to SUPER_ADMIN so accounts made before roles existed keep full
+  /// access; accounts created in Admin → Users always set it.
+  role         String    @default("SUPER_ADMIN")
+  /// Sections a STAFF account may use. Ignored for SUPER_ADMIN.
+  permissions  String[]
+  /// Disabled accounts cannot sign in, and their open sessions stop working.
+  active       Boolean   @default(true)
+  lastLoginAt  DateTime?
   accounts     Account[]
   sessions     Session[]
   createdAt    DateTime  @default(now())

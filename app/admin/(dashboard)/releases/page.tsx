@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,6 +11,7 @@ import { getSyncStatus } from '@/lib/sync/run'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminReleasesPage() {
+  await requireAdmin('releases')
   const [releases, status, id, secret, artist] = await Promise.all([
     prisma.release.findMany({ orderBy: [{ isHidden: 'asc' }, { releaseDate: 'desc' }, { createdAt: 'desc' }] }),
     getSyncStatus('spotify'),

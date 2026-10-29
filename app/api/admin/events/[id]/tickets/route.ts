@@ -8,14 +8,14 @@ type Action = 'resend' | 'checkin' | 'undo_checkin' | 'cancel' | 'restore' | 're
 
 /** Bulk actions on an event's tickets from the registrations page. */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('events')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const body = (await req.json().catch(() => ({}))) as { action?: Action; ticketIds?: unknown }
   const ids = Array.isArray(body.ticketIds) ? body.ticketIds.filter((x): x is string => typeof x === 'string').slice(0, 500) : []
   if (!ids.length) return NextResponse.json({ error: 'Select at least one ticket.' }, { status: 400 })
   const where = { id: { in: ids }, eventId: id }
-  const by = gate.user?.name ?? gate.user?.email ?? 'admin'
+  const by = gate.username ?? 'admin'
 
   switch (body.action) {
     case 'resend': {

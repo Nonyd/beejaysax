@@ -18,9 +18,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const admin = await prisma.adminUser.findUnique({
           where: { username: credentials.username as string },
         })
-        if (!admin) return null
+        if (!admin || !admin.active) return null
         const valid = await compare(credentials.password as string, admin.passwordHash)
         if (!valid) return null
+        await prisma.adminUser.update({ where: { id: admin.id }, data: { lastLoginAt: new Date() } }).catch(() => {})
         return {
           id: admin.id,
           name: admin.username,

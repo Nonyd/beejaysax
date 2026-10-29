@@ -43,7 +43,14 @@ async function testEmail(): Promise<Check[]> {
   if (!resendKey) checks.push({ name: 'Resend', ok: false, detail: 'No API key saved' })
   else {
     const { res, data } = await fetchJson('https://api.resend.com/domains', { headers: { Authorization: `Bearer ${resendKey}` } })
-    if (!res.ok) checks.push({ name: 'Resend', ok: false, detail: String(data.message ?? `Resend returned ${res.status}`) })
+    if (!res.ok && /restricted to only send/i.test(String(data.message))) {
+      // Sending-only keys can't list domains; that is the recommended key type, not a failure
+      checks.push({
+        name: 'Resend',
+        ok: true,
+        detail: 'Sending-only key (recommended). Use "Send a test email" in Email log to confirm delivery.',
+      })
+    } else if (!res.ok) checks.push({ name: 'Resend', ok: false, detail: String(data.message ?? `Resend returned ${res.status}`) })
     else {
       const list = (data.data as { name: string; status: string }[] | undefined) ?? []
       const match = list.find((d) => d.name.toLowerCase() === domain)
@@ -125,7 +132,7 @@ async function testMusic(): Promise<Check[]> {
 const TESTS: Record<string, () => Promise<Check[]>> = { paystack: testPaystack, email: testEmail, music: testMusic }
 
 export async function POST(_req: Request, { params }: { params: Promise<{ service: string }> }) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('settings')
   if (gate instanceof NextResponse) return gate
   const { service } = await params
   const run = TESTS[service]

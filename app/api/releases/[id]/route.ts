@@ -7,7 +7,7 @@ import { newlyLocked, parseReleaseInput, ReleaseInputError } from '@/lib/release
 type Params = { params: Promise<{ id: string }> }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('releases')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const current = await prisma.release.findUnique({ where: { id } })
@@ -34,7 +34,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const gate = await requireAdminApi()
+  const gate = await requireAdminApi('releases')
   if (gate instanceof NextResponse) return gate
   const { id } = await params
   const r = await prisma.release.findUnique({ where: { id } })
