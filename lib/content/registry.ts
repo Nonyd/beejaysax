@@ -53,6 +53,8 @@ export const CONTENT = {
       phone: text('Phone (as shown)', '+234 80 5898 2828'),
       email: text('Booking email', 'booking@beejaysax.com'),
       bookLabel: text('“Book” button label', 'Book BeeJay', { max: 40 }),
+      newsletterTitle: text('Mailing list heading', 'Hear it first', { max: 60, help: 'Shown above the signup form in the footer.' }),
+      newsletterText: area('Mailing list text', 'New music, concert dates and early tickets, straight to your inbox. No spam.', { rows: 2, max: 200 }),
       socials: list(
         'Social links',
         'Link',

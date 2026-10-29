@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { markContactUndeliverable } from '@/lib/mailing/contacts'
 
 export type DeliveryEvent = 'DELIVERED' | 'BOUNCED' | 'COMPLAINED' | 'DELAYED' | 'BLOCKED'
 
@@ -27,7 +28,20 @@ export async function recordDeliveryEvent(args: { provider: 'resend' | 'brevo'; 
     }
   }
 
-  const email = (args.email ?? log?.to)?.toLowerCase()
+  // Campaign emails are tracked per recipient in CampaignDelivery rather than EmailLog.
+  let campaignTo: string | undefined
+  if (!log && args.messageId && next) {
+    const d = await prisma.campaignDelivery.findFirst({ where: { providerMessageId: args.messageId } })
+    if (d && (rank[next] ?? 0) >= (rank[d.status] ?? 0)) {
+      await prisma.campaignDelivery.update({
+        where: { id: d.id },
+        data: { status: next, error: next === 'DELIVERED' ? d.error : (args.detail ?? next).slice(0, 500) },
+      })
+    }
+    campaignTo = d?.email
+  }
+
+  const email = (args.email ?? log?.to ?? campaignTo)?.toLowerCase()
   if (email && (args.event === 'BOUNCED' || args.event === 'COMPLAINED' || args.event === 'BLOCKED')) {
     const reason = args.event === 'COMPLAINED' ? 'MARKED AS SPAM' : 'BOUNCED'
     await prisma.emailSuppression.upsert({
@@ -35,5 +49,6 @@ export async function recordDeliveryEvent(args: { provider: 'resend' | 'brevo'; 
       create: { email, reason, provider: args.provider },
       update: { reason, provider: args.provider },
     })
+    await markContactUndeliverable(email, args.event === 'COMPLAINED' ? 'COMPLAINED' : 'BOUNCED')
   }
 }

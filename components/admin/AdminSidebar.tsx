@@ -13,7 +13,9 @@ const navItems = [
   { href: '/admin/videos', label: 'Videos' },
   { href: '/admin/gallery', label: 'Gallery' },
   { href: '/admin/messages', label: 'Messages' },
-  { href: '/admin/emails', label: 'Emails' },
+  { href: '/admin/contacts', label: 'Mailing list' },
+  { href: '/admin/campaigns', label: 'Campaigns' },
+  { href: '/admin/emails', label: 'Email log' },
   { href: '/admin/settings', label: 'Settings' },
 ]
 

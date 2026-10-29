@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Adire from '@/components/ui/Adire'
 import { Wordmark } from '@/components/layout/Navbar'
 import { getContent } from '@/lib/content/store'
+import SignupForm from '@/components/mailing/SignupForm'
 
 const NAV = [
   { label: 'Music', href: '/releases' },
@@ -16,6 +17,16 @@ export default async function Footer() {
   return (
     <footer className="bg-night">
       <Adire variant="band" color="#E3B23C" opacity={0.55} height={40} />
+
+      <div className="site-shell">
+        <div className="flex flex-col gap-6 border-b border-line pt-16 pb-14 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="font-display text-[clamp(30px,4vw,42px)] leading-none text-ivory">{site.newsletterTitle}</h2>
+            <p className="mt-3 max-w-[46ch] font-body text-base leading-relaxed text-ivory/65">{site.newsletterText}</p>
+          </div>
+          <SignupForm />
+        </div>
+      </div>
 
       <div className="site-shell grid grid-cols-2 gap-x-6 gap-y-12 pt-20 pb-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="col-span-2 md:col-span-1">

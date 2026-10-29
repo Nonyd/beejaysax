@@ -6,7 +6,7 @@ import path from 'node:path'
  * Photos uploaded in the admin are stored on the server's own disk and served from /uploads/….
  * The deploy never touches this folder (see .github/workflows/deploy.yml).
  */
-export const UPLOAD_ROOT = path.resolve(process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads'))
+export const UPLOAD_ROOT = path.resolve(/*turbopackIgnore: true*/ process.env.UPLOAD_DIR || path.join(/*turbopackIgnore: true*/ process.cwd(), 'uploads'))
 
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
@@ -43,8 +43,8 @@ export async function saveUpload(file: File, folder: unknown): Promise<string> {
 
   const dir = cleanFolder(folder)
   const name = `${Date.now().toString(36)}-${randomBytes(6).toString('hex')}.${ext}`
-  await mkdir(path.join(UPLOAD_ROOT, dir), { recursive: true })
-  await writeFile(path.join(UPLOAD_ROOT, dir, name), buf, { flag: 'wx' })
+  await mkdir(path.join(/*turbopackIgnore: true*/ UPLOAD_ROOT, dir), { recursive: true })
+  await writeFile(path.join(/*turbopackIgnore: true*/ UPLOAD_ROOT, dir, name), buf, { flag: 'wx' })
   return `/uploads/${dir}/${name}`
 }
 
@@ -53,7 +53,7 @@ export async function readUpload(segments: string[]): Promise<{ body: Buffer; ty
   if (segments.length !== 2 || !segments.every((s) => /^[a-z0-9][a-z0-9._-]*$/i.test(s) && !s.includes('..'))) return null
   const ext = path.extname(segments[1]).slice(1).toLowerCase() as Ext
   if (!(ext in TYPES)) return null
-  const file = path.join(UPLOAD_ROOT, ...segments)
+  const file = path.join(/*turbopackIgnore: true*/ UPLOAD_ROOT, ...segments)
   if (!file.startsWith(UPLOAD_ROOT + path.sep)) return null
   try {
     return { body: await readFile(file), type: TYPES[ext] }

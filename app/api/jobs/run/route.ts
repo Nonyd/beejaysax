@@ -7,6 +7,7 @@ import { expireStaleOrders } from '@/lib/events/orders'
 import { retryQueuedEmails } from '@/lib/email/send'
 import { markPastEvents, sendDueReminders } from '@/lib/jobs/reminders'
 import { runScheduledSync } from '@/lib/sync/run'
+import { pumpCampaigns } from '@/lib/mailing/campaigns'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -43,6 +44,8 @@ async function run(req: NextRequest) {
     return n
   })
   await task('musicSync', () => runScheduledSync())
+  // Last, with most of the remaining time: finishes campaigns the admin started and then closed the page on.
+  await task('campaigns', () => pumpCampaigns(150_000))
 
   const summary = { ok: true, ms: Date.now() - started, results }
   await prisma.siteSetting.upsert({

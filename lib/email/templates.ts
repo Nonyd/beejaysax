@@ -23,7 +23,7 @@ function button(href: string, label: string, primary = true) {
 }
 
 /** Shared frame: indigo header with wordmark, ivory card, small footer. */
-export function layout(opts: { preheader: string; body: string }) {
+export function layout(opts: { preheader: string; body: string; footer?: string }) {
   const base = siteUrl()
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -43,7 +43,7 @@ export function layout(opts: { preheader: string; body: string }) {
     </td></tr>
     <tr><td style="padding:22px 8px;font-family:${SANS};font-size:12px;line-height:1.6;color:rgba(247,241,227,0.55);">
       BeeJay Sax · Lagos, Nigeria · <a href="${base}" style="color:rgba(247,241,227,0.75);">beejaysax.com</a><br>
-      Questions? Reply to this email or write to booking@beejaysax.com.
+      Questions? Reply to this email or write to booking@beejaysax.com.${opts.footer ? `<br>${opts.footer}` : ''}
     </td></tr>
   </table>
 </td></tr></table></body></html>`
@@ -179,4 +179,51 @@ export function adminContactNotice(m: { name: string; email: string; phone?: str
 export function testEmail() {
   const body = `<h1 style="margin:0 0 14px;font-family:${SERIF};font-weight:400;font-size:30px;">Email is working</h1><p style="margin:0;">This test was sent from Admin → Settings. Ticket and reminder emails will look like this.</p>`
   return { subject: 'BeeJay Sax test email', html: layout({ preheader: 'Test email from the admin', body }), text: 'Email is working.' }
+}
+
+export type CampaignContent = {
+  subject: string
+  preheader?: string | null
+  heading?: string | null
+  body: string
+  imageUrl?: string | null
+  buttonLabel?: string | null
+  buttonUrl?: string | null
+}
+
+/** Escapes, then turns **bold**, bare https:// links and line breaks into email-safe HTML. */
+function richText(s: string) {
+  return esc(s)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g, `<a href="$1" style="color:${C.clay};">$1</a>`)
+    .replace(/\n/g, '<br>')
+}
+
+const absolute = (u: string) => (u.startsWith('/') ? siteUrl() + u : u)
+
+/**
+ * A mailing-list campaign. {{name}} in the heading or body becomes the reader's first name ("friend" if unknown).
+ * Safe to import in the browser (the admin editor uses it for the live preview).
+ */
+export function campaignEmail(c: CampaignContent, to: { name: string | null; unsubscribeUrl: string }) {
+  const first = to.name?.trim().split(/\s+/)[0] || 'friend'
+  const fill = (s: string) => s.replace(/\{\{\s*name\s*\}\}/gi, first)
+  const body = c.body.trim() ? fill(c.body.trim()) : ''
+  const paras = body
+    .split(/\n{2,}/)
+    .map((p) => `<p style="margin:0 0 14px;">${richText(p)}</p>`)
+    .join('')
+  const html = layout({
+    preheader: fill(c.preheader?.trim() || body.slice(0, 120)),
+    body: `
+    ${c.imageUrl ? `<img src="${esc(absolute(c.imageUrl))}" alt="" width="536" style="display:block;width:100%;max-width:536px;height:auto;border:0;border-radius:16px;margin:0 0 24px;">` : ''}
+    ${c.heading?.trim() ? `<h1 style="margin:0 0 18px;font-family:${SERIF};font-weight:400;font-size:30px;line-height:1.1;color:${C.text};">${esc(fill(c.heading.trim()))}</h1>` : ''}
+    ${paras}
+    ${c.buttonLabel?.trim() && c.buttonUrl?.trim() ? `<p style="margin:22px 0 4px;">${button(absolute(c.buttonUrl.trim()), c.buttonLabel.trim())}</p>` : ''}`,
+    footer: `You’re getting this because you’re on the BeeJay Sax mailing list. <a href="${esc(to.unsubscribeUrl)}" style="color:rgba(247,241,227,0.75);">Unsubscribe</a>`,
+  })
+  const text = [c.heading?.trim() ? fill(c.heading.trim()) : '', body, c.buttonLabel && c.buttonUrl ? `${c.buttonLabel}: ${absolute(c.buttonUrl)}` : '', `Unsubscribe: ${to.unsubscribeUrl}`]
+    .filter(Boolean)
+    .join('\n\n')
+  return { subject: fill(c.subject), html, text }
 }

@@ -406,3 +406,65 @@ model SiteContent {
   updatedAt DateTime @updatedAt
   updatedBy String?
 }
+
+/// Mailing list (Admin → Mailing list). One row per address; see lib/mailing/contacts.ts.
+model Contact {
+  id             String    @id @default(cuid())
+  /// Always lower-case
+  email          String    @unique
+  name           String?
+  /// SUBSCRIBED | UNSUBSCRIBED | BOUNCED | COMPLAINED
+  status         String    @default("SUBSCRIBED")
+  /// IMPORT | SIGNUP | ADMIN
+  source         String    @default("ADMIN")
+  tags           String[]
+  /// Secret in every campaign's unsubscribe link
+  token          String    @unique
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([status])
+}
+
+/// An email written in Admin → Campaigns and sent to the mailing list (or one tag of it).
+model Campaign {
+  id          String             @id @default(cuid())
+  subject     String
+  preheader   String?
+  heading     String?
+  body        String
+  imageUrl    String?
+  buttonLabel String?
+  buttonUrl   String?
+  /// null = every subscribed contact
+  audienceTag String?
+  /// DRAFT | SENDING | SENT | CANCELLED
+  status      String             @default("DRAFT")
+  recipients  Int                @default(0)
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  deliveries  CampaignDelivery[]
+}
+
+/// One recipient of a campaign, fixed when the campaign is sent (see lib/mailing/campaigns.ts).
+model CampaignDelivery {
+  id                String    @id @default(cuid())
+  campaignId        String
+  campaign          Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  contactId         String
+  email             String
+  /// PENDING | SENDING | SENT | DELIVERED | BOUNCED | COMPLAINED | FAILED
+  status            String    @default("PENDING")
+  provider          String?
+  providerMessageId String?
+  error             String?
+  claimedAt         DateTime?
+  sentAt            DateTime?
+
+  @@unique([campaignId, contactId])
+  @@index([campaignId, status])
+  @@index([providerMessageId])
+}
