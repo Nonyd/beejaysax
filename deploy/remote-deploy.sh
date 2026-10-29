@@ -56,6 +56,14 @@ case "${1:-}" in
     npx prisma db push --skip-generate --schema schema.prisma
     ;;
   restart)
+    # Prisma guesses the platform differently under the web server than over SSH on CloudLinux,
+    # so pin the engine that matches this server's OpenSSL 1.1 (once; the app reads .env at startup).
+    engine="$APP_DIR/node_modules/.prisma/client/libquery_engine-rhel-openssl-1.1.x.so.node"
+    if [ -f "$APP_DIR/.env" ] && [ -f "$engine" ] && [ -e /lib64/libssl.so.1.1 ] \
+      && ! grep -q '^PRISMA_QUERY_ENGINE_LIBRARY=' "$APP_DIR/.env"; then
+      printf '\n# Added by the deploy: database engine for this server\nPRISMA_QUERY_ENGINE_LIBRARY="%s"\n' "$engine" >> "$APP_DIR/.env"
+      echo "Pinned the database engine in .env"
+    fi
     mkdir -p "$APP_DIR/tmp"
     touch "$APP_DIR/tmp/restart.txt"
     echo "Restart requested"
