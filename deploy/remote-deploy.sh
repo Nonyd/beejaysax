@@ -31,6 +31,11 @@ use_node() {
     # shellcheck disable=SC1090
     set +u; . "$activate"; set -u
   fi
+  # CloudLinux's npm wrapper only installs into the app's own folder; use the real Node/npm instead.
+  if [ -n "${CL_NODEHOME:-}" ] && [ -x "$CL_NODEHOME/usr/bin/node" ]; then
+    export PATH="$CL_NODEHOME/usr/bin:$PATH"
+    unset NODE_PATH
+  fi
   command -v node >/dev/null || fail "Node.js not found. Create the app in cPanel → Setup Node.js App first (docs/DEPLOY.md, step 3)."
   echo "Using node $(node -v)"
 }
