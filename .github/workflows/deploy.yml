@@ -1,0 +1,124 @@
+# Push to master → build on GitHub → update the database schema on the server → upload → restart.
+# One-time server setup: docs/DEPLOY.md
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Never run two deploys at once; a newer push waits for the current one.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Switched on by setting the repository variable DEPLOY_ENABLED=true (last step of docs/DEPLOY.md).
+    if: ${{ vars.DEPLOY_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    env:
+      SSH_OPTS: -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o ServerAliveInterval=30
+      REMOTE: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+      APP_DIR: ${{ secrets.APP_DIR }}
+      SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Check configuration
+        run: |
+          missing=""
+          for v in SSH_HOST SSH_PORT SSH_USER SSH_KEY APP_DIR; do
+            [ -n "$(eval echo \${$v:-})" ] || missing="$missing $v"
+          done
+          [ -n "$SITE_URL" ] || missing="$missing NEXT_PUBLIC_SITE_URL(variable)"
+          [ -z "$missing" ] || { echo "::error::Missing GitHub secrets/variables:$missing (see docs/DEPLOY.md, step 6)"; exit 1; }
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ vars.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+          NEXT_PUBLIC_BUILD_SHA: ${{ github.sha }}
+          # Public pages render at request time, so the build never needs the real database.
+          DATABASE_URL: postgresql://build:build@127.0.0.1:5432/build
+          DIRECT_URL: postgresql://build:build@127.0.0.1:5432/build
+          NEXTAUTH_SECRET: build-time-placeholder
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: |
+          npx prisma generate
+          npx next build
+
+      - name: Assemble release
+        run: |
+          mkdir -p release
+          cp -r .next/standalone/. release/
+          mkdir -p release/.next
+          cp -r .next/static release/.next/static
+          cp -r public release/public
+          # Ship the Prisma engines for the server's Linux (tracing can miss the extra targets).
+          mkdir -p release/node_modules/.prisma
+          cp -r node_modules/.prisma/client release/node_modules/.prisma/
+          rm -f release/.env release/.env.*
+          echo "${{ github.sha }}" > release/BUILD_SHA
+          # Schema + Prisma CLI manifest + server script, uploaded separately and run first.
+          mkdir -p bundle/migrate
+          cp deploy/remote-deploy.sh bundle/
+          cp deploy/migrate/package.json prisma/schema.prisma bundle/migrate/
+          du -sh release
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          if [ -n "${{ secrets.SSH_KNOWN_HOSTS }}" ]; then
+            printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts 2>/dev/null
+          fi
+
+      - name: Update database schema
+        run: |
+          rsync -az --delete --exclude 'migrate/node_modules/' --exclude 'migrate/.installed' \
+            -e "ssh $SSH_OPTS" bundle/ "$REMOTE:$APP_DIR/_deploy/"
+          ssh $SSH_OPTS "$REMOTE" "bash '$APP_DIR/_deploy/remote-deploy.sh' migrate"
+
+      - name: Upload app
+        run: |
+          rsync -az --delete \
+            --exclude '.env' --exclude 'tmp/' --exclude '_deploy/' --exclude '.next/cache/' \
+            --exclude 'stderr.log' --exclude '.htaccess' \
+            -e "ssh $SSH_OPTS" release/ "$REMOTE:$APP_DIR/"
+
+      - name: Restart
+        run: ssh $SSH_OPTS "$REMOTE" "bash '$APP_DIR/_deploy/remote-deploy.sh' restart"
+
+      - name: Check the new version is live
+        run: |
+          for i in $(seq 1 20); do
+            body="$(curl -fsS --max-time 20 "$SITE_URL/api/health" || true)"
+            if echo "$body" | grep -q "\"version\":\"${{ github.sha }}\"" && echo "$body" | grep -q '"db":true'; then
+              echo "Live: $body"
+              exit 0
+            fi
+            echo "Waiting for the new version ($i/20): ${body:-no response}"
+            sleep 6
+          done
+          echo "::error::The site did not come back on the new version. Check cPanel → Setup Node.js App and $APP_DIR/stderr.log"
+          exit 1

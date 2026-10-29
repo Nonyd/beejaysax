@@ -1,0 +1,59 @@
+# One-time: copy all data (events, tickets, orders, releases, content, admin login…) from the
+# Neon staging database into the new server database. Run it from the Actions tab AFTER the
+# first successful deploy (which creates the tables). It refuses to run if the server
+# database already has data, so it can't overwrite anything.
+name: Copy data from Neon to the server (one-time)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type COPY to confirm'
+        required: true
+
+jobs:
+  copy:
+    if: ${{ github.event.inputs.confirm == 'COPY' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    env:
+      SSH_OPTS: -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes
+      REMOTE: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+      APP_DIR: ${{ secrets.APP_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PostgreSQL 17 client
+        run: |
+          sudo apt-get install -y -qq postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17
+
+      - name: Dump data from Neon
+        env:
+          NEON_URL: ${{ secrets.NEON_DIRECT_URL }}
+        run: |
+          [ -n "$NEON_URL" ] || { echo "::error::Add the NEON_DIRECT_URL secret (Neon's direct, non-pooled connection string)"; exit 1; }
+          /usr/lib/postgresql/17/bin/pg_dump "$NEON_URL" --data-only --column-inserts --no-owner --no-privileges \
+            --exclude-table=_prisma_migrations -f data.sql
+          # Strip settings and meta-commands that older server versions of PostgreSQL/psql reject.
+          sed -i -e '/^SET transaction_timeout/d' -e '/^\\restrict/d' -e '/^\\unrestrict/d' data.sql
+          echo "Rows: $(grep -c '^INSERT INTO' data.sql)"
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          if [ -n "${{ secrets.SSH_KNOWN_HOSTS }}" ]; then
+            printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts 2>/dev/null
+          fi
+
+      - name: Import on the server
+        run: |
+          scp -P "${{ secrets.SSH_PORT }}" -i ~/.ssh/deploy_key data.sql "$REMOTE:$APP_DIR/_deploy/neon-data.sql"
+          rm -f data.sql
+          ssh $SSH_OPTS "$REMOTE" "bash '$APP_DIR/_deploy/remote-deploy.sh' import '$APP_DIR/_deploy/neon-data.sql'"

@@ -1,6 +1,12 @@
+import path from 'path'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  // Self-contained server bundle (.next/standalone) for the cPanel Node.js host; see docs/DEPLOY.md.
+  output: 'standalone',
+  // Pin the project root so a stray lockfile in a parent folder can't change the bundle layout.
+  outputFileTracingRoot: path.join(__dirname),
+  turbopack: { root: path.join(__dirname) },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/**' },

@@ -1,0 +1,8 @@
+{
+  "name": "beejaysax-db-migrate",
+  "private": true,
+  "description": "Prisma CLI used on the server to apply schema changes during deploy (see deploy/remote-deploy.sh).",
+  "dependencies": {
+    "prisma": "5.22.0"
+  }
+}
