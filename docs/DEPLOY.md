@@ -34,9 +34,10 @@ postgresql://beejebrk_app:PASSWORD@localhost:5432/beejebrk_beejaysax?connection_
 If the password has symbols like `@ : / ? # %`, replace them with their URL codes (`@` → `%40`, `#` → `%23`,
 `%` → `%25`, `/` → `%2F`, `:` → `%3A`, `?` → `%3F`) or generate a password with only letters and numbers.
 
-### 2. (If needed) Check SSH is on
+### 2. Turn SSH on
 
-cPanel → **Security → SSH Access**. Namecheap shared hosting allows SSH on port **21098**.
+cPanel → **Manage Shell** (or **Security → SSH Access**) → switch **Enable SSH access** on. Port **21098**.
+Without this the server accepts the key but replies "Shell access is not enabled on your account".
 
 ### 3. Create the Node.js app
 
@@ -44,7 +45,7 @@ cPanel → **Software → Setup Node.js App → Create application**
 
 | Field | Value |
 |---|---|
-| Node.js version | **20.x** (or 22.x). Must be 20.9 or newer. |
+| Node.js version | **22.x** (the build also runs on Node 22) |
 | Application mode | Production |
 | Application root | `beejaysax` (this becomes `/home/beejebrk/beejaysax`) |
 | Application URL | `beejaysax.com` |
@@ -53,7 +54,10 @@ cPanel → **Software → Setup Node.js App → Create application**
 Click **Create**. Don't click "Run NPM install"; the deploy uploads everything the app needs.
 You can leave the environment variables in this screen empty: the app reads them from `.env` (next step).
 
-> The Node.js app takes over the whole domain. Anything previously in `public_html` stops being served.
+> The domain's `public_html/.htaccess` must contain only the CloudLinux Passenger blocks that cPanel adds.
+> Old WordPress/LiteSpeed rewrite rules in that file send every request to WordPress instead of the app
+> (the original was kept as `public_html/.htaccess.wordpress-backup`). Files left in `public_html` can still be
+> opened directly by their exact path, so move old sites out of it.
 
 ### 4. Create the server's `.env` file
 
@@ -79,8 +83,11 @@ SETTINGS_ENCRYPTION_KEY="…"
 Photos uploaded in the admin are saved on the server in `/home/beejebrk/beejaysax/uploads` and served from
 `https://beejaysax.com/uploads/…`. Deploys never touch that folder. Include it in your cPanel backups.
 
-Generate the two secrets with any password generator (40+ letters and numbers), or in a terminal:
-`openssl rand -base64 32`.
+Generate each secret in PowerShell (run it twice, one value per secret):
+`$b = New-Object byte[] 32; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); ($b | % { $_.ToString('x2') }) -join ''`
+
+The first deploy adds one line, `PRISMA_QUERY_ENGINE_LIBRARY=…`, to this file. Leave it in: it tells the app which
+database engine fits this server.
 
 Then set the file's permissions to **600** (File Manager → right-click → Change Permissions), so only your
 account can read it. The deploy never overwrites this file.
@@ -90,11 +97,14 @@ site is running.
 
 ### 5. Create the deploy key
 
-cPanel → **Security → SSH Access → Manage SSH Keys → Generate a New Key**
+This cPanel won't generate a key without a passphrase, so make it on your PC and import only the public half.
 
-- Key name: `github_deploy`, **no passphrase** (leave both password fields empty), type RSA 4096.
-- Back in the key list, click **Manage** next to `github_deploy` → **Authorize**.
-- Click **View/Download** on the *private* key and copy the whole text (from `-----BEGIN` to `-----END…KEY-----`).
+1. PowerShell: `ssh-keygen -t rsa -b 4096 -m PEM -C "github-deploy-beejaysax" -f "$HOME.ssheejaysax_deploy"`
+   and press Enter twice for no passphrase.
+2. `Get-Content "$HOME.ssheejaysax_deploy.pub" | Set-Clipboard` → cPanel → **SSH Access → Manage SSH Keys →
+   Import Key** → name `github_deploy`, paste into **Public key** only → Import.
+3. **Manage** next to `github_deploy` → **Authorize**.
+4. `Get-Content "$HOME.ssheejaysax_deploy" -Raw | Set-Clipboard` → that is the `SSH_KEY` secret (next step).
 
 ### 6. Add the GitHub secrets and variables
 
@@ -109,13 +119,12 @@ GitHub → repository **Settings → Secrets and variables → Actions**.
 | `SSH_USER` | `beejebrk` |
 | `SSH_KEY` | the private key from step 5 |
 | `APP_DIR` | `/home/beejebrk/beejaysax` |
-| `NEON_DIRECT_URL` | Neon's *direct* connection string (Neon dashboard → Connection details, pooling **off**). Only used once, in step 8. |
 
 **Variables** (tab "Variables" → New repository variable):
 
 | Name | Value |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://beejaysax.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://beejaysax.com` (a secret with this name works too) |
 | `DEPLOY_ENABLED` | `true` (this switches automatic deploys on) |
 
 ### 7. First deploy
@@ -123,15 +132,11 @@ GitHub → repository **Settings → Secrets and variables → Actions**.
 GitHub → **Actions → Deploy to cPanel → Run workflow** (on `master`). This creates the database tables and
 starts the site. When it's green, https://beejaysax.com/api/health shows `"db":true`.
 
-### 8. Copy the existing data from Neon (once)
+### 8. Existing data (done 29 Oct 2026)
 
-GitHub → **Actions → Copy data from Neon to the server (one-time) → Run workflow**, type `COPY`.
-
-It copies events, tickets, orders, releases, videos, website content, messages and the admin login. It refuses to
-run if the server database already has data, so it can't overwrite anything.
-
-If it says `psql is not available`, use the manual route: cPanel → **phpPgAdmin** → your database → **SQL** →
-upload a data-only dump (ask for one and it can be generated from Neon).
+The data from the old Neon staging database (admin login, events, tiers, tickets, releases, videos, settings) was
+copied into the server database once. The server runs PostgreSQL 10 and blocks SSH tunnels, so it was exported
+to JSON with Prisma and imported on the server with the app's own Prisma client. Neon is no longer used.
 
 ### 9. Turn on scheduled jobs (reminders, email retries, seat release)
 
