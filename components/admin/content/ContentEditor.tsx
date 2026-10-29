@@ -8,7 +8,7 @@ import AdminSectionCard from '@/components/admin/AdminSectionCard'
 import AdminFormField from '@/components/admin/AdminFormField'
 import AdminInput from '@/components/admin/AdminInput'
 import AdminTextarea from '@/components/admin/AdminTextarea'
-import CloudinaryUpload from '@/components/admin/CloudinaryUpload'
+import ImageUpload from '@/components/admin/ImageUpload'
 import type { Field, ScalarField } from '@/lib/content/registry'
 
 type Values = Record<string, unknown>
@@ -68,7 +68,7 @@ function ScalarInput({ f, value, onChange, id }: { f: ScalarField; value: unknow
             </div>
           )}
           <div className="min-w-[220px] flex-1 space-y-2">
-            <CloudinaryUpload folder="beejaysax/site" label="Upload a photo" aspectRatio="free" onUpload={(url) => onChange(url)} />
+            <ImageUpload folder="beejaysax/site" label="Upload a photo" aspectRatio="free" onUpload={(url) => onChange(url)} />
             <AdminInput value={src} onChange={(e) => onChange(e.target.value)} placeholder="…or paste an image link (https://)" aria-label="Image link" />
           </div>
         </div>

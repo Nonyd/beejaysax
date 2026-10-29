@@ -5,7 +5,7 @@ import { CONTENT, type ContentKey, type ContentOf, type Field, type ScalarField 
 export class ContentError extends Error {}
 
 /** Must match images.remotePatterns in next.config.ts */
-const IMAGE_HOSTS = ['res.cloudinary.com', 'images.unsplash.com', 'img.youtube.com', 'i.ytimg.com', 'i.scdn.co']
+const IMAGE_HOSTS = ['images.unsplash.com', 'img.youtube.com', 'i.ytimg.com', 'i.scdn.co']
 
 function cleanScalar(f: ScalarField, v: unknown, strict: boolean): unknown {
   switch (f.type) {

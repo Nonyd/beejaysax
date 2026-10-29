@@ -11,7 +11,7 @@ import AdminInput from '@/components/admin/AdminInput'
 import AdminTextarea from '@/components/admin/AdminTextarea'
 import AdminSelect from '@/components/admin/AdminSelect'
 import AdminToggle from '@/components/admin/AdminToggle'
-import CloudinaryUpload from '@/components/admin/CloudinaryUpload'
+import ImageUpload from '@/components/admin/ImageUpload'
 
 export type EditorTier = {
   id?: string
@@ -179,7 +179,7 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
           <AdminTextarea rows={6} value={ev.description} onChange={(e) => set('description', e.target.value)} />
         </AdminFormField>
         <AdminFormField label="Poster" optional>
-          <CloudinaryUpload
+          <ImageUpload
             folder="beejaysax/events"
             label="Upload event poster"
             aspectRatio="poster"

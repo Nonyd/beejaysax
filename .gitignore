@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# photos uploaded in the admin (stored on the server)
+/uploads/

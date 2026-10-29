@@ -2,7 +2,7 @@
 
 import { useRef, useState, type CSSProperties } from 'react'
 
-interface CloudinaryUploadProps {
+interface ImageUploadProps {
   onUpload: (url: string) => void
   folder?: string
   label?: string
@@ -10,13 +10,13 @@ interface CloudinaryUploadProps {
   aspectRatio?: 'square' | 'poster' | 'free'
 }
 
-export default function CloudinaryUpload({
+export default function ImageUpload({
   onUpload,
   folder = 'beejaysax',
   label = 'Upload Image',
   currentUrl,
   aspectRatio = 'free',
-}: CloudinaryUploadProps) {
+}: ImageUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -38,31 +38,16 @@ export default function CloudinaryUpload({
     setError('')
 
     try {
-      // Get signed upload params from our API
-      const sigRes = await fetch('/api/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ folder }),
-      })
-      if (!sigRes.ok) throw new Error('Failed to get upload signature')
-      const { signature, timestamp, cloudName, apiKey } = await sigRes.json()
-
-      // Upload directly to Cloudinary
+      // Saved on our own server, under /uploads
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('signature', signature)
-      formData.append('timestamp', String(timestamp))
-      formData.append('api_key', apiKey)
       formData.append('folder', folder)
 
-      const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData,
-      })
-      if (!uploadRes.ok) throw new Error('Upload failed')
+      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+      const data = await uploadRes.json().catch(() => ({}))
+      if (!uploadRes.ok || !data.url) throw new Error(data.error || 'Upload failed')
 
-      const data = await uploadRes.json()
-      onUpload(data.secure_url)
+      onUpload(data.url)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed')
     } finally {

@@ -70,18 +70,14 @@ NEXT_PUBLIC_SITE_URL="https://beejaysax.com"
 NEXTAUTH_URL="https://beejaysax.com"
 SITE_TIMEZONE="Africa/Lagos"
 
-# Login sessions. Use the SAME value as on Vercel/Neon if you saved any keys in Admin → Settings there,
-# otherwise those saved keys can't be decrypted (you'd just re-enter them).
+# Login sessions. Long random string.
 NEXTAUTH_SECRET="…"
 # Encrypts payment/email keys saved in Admin → Settings. Long random string. Never change it later.
 SETTINGS_ENCRYPTION_KEY="…"
-
-# Image uploads (Cloudinary dashboard)
-CLOUDINARY_CLOUD_NAME="…"
-CLOUDINARY_API_KEY="…"
-CLOUDINARY_API_SECRET="…"
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="…"
 ```
+
+Photos uploaded in the admin are saved on the server in `/home/beejebrk/beejaysax/uploads` and served from
+`https://beejaysax.com/uploads/…`. Deploys never touch that folder. Include it in your cPanel backups.
 
 Generate the two secrets with any password generator (40+ letters and numbers), or in a terminal:
 `openssl rand -base64 32`.
@@ -120,7 +116,6 @@ GitHub → repository **Settings → Secrets and variables → Actions**.
 | Name | Value |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://beejaysax.com` |
-| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | your Cloudinary cloud name |
 | `DEPLOY_ENABLED` | `true` (this switches automatic deploys on) |
 
 ### 7. First deploy
@@ -188,7 +183,7 @@ server. Disconnect the Vercel project (Vercel → Project → Settings → Git �
 git push ──▶ GitHub Actions (ubuntu)
              ├─ npm ci, prisma generate, next build (output: standalone)
              ├─ rsync schema + Prisma CLI ──▶ ~/beejaysax/_deploy ──▶ prisma db push   (stops on data loss)
-             ├─ rsync app bundle ─────────▶ ~/beejaysax            (keeps .env, tmp/, logs)
+             ├─ rsync app bundle ─────────▶ ~/beejaysax            (keeps .env, uploads/, tmp/, logs)
              ├─ touch tmp/restart.txt ───▶ Passenger restarts node server.js
              └─ curl /api/health until it reports the new commit
 ```

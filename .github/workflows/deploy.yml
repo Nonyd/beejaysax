@@ -53,7 +53,6 @@ jobs:
       - name: Build
         env:
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ vars.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
           NEXT_PUBLIC_BUILD_SHA: ${{ github.sha }}
           # Public pages render at request time, so the build never needs the real database.
           DATABASE_URL: postgresql://build:build@127.0.0.1:5432/build
@@ -102,7 +101,7 @@ jobs:
       - name: Upload app
         run: |
           rsync -az --delete \
-            --exclude '.env' --exclude 'tmp/' --exclude '_deploy/' --exclude '.next/cache/' \
+            --exclude '.env' --exclude 'tmp/' --exclude '_deploy/' --exclude 'uploads/' --exclude '.next/cache/' \
             --exclude 'stderr.log' --exclude '.htaccess' \
             -e "ssh $SSH_OPTS" release/ "$REMOTE:$APP_DIR/"
 

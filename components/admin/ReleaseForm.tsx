@@ -8,7 +8,7 @@ import AdminInput from './AdminInput'
 import AdminTextarea from './AdminTextarea'
 import AdminSelect from './AdminSelect'
 import AdminToggle from './AdminToggle'
-import CloudinaryUpload from './CloudinaryUpload'
+import ImageUpload from './ImageUpload'
 import AdminFormShell from './AdminFormShell'
 import AdminSectionCard from './AdminSectionCard'
 import type { Release, ReleaseType } from '@prisma/client'
@@ -127,7 +127,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
       </AdminSectionCard>
 
       <AdminSectionCard title="Cover image" description="Square artwork for listings and players.">
-        <CloudinaryUpload
+        <ImageUpload
           onUpload={(url) => setCoverImage(url)}
           folder="beejaysax/releases"
           label="Upload Cover Art"
@@ -139,7 +139,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
             <input
               value={coverImage}
               onChange={(e) => setCoverImage(e.target.value)}
-              placeholder="Or paste Cloudinary URL directly..."
+              placeholder="Or paste an image link..."
               className="min-w-0 flex-1 bg-[#1B1F4B] border border-[rgba(247,241,227,0.12)] px-4 py-2 text-white text-sm focus:border-[#E3B23C] focus:outline-none"
               style={{ fontSize: 11 }}
             />

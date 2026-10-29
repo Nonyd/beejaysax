@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import cloudinary from '@/lib/cloudinary'
+import { saveUpload, UploadError } from '@/lib/uploads'
 
 export async function POST(req: NextRequest) {
   const session = await auth()
@@ -9,30 +9,18 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { folder = 'beejaysax', publicId } = await req.json()
-
-    const timestamp = Math.round(Date.now() / 1000)
-
-    const paramsToSign: Record<string, string | number> = {
-      timestamp,
-      folder,
+    const form = await req.formData()
+    const file = form.get('file')
+    if (!(file instanceof File)) {
+      return NextResponse.json({ error: 'Choose an image to upload.' }, { status: 400 })
     }
-    if (publicId) paramsToSign.public_id = publicId
-
-    const signature = cloudinary.utils.api_sign_request(
-      paramsToSign,
-      process.env.CLOUDINARY_API_SECRET!
-    )
-
-    return NextResponse.json({
-      signature,
-      timestamp,
-      folder,
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-      apiKey: process.env.CLOUDINARY_API_KEY,
-    })
+    const url = await saveUpload(file, form.get('folder'))
+    return NextResponse.json({ url })
   } catch (err) {
+    if (err instanceof UploadError) {
+      return NextResponse.json({ error: err.message }, { status: 400 })
+    }
     console.error('[/api/upload]', err)
-    return NextResponse.json({ error: 'Failed to generate signature' }, { status: 500 })
+    return NextResponse.json({ error: 'Upload failed. Try again.' }, { status: 500 })
   }
 }

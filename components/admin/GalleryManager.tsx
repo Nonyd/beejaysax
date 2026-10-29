@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
 import AdminFormField from './AdminFormField'
-import CloudinaryUpload from './CloudinaryUpload'
+import ImageUpload from './ImageUpload'
 import AdminFormShell from './AdminFormShell'
 import AdminSectionCard from './AdminSectionCard'
 
@@ -86,10 +86,10 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
         <div className="mb-8">
           <AdminSectionCard
             title="Add image"
-            description="Upload to Cloudinary, then add a caption and category before saving."
+            description="Upload a photo, then add a caption and category before saving."
           >
             <AdminFormField label="Upload Image *">
-              <CloudinaryUpload
+              <ImageUpload
                 onUpload={(url) => setImageUrl(url)}
                 folder="beejaysax/gallery"
                 label="Upload Gallery Photo"
@@ -100,7 +100,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
                 <input
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="Cloudinary URL"
+                  placeholder="Image link"
                   className="mt-2 w-full border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] px-4 py-2 text-xs text-white focus:border-[#E3B23C] focus:outline-none"
                 />
               )}

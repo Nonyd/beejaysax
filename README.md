@@ -5,7 +5,7 @@ Built by [SonsHub Media Ltd.](https://sonshubmedia.com)
 ## Stack
 
 Next.js 16 · TypeScript · Tailwind CSS v4 · Prisma 5 · Neon PostgreSQL
-NextAuth v5 · GSAP 3 · Lenis · Cloudinary · Resend · QR Tickets
+NextAuth v5 · GSAP 3 · Lenis · Resend · QR Tickets
 
 ## Local Setup
 
