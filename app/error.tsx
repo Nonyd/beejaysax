@@ -17,7 +17,7 @@ export default function GlobalError({
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-6">
-      <Adire variant="field" color="#E3B23C" opacity={0.06} />
+      <Adire variant="field" color="var(--gold)" opacity={0.06} />
       <div className="relative max-w-lg text-center">
         <h1 className="font-display text-[clamp(48px,8vw,88px)] leading-[0.92] text-ivory">This page didn&apos;t load</h1>
         <p className="mx-auto mt-6 max-w-[42ch] font-body text-lg text-ivory/75">

@@ -19,9 +19,9 @@ export default async function EditContentPage({ params }: { params: Promise<{ ke
   return (
     <div>
       <nav className="mb-8 text-[13px]">
-        <Link href="/admin/content" className="text-[rgba(247,241,227,0.65)] no-underline">Content</Link>
-        <span className="mx-2 text-[rgba(247,241,227,0.35)]">/</span>
-        <span className="text-[#E3B23C]">{section.title}</span>
+        <Link href="/admin/content" className="text-ivory/65 no-underline">Content</Link>
+        <span className="mx-2 text-ivory/35">/</span>
+        <span className="text-gold">{section.title}</span>
       </nav>
       <AdminPageHeader
         eyebrow={section.group}
@@ -29,7 +29,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ ke
         subtitle={section.description}
         action={
           'page' in section && section.page ? (
-            <a href={section.page} target="_blank" rel="noopener noreferrer" className="text-[14px] text-[#E3B23C] underline">
+            <a href={section.page} target="_blank" rel="noopener noreferrer" className="text-[14px] text-gold underline">
               View on site
             </a>
           ) : undefined

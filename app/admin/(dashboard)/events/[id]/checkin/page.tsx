@@ -20,26 +20,26 @@ export default async function AdminCheckinPage({ params }: { params: Promise<{ i
       <nav className="mb-8 flex flex-wrap items-center gap-2 text-[13px]">
         {fullEvents ? (
           <>
-            <Link href="/admin/events" className="text-[rgba(247,241,227,0.65)] no-underline">Events</Link>
-            <span className="text-[rgba(247,241,227,0.35)]">/</span>
-            <Link href={`/admin/events/${id}/tickets`} className="text-[rgba(247,241,227,0.65)] no-underline">{event.title}</Link>
+            <Link href="/admin/events" className="text-ivory/65 no-underline">Events</Link>
+            <span className="text-ivory/35">/</span>
+            <Link href={`/admin/events/${id}/tickets`} className="text-ivory/65 no-underline">{event.title}</Link>
           </>
         ) : (
           <>
-            <Link href="/admin/checkin" className="text-[rgba(247,241,227,0.65)] no-underline">Door check-in</Link>
-            <span className="text-[rgba(247,241,227,0.35)]">/</span>
-            <span className="text-[rgba(247,241,227,0.65)]">{event.title}</span>
+            <Link href="/admin/checkin" className="text-ivory/65 no-underline">Door check-in</Link>
+            <span className="text-ivory/35">/</span>
+            <span className="text-ivory/65">{event.title}</span>
           </>
         )}
-        <span className="text-[rgba(247,241,227,0.35)]">/</span>
-        <span className="text-[#E3B23C]">Check-in</span>
+        <span className="text-ivory/35">/</span>
+        <span className="text-gold">Check-in</span>
       </nav>
       <CheckinScanner eventId={event.id} eventTitle={event.title} />
-      <p className="mx-auto mt-10 max-w-[520px] text-[14px] leading-relaxed text-[rgba(247,241,227,0.6)]">
+      <p className="mx-auto mt-10 max-w-[520px] text-[14px] leading-relaxed text-ivory/60">
         {event.checkInPinHash ? (
           <>
             Door volunteers can scan without an admin login at{' '}
-            <code className="text-[#F7F1E3]">{siteUrl}/checkin/{event.id}</code> using the event’s check-in PIN.
+            <code className="text-ivory">{siteUrl}/checkin/{event.id}</code> using the event’s check-in PIN.
           </>
         ) : (
           <>Set a check-in PIN on the event to let door volunteers scan without an admin login.</>

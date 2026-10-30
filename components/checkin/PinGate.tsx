@@ -54,7 +54,7 @@ export default function PinGate({ eventId, eventTitle }: { eventId: string; even
         aria-describedby={error ? 'pin-error' : undefined}
       />
       {error && (
-        <p id="pin-error" role="alert" className="mt-3 font-body text-sm text-[#f0a35e]">
+        <p id="pin-error" role="alert" className="mt-3 font-body text-sm text-warn">
           {error}
         </p>
       )}

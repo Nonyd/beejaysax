@@ -10,9 +10,9 @@ export default function AdminProviders({ children }: { children: React.ReactNode
         position="top-right"
         toastOptions={{
           style: {
-            background: '#1B1F4B',
-            color: '#F7F1E3',
-            border: '1px solid rgba(227,178,60,0.35)',
+            background: 'var(--ink)',
+            color: 'var(--ivory)',
+            border: '1px solid color-mix(in srgb, var(--gold) 35%, transparent)',
             fontFamily: 'var(--font-sans)',
             fontSize: 14,
           },

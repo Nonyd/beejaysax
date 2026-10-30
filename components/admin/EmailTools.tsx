@@ -32,7 +32,7 @@ export function RetryButton({ id }: { id: string }) {
           router.refresh()
         }
       }}
-      className="mt-1 inline-flex items-center gap-1 text-[12px] text-[#E3B23C] underline"
+      className="mt-1 inline-flex items-center gap-1 text-[12px] text-gold underline"
     >
       {busy && <Loader2 className="h-3 w-3 animate-spin" />}Retry now
     </button>
@@ -47,7 +47,7 @@ function EmailTools({ suppressions }: { suppressions: { email: string; reason: s
   return (
     <div className="grid gap-5 lg:grid-cols-2">
       <form
-        className="rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6"
+        className="rounded-[20px] border border-ivory/12 bg-ink p-6"
         onSubmit={async (e) => {
           e.preventDefault()
           setBusy(true)
@@ -62,33 +62,33 @@ function EmailTools({ suppressions }: { suppressions: { email: string; reason: s
           }
         }}
       >
-        <p className="font-display text-xl text-[#F7F1E3]">Send a test email</p>
-        <p className="mt-1 mb-4 text-[14px] text-[rgba(247,241,227,0.65)]">Checks that your email settings work end to end.</p>
+        <p className="font-display text-xl text-ivory">Send a test email</p>
+        <p className="mt-1 mb-4 text-[14px] text-ivory/65">Checks that your email settings work end to end.</p>
         <div className="flex gap-2">
           <AdminInput type="email" required value={to} onChange={(e) => setTo(e.target.value)} placeholder="you@example.com" aria-label="Test recipient" />
-          <button type="submit" disabled={busy} className="inline-flex shrink-0 items-center gap-2 bg-[#E3B23C] px-5 font-semibold text-[#11142F]">
+          <button type="submit" disabled={busy} className="inline-flex shrink-0 items-center gap-2 bg-gold px-5 font-semibold text-night">
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}Send
           </button>
         </div>
       </form>
 
-      <div className="rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6">
-        <p className="font-display text-xl text-[#F7F1E3]">Blocked addresses</p>
-        <p className="mt-1 mb-4 text-[14px] text-[rgba(247,241,227,0.65)]">
+      <div className="rounded-[20px] border border-ivory/12 bg-ink p-6">
+        <p className="font-display text-xl text-ivory">Blocked addresses</p>
+        <p className="mt-1 mb-4 text-[14px] text-ivory/65">
           Addresses that bounced or marked us as spam aren’t emailed again. Remove one if the person fixed their mailbox.
         </p>
         {suppressions.length === 0 ? (
-          <p className="text-[14px] text-[rgba(247,241,227,0.55)]">None.</p>
+          <p className="text-[14px] text-ivory/55">None.</p>
         ) : (
           <ul className="max-h-48 space-y-2 overflow-y-auto">
             {suppressions.map((s) => (
               <li key={s.email} className="flex items-center justify-between gap-3 text-[14px]">
-                <span className="min-w-0 truncate text-[#F7F1E3]">
-                  {s.email} <span className="text-[12px] text-[rgba(247,241,227,0.55)]">{s.reason.toLowerCase()}, {s.at}</span>
+                <span className="min-w-0 truncate text-ivory">
+                  {s.email} <span className="text-[12px] text-ivory/55">{s.reason.toLowerCase()}, {s.at}</span>
                 </span>
                 <button
                   type="button"
-                  className="shrink-0 text-[13px] text-[#E3B23C] underline"
+                  className="shrink-0 text-[13px] text-gold underline"
                   onClick={async () => {
                     await post({ action: 'unsuppress', email: s.email })
                     toast.success('Removed')

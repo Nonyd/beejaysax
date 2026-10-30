@@ -15,9 +15,9 @@ async function postJson(body: Record<string, unknown>) {
   return data
 }
 
-const card = 'rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6'
-const goldBtn = 'inline-flex shrink-0 items-center justify-center gap-2 bg-[#E3B23C] px-5 py-3 text-[14px] font-semibold text-[#11142F] disabled:opacity-60'
-const ghostBtn = 'inline-flex items-center justify-center gap-2 border border-[rgba(247,241,227,0.2)] px-5 py-3 text-[14px] text-[#F7F1E3] disabled:opacity-60'
+const card = 'rounded-[20px] border border-ivory/12 bg-ink p-6'
+const goldBtn = 'inline-flex shrink-0 items-center justify-center gap-2 bg-gold px-5 py-3 text-[14px] font-semibold text-night disabled:opacity-60'
+const ghostBtn = 'inline-flex items-center justify-center gap-2 border border-ivory/20 px-5 py-3 text-[14px] text-ivory disabled:opacity-60'
 
 function TagsInput({ value, onChange, tags, id }: { value: string; onChange: (v: string) => void; tags: string[]; id: string }) {
   return (
@@ -72,8 +72,8 @@ export default function ContactsTools({ tags }: { tags: string[] }) {
   return (
     <div className="grid gap-5 lg:grid-cols-2">
       <div className={card}>
-        <p className="font-display text-xl text-[#F7F1E3]">Import a spreadsheet</p>
-        <p className="mt-1 mb-4 text-[14px] text-[rgba(247,241,227,0.65)]">
+        <p className="font-display text-xl text-ivory">Import a spreadsheet</p>
+        <p className="mt-1 mb-4 text-[14px] text-ivory/65">
           Excel (.xlsx) or CSV with an email column, and optionally a name column. Duplicates are skipped and obvious typos like “gmail.con” are fixed.
           People who unsubscribed stay unsubscribed.
         </p>
@@ -87,16 +87,16 @@ export default function ContactsTools({ tags }: { tags: string[] }) {
               setFile(e.target.files?.[0] ?? null)
               setSummary(null)
             }}
-            className="text-[14px] text-[rgba(247,241,227,0.8)] file:mr-4 file:border-0 file:bg-[#11142F] file:px-4 file:py-2.5 file:text-[#F7F1E3]"
+            className="text-[14px] text-ivory/80 file:mr-4 file:border-0 file:bg-night file:px-4 file:py-2.5 file:text-ivory"
           />
           <TagsInput id="import" value={importTags} onChange={(v) => (setImportTags(v), setSummary(null))} tags={tags} />
           {summary ? (
-            <div className="rounded-[14px] bg-[#11142F] p-4 text-[14px] text-[rgba(247,241,227,0.85)]">
+            <div className="rounded-[14px] bg-night p-4 text-[14px] text-ivory/85">
               <p>
-                <strong className="text-[#F7F1E3]">{summary.added.toLocaleString()} new people</strong> will be added
+                <strong className="text-ivory">{summary.added.toLocaleString()} new people</strong> will be added
                 {summary.alreadyOnList ? `, ${summary.alreadyOnList.toLocaleString()} already on the list will get the tags` : ''}.
               </p>
-              <p className="mt-1 text-[13px] text-[rgba(247,241,227,0.6)]">
+              <p className="mt-1 text-[13px] text-ivory/60">
                 {summary.rows.toLocaleString()} rows · {summary.duplicatesInFile.toLocaleString()} repeated in the file · {summary.fixed.toLocaleString()} typos fixed ·{' '}
                 {summary.invalid.toLocaleString()} not valid emails
               </p>
@@ -135,8 +135,8 @@ export default function ContactsTools({ tags }: { tags: string[] }) {
           }
         }}
       >
-        <p className="font-display text-xl text-[#F7F1E3]">Add one person</p>
-        <p className="mt-1 mb-4 text-[14px] text-[rgba(247,241,227,0.65)]">They’re added as subscribed. Only add people who agreed to hear from you.</p>
+        <p className="font-display text-xl text-ivory">Add one person</p>
+        <p className="mt-1 mb-4 text-[14px] text-ivory/65">They’re added as subscribed. Only add people who agreed to hear from you.</p>
         <div className="flex flex-col gap-3">
           <AdminInput type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email address" aria-label="Email address" />
           <AdminInput value={name} onChange={(e) => setName(e.target.value)} placeholder="Name (optional)" aria-label="Name" />
@@ -173,7 +173,7 @@ export function ContactRowActions({ id, email, name: initialName, tags: initialT
 
   if (!open) {
     return (
-      <button type="button" onClick={() => setOpen(true)} className="text-[13px] text-[#E3B23C] underline">
+      <button type="button" onClick={() => setOpen(true)} className="text-[13px] text-gold underline">
         Edit
       </button>
     )
@@ -200,12 +200,12 @@ export function ContactRowActions({ id, email, name: initialName, tags: initialT
         <button
           type="button"
           disabled={busy}
-          className="text-[13px] text-[#f87171] underline"
+          className="text-[13px] text-danger underline"
           onClick={() => confirm(`Delete ${email} from the mailing list? This can’t be undone.`) && run({ action: 'delete' }, 'Deleted')}
         >
           Delete
         </button>
-        <button type="button" className="text-[13px] text-[rgba(247,241,227,0.7)] underline" onClick={() => setOpen(false)}>
+        <button type="button" className="text-[13px] text-ivory/70 underline" onClick={() => setOpen(false)}>
           Close
         </button>
       </div>

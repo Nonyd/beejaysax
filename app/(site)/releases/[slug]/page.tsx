@@ -48,7 +48,7 @@ export default async function ReleaseDetailPage({ params }: Props) {
 
   return (
     <article className="relative -mt-[72px] overflow-hidden bg-night pt-[72px]">
-      <Adire variant="field" color="#E3B23C" opacity={0.05} />
+      <Adire variant="field" color="var(--gold)" opacity={0.05} />
       <div className="site-shell relative py-16 md:py-24">
         <Link href="/releases" className="font-body text-sm font-semibold text-gold no-underline hover:underline">
           All music

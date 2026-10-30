@@ -99,7 +99,7 @@ export default function UsersClient({ initial, currentUserId }: { initial: Admin
     <div className="mx-auto max-w-[960px] space-y-6">
       {!form && (
         <div className="flex justify-end">
-          <button type="button" onClick={() => setForm(BLANK)} className="bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F]">
+          <button type="button" onClick={() => setForm(BLANK)} className="bg-gold px-6 py-3 font-semibold text-night">
             + Add user
           </button>
         </div>
@@ -132,50 +132,50 @@ export default function UsersClient({ initial, currentUserId }: { initial: Admin
           </div>
 
           <fieldset className="mt-8">
-            <legend className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E3B23C]">Role</legend>
+            <legend className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">Role</legend>
             <div className="grid gap-3 sm:grid-cols-2">
               {ROLES.map((r) => (
                 <label
                   key={r.value}
                   className={`flex cursor-pointer gap-3 border px-4 py-3 ${
-                    form.role === r.value ? 'border-[#E3B23C] bg-[rgba(227,178,60,0.08)]' : 'border-[rgba(247,241,227,0.15)]'
+                    form.role === r.value ? 'border-gold bg-gold/8' : 'border-ivory/15'
                   } ${isSelf ? 'cursor-not-allowed opacity-60' : ''}`}
                 >
                   <input
                     type="radio"
                     name="role"
-                    className="mt-1 accent-[#E3B23C]"
+                    className="mt-1 accent-gold"
                     checked={form.role === r.value}
                     disabled={isSelf}
                     onChange={() => set('role', r.value)}
                   />
                   <span>
-                    <span className="block text-[15px] text-[#F7F1E3]">{r.label}</span>
-                    <span className="block text-[13px] text-[rgba(247,241,227,0.6)]">{r.description}</span>
+                    <span className="block text-[15px] text-ivory">{r.label}</span>
+                    <span className="block text-[13px] text-ivory/60">{r.description}</span>
                   </span>
                 </label>
               ))}
             </div>
-            {isSelf && <p className="mt-2 text-[13px] text-[rgba(247,241,227,0.55)]">You cannot change your own role.</p>}
+            {isSelf && <p className="mt-2 text-[13px] text-ivory/55">You cannot change your own role.</p>}
           </fieldset>
 
           {form.role === 'STAFF' && (
             <fieldset className="mt-8">
-              <legend className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E3B23C]">
+              <legend className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
                 Sections they can use
               </legend>
               <div className="grid gap-2 sm:grid-cols-2">
                 {PERMISSIONS.map((p) => (
-                  <label key={p.key} className="flex cursor-pointer gap-3 border border-[rgba(247,241,227,0.12)] px-4 py-3 hover:border-[rgba(247,241,227,0.3)]">
+                  <label key={p.key} className="flex cursor-pointer gap-3 border border-ivory/12 px-4 py-3 hover:border-ivory/30">
                     <input
                       type="checkbox"
-                      className="mt-1 accent-[#E3B23C]"
+                      className="mt-1 accent-gold"
                       checked={form.permissions.includes(p.key)}
                       onChange={() => togglePermission(p.key)}
                     />
                     <span>
-                      <span className="block text-[14px] text-[#F7F1E3]">{p.label}</span>
-                      <span className="block text-[12px] text-[rgba(247,241,227,0.55)]">{p.description}</span>
+                      <span className="block text-[14px] text-ivory">{p.label}</span>
+                      <span className="block text-[12px] text-ivory/55">{p.description}</span>
                     </span>
                   </label>
                 ))}
@@ -194,12 +194,12 @@ export default function UsersClient({ initial, currentUserId }: { initial: Admin
             </div>
           )}
 
-          <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-[rgba(247,241,227,0.12)] pt-6">
+          <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-ivory/12 pt-6">
             <button
               type="button"
               onClick={save}
               disabled={busy}
-              className="inline-flex items-center gap-2 bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F] disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-gold px-6 py-3 font-semibold text-night disabled:opacity-50"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {editing ? 'Save changes' : 'Create user'}
@@ -207,12 +207,12 @@ export default function UsersClient({ initial, currentUserId }: { initial: Admin
             <button
               type="button"
               onClick={() => setForm(null)}
-              className="border border-[rgba(247,241,227,0.25)] px-6 py-3 text-[#F7F1E3] hover:border-[#E3B23C]"
+              className="border border-ivory/25 px-6 py-3 text-ivory hover:border-gold"
             >
               Cancel
             </button>
             {editing && !isSelf && (
-              <button type="button" onClick={remove} disabled={busy} className="ml-auto px-2 py-3 text-[14px] text-[#f87171] underline">
+              <button type="button" onClick={remove} disabled={busy} className="ml-auto px-2 py-3 text-[14px] text-danger underline">
                 Delete user
               </button>
             )}
@@ -220,43 +220,43 @@ export default function UsersClient({ initial, currentUserId }: { initial: Admin
         </AdminSectionCard>
       )}
 
-      <div className="overflow-x-auto border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B]">
+      <div className="overflow-x-auto border border-ivory/12 bg-ink">
         <table className="w-full min-w-[640px] text-left text-[14px]">
           <thead>
-            <tr className="border-b border-[rgba(247,241,227,0.12)] text-[10px] uppercase tracking-[0.2em] text-[#E3B23C]">
+            <tr className="border-b border-ivory/12 text-[10px] uppercase tracking-[0.2em] text-gold">
               <th className="px-5 py-3 font-semibold">User</th>
               <th className="px-5 py-3 font-semibold">Access</th>
               <th className="px-5 py-3 font-semibold">Last sign-in</th>
               <th className="px-5 py-3" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-[rgba(247,241,227,0.08)]">
+          <tbody className="divide-y divide-ivory/8">
             {users.map((u) => (
               <tr key={u.id} className={u.active ? '' : 'opacity-55'}>
                 <td className="px-5 py-4 align-top">
-                  <p className="text-[#F7F1E3]">
+                  <p className="text-ivory">
                     {u.name || u.username}
-                    {u.id === currentUserId && <span className="ml-2 text-[12px] text-[rgba(247,241,227,0.5)]">(you)</span>}
+                    {u.id === currentUserId && <span className="ml-2 text-[12px] text-ivory/50">(you)</span>}
                   </p>
-                  <p className="mt-0.5 text-[12px] text-[rgba(247,241,227,0.55)]">
+                  <p className="mt-0.5 text-[12px] text-ivory/55">
                     {u.username} · {u.email}
                   </p>
                 </td>
                 <td className="px-5 py-4 align-top">
-                  <p className={u.role === 'SUPER_ADMIN' ? 'text-[#E3B23C]' : 'text-[#F7F1E3]'}>
+                  <p className={u.role === 'SUPER_ADMIN' ? 'text-gold' : 'text-ivory'}>
                     {u.role === 'SUPER_ADMIN' ? 'Super admin' : 'Staff'}
-                    {!u.active && <span className="ml-2 text-[#f87171]">Disabled</span>}
+                    {!u.active && <span className="ml-2 text-danger">Disabled</span>}
                   </p>
-                  <p className="mt-0.5 max-w-[340px] text-[12px] text-[rgba(247,241,227,0.55)]">{accessSummary(u)}</p>
+                  <p className="mt-0.5 max-w-[340px] text-[12px] text-ivory/55">{accessSummary(u)}</p>
                 </td>
-                <td className="px-5 py-4 align-top text-[13px] text-[rgba(247,241,227,0.6)]">
+                <td className="px-5 py-4 align-top text-[13px] text-ivory/60">
                   {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString('en-NG') : 'Never'}
                 </td>
                 <td className="px-5 py-4 text-right align-top">
                   <button
                     type="button"
                     onClick={() => setForm(toForm(u))}
-                    className="text-[13px] text-[#E3B23C] underline"
+                    className="text-[13px] text-gold underline"
                   >
                     Edit
                   </button>

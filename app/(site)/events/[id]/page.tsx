@@ -67,7 +67,7 @@ export default async function EventDetailPage({ params }: Props) {
   return (
     <>
       <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
-        <Adire variant="field" color="#E3B23C" opacity={0.06} />
+        <Adire variant="field" color="var(--gold)" opacity={0.06} />
         <div className="site-shell relative grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.3fr_0.7fr]">
           <div className="min-w-0">
             <Link href="/events" className="font-body text-sm font-semibold text-gold no-underline hover:underline">
@@ -89,7 +89,7 @@ export default async function EventDetailPage({ params }: Props) {
               // date seal stands in for a poster until one is uploaded
               <div className="relative mx-auto aspect-square w-[78%]">
                 <svg aria-hidden viewBox="0 0 200 200" className="animate-halo absolute inset-[-12%] h-[124%] w-[124%]">
-                  <circle cx="100" cy="100" r="96" fill="none" stroke="#E3B23C" strokeWidth="2.2" strokeDasharray="0.1 7.6" strokeLinecap="round" />
+                  <circle cx="100" cy="100" r="96" fill="none" stroke="var(--gold)" strokeWidth="2.2" strokeDasharray="0.1 7.6" strokeLinecap="round" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-gold text-night">
                   <span className="font-display text-[clamp(72px,9vw,112px)] leading-none">{fmt(event.eventDate, 'd')}</span>
@@ -99,7 +99,7 @@ export default async function EventDetailPage({ params }: Props) {
             )}
           </div>
         </div>
-        <Adire variant="band" color="#E3B23C" opacity={0.6} height={32} />
+        <Adire variant="band" color="var(--gold)" opacity={0.6} height={32} />
       </section>
 
       <section className="bg-night py-16 md:py-24">

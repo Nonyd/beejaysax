@@ -11,7 +11,7 @@ export default async function MaintenancePage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-6">
-      <Adire variant="field" color="#E3B23C" opacity={0.06} />
+      <Adire variant="field" color="var(--gold)" opacity={0.06} />
       <div className="relative max-w-lg text-center">
         <p className="font-body text-[12px] font-semibold uppercase tracking-[0.28em] text-gold">BeeJay Sax</p>
         <h1 className="mt-6 font-display text-[clamp(40px,7vw,72px)] leading-[0.95] text-ivory">Back soon</h1>

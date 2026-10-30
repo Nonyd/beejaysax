@@ -97,9 +97,10 @@ export const CONTENT = {
       intro: area('Short introduction', 'Spirit-filled saxophone from Lagos to London. Concerts, worship nights and ministry on three continents.', { rows: 3, max: 300 }),
       primaryLabel: text('Gold button', 'Get concert tickets', { max: 40 }),
       secondaryLabel: text('Outline button', 'Listen to the music', { max: 40 }),
-      image: image('Portrait photo', LONDON_STILL, { help: 'Portrait (taller than wide) works best, at least 1200 × 1600.' }),
-      imageAlt: text('Photo description', 'BeeJay Sax playing the saxophone on stage', { help: 'Read aloud to blind visitors.' }),
-      imagePosition: text('Photo focus point', '50% 30%', { max: 20, help: 'Which part stays in frame: "50% 30%" = centre, upper third.' }),
+      cutout: image('Leaping photo (background removed)', '/images/beejay-leap.webp', {
+        help: 'A PNG or WebP with a transparent background, taller than wide, cropped close around him. He is shown jumping out of a golden arch, so arms or feet may stick out past it.',
+      }),
+      imageAlt: text('Photo description', 'BeeJay Sax leaping in the air, saxophone in hand', { help: 'Read aloud to blind visitors.' }),
     },
   }),
   homeAbout: section({

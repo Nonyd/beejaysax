@@ -41,7 +41,7 @@ export default function CustomCursor() {
       dot.style.transform = `translate(${target.current.x}px, ${target.current.y}px) translate(-50%, -50%) scale(${int ? 0 : 1})`
       dot.style.opacity = int ? '0' : '1'
       ring.style.transform = `translate(${current.current.x}px, ${current.current.y}px) translate(-50%, -50%) scale(${int ? 1.8 : 1})`
-      ring.style.backgroundColor = int ? 'rgba(201, 168, 76, 0.1)' : 'transparent'
+      ring.style.backgroundColor = int ? 'color-mix(in srgb, var(--gold) 10%, transparent)' : 'transparent'
       rafId = requestAnimationFrame(loop)
     }
     rafId = requestAnimationFrame(loop)

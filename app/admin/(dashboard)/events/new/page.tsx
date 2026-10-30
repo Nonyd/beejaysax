@@ -9,9 +9,9 @@ export default async function NewEventPage() {
   return (
     <div>
       <nav className="mb-8 text-[13px]">
-        <Link href="/admin/events" className="text-[rgba(247,241,227,0.65)] no-underline">Events</Link>
-        <span className="mx-2 text-[rgba(247,241,227,0.35)]">/</span>
-        <span className="text-[#E3B23C]">New event</span>
+        <Link href="/admin/events" className="text-ivory/65 no-underline">Events</Link>
+        <span className="mx-2 text-ivory/35">/</span>
+        <span className="text-gold">New event</span>
       </nav>
       <AdminPageHeader
         eyebrow="Events"

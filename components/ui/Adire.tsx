@@ -49,7 +49,7 @@ function FieldTile({ color }: { color: string }) {
   )
 }
 
-export default function Adire({ variant = 'band', color = '#E3B23C', opacity = 1, height = 48, className }: Props) {
+export default function Adire({ variant = 'band', color = 'var(--gold)', opacity = 1, height = 48, className }: Props) {
   const id = `adire-${variant}-${color.replace(/[^a-z0-9]/gi, '')}`
   const isBand = variant === 'band'
   const w = isBand ? 56 : 88

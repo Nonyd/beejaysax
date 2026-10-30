@@ -30,18 +30,18 @@ export default function ArchPhoto({
           viewBox="0 0 200 200"
           className="animate-halo pointer-events-none absolute left-1/2 top-0 w-[128%] -translate-x-1/2 -translate-y-[14%]"
         >
-          <circle cx="100" cy="100" r="96" fill="none" stroke="#E3B23C" strokeOpacity="0.55" strokeWidth="0.6" />
+          <circle cx="100" cy="100" r="96" fill="none" stroke="var(--gold)" strokeOpacity="0.55" strokeWidth="0.6" />
           <circle
             cx="100"
             cy="100"
             r="88"
             fill="none"
-            stroke="#E3B23C"
+            stroke="var(--gold)"
             strokeWidth="2.2"
             strokeDasharray="0.1 7.6"
             strokeLinecap="round"
           />
-          <circle cx="100" cy="100" r="80" fill="none" stroke="#C4583A" strokeOpacity="0.6" strokeWidth="0.6" strokeDasharray="10 6" />
+          <circle cx="100" cy="100" r="80" fill="none" stroke="var(--clay)" strokeOpacity="0.6" strokeWidth="0.6" strokeDasharray="10 6" />
         </svg>
       )}
       {/* offset outline */}

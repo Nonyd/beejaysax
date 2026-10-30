@@ -36,12 +36,12 @@ export default async function UpcomingEvents() {
         </div>
 
         {events.length === 1 ? (
-          <EventCard event={events[0]} wide notchColor="#1B1F4B" />
+          <EventCard event={events[0]} wide notchColor="var(--ink)" />
         ) : events.length > 1 ? (
           // auto-fit collapses empty tracks, so 2 or 3 tickets always share the full container width
           <div className="grid gap-8" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))' }}>
             {events.map((e) => (
-              <EventCard key={e.id} event={e} notchColor="#1B1F4B" />
+              <EventCard key={e.id} event={e} notchColor="var(--ink)" />
             ))}
           </div>
         ) : (

@@ -66,7 +66,7 @@ export default async function TicketViewPage({ params }: Props) {
       />
 
       <section className="relative -mt-[72px] overflow-hidden bg-night pt-[72px]">
-        <Adire variant="field" color="#E3B23C" opacity={0.05} />
+        <Adire variant="field" color="var(--gold)" opacity={0.05} />
         <div className="ticket-print-root relative mx-auto max-w-[480px] px-6 py-16 pb-28">
           <div className="no-print mb-8 text-center">
             <Link href={`/events/${ev.id}`} className="font-body text-sm font-semibold text-gold no-underline hover:underline">
@@ -82,7 +82,7 @@ export default async function TicketViewPage({ params }: Props) {
                   Official ticket{ticket.quantity > 1 ? `, admits ${ticket.quantity}` : ''}
                 </p>
               </div>
-              <Adire variant="band" color="#11142F" opacity={0.55} height={22} />
+              <Adire variant="band" color="var(--night)" opacity={0.55} height={22} />
             </header>
 
             <div className="space-y-6 p-8">
@@ -152,8 +152,8 @@ export default async function TicketViewPage({ params }: Props) {
             <footer
               className={
                 ticket.isUsed
-                  ? 'bg-clay-deep px-6 py-4 text-center font-body text-sm font-semibold text-ivory'
-                  : 'bg-[#2f6b4f] px-6 py-4 text-center font-body text-sm font-semibold text-ivory'
+                  ? 'bg-clay-deep px-6 py-4 text-center font-body text-sm font-semibold text-white'
+                  : 'bg-[#2f6b4f] px-6 py-4 text-center font-body text-sm font-semibold text-white'
               }
             >
               {ticket.isUsed

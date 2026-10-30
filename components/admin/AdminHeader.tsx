@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 const titles: Record<string, string> = {
   '/admin': 'Dashboard',
@@ -38,8 +39,8 @@ export default function AdminHeader() {
       className="flex min-h-[72px] items-stretch justify-between gap-6"
       style={{
         flexShrink: 0,
-        borderBottom: '1px solid rgba(247,241,227,0.12)',
-        background: 'rgba(17,20,47,0.92)',
+        borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)',
+        background: 'color-mix(in srgb, var(--night) 92%, transparent)',
         backdropFilter: 'blur(12px)',
         paddingLeft: 32,
         paddingRight: 32,
@@ -55,7 +56,7 @@ export default function AdminHeader() {
             fontWeight: 600,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            color: '#E3B23C',
+            color: 'var(--gold)',
             marginBottom: 4,
           }}
         >
@@ -65,7 +66,7 @@ export default function AdminHeader() {
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(22px,2.5vw,28px)',
-            color: '#F7F1E3',
+            color: 'var(--ivory)',
             fontWeight: 600,
             margin: 0,
             lineHeight: 1.2,
@@ -74,19 +75,20 @@ export default function AdminHeader() {
           {title}
         </h1>
       </div>
+      <ThemeToggle className="self-center" />
       <div
         className="hidden shrink-0 sm:block"
         style={{
           alignSelf: 'center',
-          borderLeft: '1px solid rgba(247,241,227,0.12)',
+          borderLeft: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)',
           paddingLeft: 24,
           textAlign: 'right',
         }}
       >
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(247,241,227,0.6)', margin: 0, letterSpacing: '0.06em' }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'color-mix(in srgb, var(--ivory) 60%, transparent)', margin: 0, letterSpacing: '0.06em' }}>
           Today
         </p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'rgba(247,241,227,0.8)', margin: '6px 0 0' }}>{today}</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'color-mix(in srgb, var(--ivory) 80%, transparent)', margin: '6px 0 0' }}>{today}</p>
       </div>
     </header>
   )

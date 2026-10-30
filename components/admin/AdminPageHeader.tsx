@@ -14,7 +14,7 @@ export default function AdminPageHeader({
   return (
     <div
       className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
-      style={{ borderBottom: '1px solid rgba(247,241,227,0.12)', paddingBottom: 28 }}
+      style={{ borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', paddingBottom: 28 }}
     >
       <div style={{ minWidth: 0 }}>
         {eyebrow && (
@@ -25,7 +25,7 @@ export default function AdminPageHeader({
               fontWeight: 600,
               letterSpacing: '0.28em',
               textTransform: 'uppercase',
-              color: '#E3B23C',
+              color: 'var(--gold)',
               marginBottom: 10,
             }}
           >
@@ -37,7 +37,7 @@ export default function AdminPageHeader({
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(26px,3.2vw,36px)',
             fontWeight: 600,
-            color: '#F7F1E3',
+            color: 'var(--ivory)',
             margin: 0,
             lineHeight: 1.15,
           }}
@@ -50,7 +50,7 @@ export default function AdminPageHeader({
               fontFamily: 'var(--font-sans)',
               fontSize: 15,
               lineHeight: 1.5,
-              color: 'rgba(247,241,227,0.65)',
+              color: 'color-mix(in srgb, var(--ivory) 65%, transparent)',
               marginTop: 10,
               marginBottom: 0,
               maxWidth: 560,
@@ -73,14 +73,14 @@ export function adminPrimaryLinkStyle(): CSSProperties {
     fontWeight: 600,
     letterSpacing: '0.14em',
     textTransform: 'uppercase',
-    background: '#E3B23C',
-    color: '#11142F',
+    background: 'var(--gold)',
+    color: 'var(--night)',
     padding: '14px 28px',
     textDecoration: 'none',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '1px solid rgba(227,178,60,0.5)',
+    border: '1px solid color-mix(in srgb, var(--gold) 50%, transparent)',
     transition: 'background 200ms',
   }
 }
@@ -92,9 +92,9 @@ export function adminOutlineLinkStyle(): CSSProperties {
     fontWeight: 600,
     letterSpacing: '0.14em',
     textTransform: 'uppercase',
-    color: '#F7F1E3',
+    color: 'var(--ivory)',
     background: 'transparent',
-    border: '1px solid rgba(247,241,227,0.2)',
+    border: '1px solid color-mix(in srgb, var(--ivory) 20%, transparent)',
     padding: '14px 28px',
     textDecoration: 'none',
     display: 'inline-flex',

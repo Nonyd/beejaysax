@@ -30,10 +30,10 @@ async function api(body: Record<string, unknown>) {
   return data
 }
 
-const goldBtn = 'inline-flex items-center justify-center gap-2 bg-[#E3B23C] px-5 py-3 text-[14px] font-semibold text-[#11142F] disabled:opacity-60'
-const ghostBtn = 'inline-flex items-center justify-center gap-2 border border-[rgba(247,241,227,0.2)] px-5 py-3 text-[14px] text-[#F7F1E3] disabled:opacity-60'
-const label = 'mb-1.5 block text-[13px] font-semibold text-[rgba(247,241,227,0.8)]'
-const help = 'mt-1.5 text-[12px] text-[rgba(247,241,227,0.55)]'
+const goldBtn = 'inline-flex items-center justify-center gap-2 bg-gold px-5 py-3 text-[14px] font-semibold text-night disabled:opacity-60'
+const ghostBtn = 'inline-flex items-center justify-center gap-2 border border-ivory/20 px-5 py-3 text-[14px] text-ivory disabled:opacity-60'
+const label = 'mb-1.5 block text-[13px] font-semibold text-ivory/80'
+const help = 'mt-1.5 text-[12px] text-ivory/55'
 
 export function NewCampaignButton() {
   const router = useRouter()
@@ -138,7 +138,7 @@ export default function CampaignEditor({
       <div className="flex flex-col gap-6">
         {stats && <Progress stats={stats} status={status} />}
 
-        <fieldset disabled={!draft} className="flex flex-col gap-5 rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6 disabled:opacity-80">
+        <fieldset disabled={!draft} className="flex flex-col gap-5 rounded-[20px] border border-ivory/12 bg-ink p-6 disabled:opacity-80">
           <div>
             <label htmlFor="c-subject" className={label}>
               Subject line
@@ -155,7 +155,7 @@ export default function CampaignEditor({
             <p className={label}>Photo (optional)</p>
             <ImageUpload folder="campaigns" label="Upload a photo" currentUrl={f.imageUrl || undefined} onUpload={(url) => setF((x) => ({ ...x, imageUrl: url }))} />
             {f.imageUrl && (
-              <button type="button" className="mt-2 text-[13px] text-[#E3B23C] underline" onClick={() => setF((x) => ({ ...x, imageUrl: '' }))}>
+              <button type="button" className="mt-2 text-[13px] text-gold underline" onClick={() => setF((x) => ({ ...x, imageUrl: '' }))}>
                 Remove photo
               </button>
             )}
@@ -197,7 +197,7 @@ export default function CampaignEditor({
               id="c-aud"
               value={f.audienceTag}
               onChange={set('audienceTag')}
-              className="w-full rounded-[12px] border border-[rgba(247,241,227,0.16)] bg-[#11142F] px-4 py-3 text-sm text-[#F7F1E3]"
+              className="w-full rounded-[12px] border border-ivory/16 bg-night px-4 py-3 text-sm text-ivory"
             >
               {audiences.map((a) => (
                 <option key={a.tag} value={a.tag}>
@@ -217,7 +217,7 @@ export default function CampaignEditor({
               </button>
               <button
                 type="button"
-                className="text-[13px] text-[#f87171] underline"
+                className="text-[13px] text-danger underline"
                 disabled={!!busy}
                 onClick={async () => {
                   if (!confirm('Delete this draft?')) return
@@ -234,7 +234,7 @@ export default function CampaignEditor({
             </div>
 
             <form
-              className="rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6"
+              className="rounded-[20px] border border-ivory/12 bg-ink p-6"
               onSubmit={async (e) => {
                 e.preventDefault()
                 setBusy('test')
@@ -248,8 +248,8 @@ export default function CampaignEditor({
                 }
               }}
             >
-              <p className="font-display text-xl text-[#F7F1E3]">1. Send yourself a test</p>
-              <p className="mt-1 mb-4 text-[14px] text-[rgba(247,241,227,0.65)]">Check it on your phone before it goes to everyone.</p>
+              <p className="font-display text-xl text-ivory">1. Send yourself a test</p>
+              <p className="mt-1 mb-4 text-[14px] text-ivory/65">Check it on your phone before it goes to everyone.</p>
               <div className="flex gap-2">
                 <AdminInput type="email" required value={testTo} onChange={(e) => setTestTo(e.target.value)} placeholder="you@example.com" aria-label="Test recipient" />
                 <button type="submit" disabled={!!busy} className={`${goldBtn} shrink-0`}>
@@ -258,9 +258,9 @@ export default function CampaignEditor({
               </div>
             </form>
 
-            <div className="rounded-[20px] border border-[rgba(227,178,60,0.4)] bg-[#1B1F4B] p-6">
-              <p className="font-display text-xl text-[#F7F1E3]">2. Send to the list</p>
-              <p className="mt-1 mb-4 text-[14px] text-[rgba(247,241,227,0.65)]">
+            <div className="rounded-[20px] border border-gold/40 bg-ink p-6">
+              <p className="font-display text-xl text-ivory">2. Send to the list</p>
+              <p className="mt-1 mb-4 text-[14px] text-ivory/65">
                 Goes to {audience.label.toLowerCase() === 'everyone subscribed' ? 'everyone subscribed' : `everyone tagged “${audience.label}”`}. People who
                 unsubscribed, bounced or marked you as spam are skipped automatically.
               </p>
@@ -313,7 +313,7 @@ export default function CampaignEditor({
             {status === 'SENDING' && (
               <button
                 type="button"
-                className="text-[13px] text-[#f87171] underline"
+                className="text-[13px] text-danger underline"
                 onClick={async () => {
                   if (!confirm('Stop sending? People not emailed yet won’t get it.')) return
                   await api({ action: 'cancel', id: campaign.id }).catch(() => null)
@@ -328,13 +328,13 @@ export default function CampaignEditor({
         )}
 
         {failures.length > 0 && (
-          <div className="rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6">
-            <p className="font-display text-xl text-[#F7F1E3]">Not delivered</p>
+          <div className="rounded-[20px] border border-ivory/12 bg-ink p-6">
+            <p className="font-display text-xl text-ivory">Not delivered</p>
             <ul className="mt-3 space-y-2 text-[13px]">
               {failures.map((x) => (
                 <li key={x.email}>
-                  <span className="text-[#F7F1E3]">{x.email}</span>{' '}
-                  <span className="text-[rgba(247,241,227,0.55)]">
+                  <span className="text-ivory">{x.email}</span>{' '}
+                  <span className="text-ivory/55">
                     {x.status === 'COMPLAINED' ? 'marked as spam' : x.status.toLowerCase()}
                     {x.error ? `: ${x.error}` : ''}
                   </span>
@@ -346,14 +346,14 @@ export default function CampaignEditor({
       </div>
 
       <div className="xl:sticky xl:top-6 xl:self-start">
-        <p className="mb-2 text-[13px] font-semibold text-[rgba(247,241,227,0.6)]">
+        <p className="mb-2 text-[13px] font-semibold text-ivory/60">
           Preview <span className="font-normal">(as Ada Okafor would see it)</span>
         </p>
-        <div className="rounded-[14px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] px-4 py-3 text-[14px]">
-          <p className="truncate font-semibold text-[#F7F1E3]">{preview.subject}</p>
-          <p className="truncate text-[13px] text-[rgba(247,241,227,0.6)]">{f.preheader || f.body.slice(0, 120) || 'Preview text'}</p>
+        <div className="rounded-[14px] border border-ivory/12 bg-ink px-4 py-3 text-[14px]">
+          <p className="truncate font-semibold text-ivory">{preview.subject}</p>
+          <p className="truncate text-[13px] text-ivory/60">{f.preheader || f.body.slice(0, 120) || 'Preview text'}</p>
         </div>
-        <iframe title="Email preview" srcDoc={preview.html} sandbox="" className="mt-3 h-[760px] w-full rounded-[14px] border border-[rgba(247,241,227,0.12)] bg-[#11142F]" />
+        <iframe title="Email preview" srcDoc={preview.html} sandbox="" className="mt-3 h-[760px] w-full rounded-[14px] border border-ivory/12 bg-night" />
       </div>
     </div>
   )
@@ -362,15 +362,15 @@ export default function CampaignEditor({
 function Progress({ stats, status }: { stats: CampaignStats; status: string }) {
   const done = stats.recipients ? Math.round(((stats.sent + stats.failed) / stats.recipients) * 100) : 0
   return (
-    <div className="rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6" aria-live="polite">
+    <div className="rounded-[20px] border border-ivory/12 bg-ink p-6" aria-live="polite">
       <div className="flex items-baseline justify-between">
-        <p className="font-display text-xl text-[#F7F1E3]">
+        <p className="font-display text-xl text-ivory">
           {status === 'SENDING' ? 'Sending…' : status === 'CANCELLED' ? 'Stopped' : 'Sent'}
         </p>
-        <p className="text-[14px] text-[rgba(247,241,227,0.7)]">{done}%</p>
+        <p className="text-[14px] text-ivory/70">{done}%</p>
       </div>
-      <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#11142F]">
-        <div className="h-full bg-[#E3B23C] transition-[width] duration-500" style={{ width: `${done}%` }} />
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-night">
+        <div className="h-full bg-gold transition-[width] duration-500" style={{ width: `${done}%` }} />
       </div>
       <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
@@ -380,13 +380,13 @@ function Progress({ stats, status }: { stats: CampaignStats; status: string }) {
           ['Not sent', stats.failed],
         ].map(([k, v]) => (
           <div key={k}>
-            <dt className="text-[12px] text-[rgba(247,241,227,0.6)]">{k}</dt>
-            <dd className="font-display text-[26px] leading-tight text-[#F7F1E3]">{Number(v).toLocaleString()}</dd>
+            <dt className="text-[12px] text-ivory/60">{k}</dt>
+            <dd className="font-display text-[26px] leading-tight text-ivory">{Number(v).toLocaleString()}</dd>
           </div>
         ))}
       </dl>
       {status === 'SENDING' && stats.pending > 0 && (
-        <p className="mt-3 text-[12px] text-[rgba(247,241,227,0.55)]">{stats.pending.toLocaleString()} still to send. You can leave this page; sending continues in the background.</p>
+        <p className="mt-3 text-[12px] text-ivory/55">{stats.pending.toLocaleString()} still to send. You can leave this page; sending continues in the background.</p>
       )}
     </div>
   )

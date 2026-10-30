@@ -8,7 +8,7 @@ export default async function ContactCTA() {
   const tel = site.phone.replace(/[^\d+]/g, '')
   return (
     <section className="relative overflow-hidden bg-clay-deep py-24 text-ivory md:py-32">
-      <Adire variant="field" color="#F7F1E3" opacity={0.09} />
+      <Adire variant="field" color="var(--ivory)" opacity={0.09} />
       <div className="site-shell relative">
         <h2 className="max-w-[14ch] font-display text-[clamp(48px,7.5vw,112px)] leading-[0.92] tracking-[-0.025em]">
           {c.title}

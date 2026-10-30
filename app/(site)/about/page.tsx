@@ -23,7 +23,7 @@ export default async function AboutPage() {
     <>
       {/* header */}
       <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
-        <Adire variant="field" color="#E3B23C" opacity={0.06} />
+        <Adire variant="field" color="var(--gold)" opacity={0.06} />
         <div className="site-shell relative grid items-center gap-14 py-16 md:py-24 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="min-w-0">
             <p className="font-body text-lg font-medium text-gold">{c.kicker}</p>
@@ -40,7 +40,7 @@ export default async function AboutPage() {
             <ArchPhoto src={c.image} alt={c.imageAlt} sizes="(max-width:1024px) 300px, 380px" priority objectPosition={c.imagePosition} />
           </div>
         </div>
-        <Adire variant="band" color="#E3B23C" opacity={0.6} height={32} />
+        <Adire variant="band" color="var(--gold)" opacity={0.6} height={32} />
       </section>
 
       {/* story */}

@@ -23,7 +23,7 @@ export default async function AdminContentPage() {
       <div className="space-y-10">
         {[...groups].map(([group, keys]) => (
           <section key={group}>
-            <h3 className="mb-4 font-display text-xl text-[#F7F1E3]">{group}</h3>
+            <h3 className="mb-4 font-display text-xl text-ivory">{group}</h3>
             <ul className="grid gap-4 md:grid-cols-2">
               {keys.map((k) => {
                 const s = CONTENT[k]
@@ -32,11 +32,11 @@ export default async function AdminContentPage() {
                   <li key={k}>
                     <Link
                       href={`/admin/content/${k}`}
-                      className="block h-full rounded-[18px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-5 no-underline transition-colors hover:border-[#E3B23C]"
+                      className="block h-full rounded-[18px] border border-ivory/12 bg-ink p-5 no-underline transition-colors hover:border-gold"
                     >
-                      <p className="font-semibold text-[#F7F1E3]">{s.title}</p>
-                      <p className="mt-1 text-[14px] text-[rgba(247,241,227,0.65)]">{s.description}</p>
-                      <p className="mt-3 text-[12px] text-[rgba(247,241,227,0.5)]">
+                      <p className="font-semibold text-ivory">{s.title}</p>
+                      <p className="mt-1 text-[14px] text-ivory/65">{s.description}</p>
+                      <p className="mt-3 text-[12px] text-ivory/50">
                         {e ? `Edited ${fmt(e.updatedAt, 'd MMM yyyy, HH:mm')}${e.updatedBy ? ` by ${e.updatedBy}` : ''}` : 'Original text'}
                       </p>
                     </Link>

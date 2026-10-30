@@ -7,7 +7,7 @@ export default function GoldRule({ full }: { full?: boolean }) {
       style={{
         width: full ? '100%' : 40,
         height: 1,
-        background: '#C9A84C',
+        background: 'var(--gold)',
       }}
     />
   )

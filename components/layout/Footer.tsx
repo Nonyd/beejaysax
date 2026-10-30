@@ -16,7 +16,7 @@ export default async function Footer() {
   const site = await getContent('site')
   return (
     <footer className="bg-night">
-      <Adire variant="band" color="#E3B23C" opacity={0.55} height={40} />
+      <Adire variant="band" color="var(--gold)" opacity={0.55} height={40} />
 
       <div className="site-shell">
         <div className="flex flex-col gap-6 border-b border-line pt-16 pb-14 md:flex-row md:items-end md:justify-between">

@@ -163,7 +163,7 @@ export default function CheckinScanner({ eventId, eventTitle }: { eventId: strin
         )}
         {(result || busy) && (
           <div
-            className={`absolute inset-x-0 bottom-0 p-5 text-ivory ${tone?.bg ?? 'bg-night/90'}`}
+            className={`absolute inset-x-0 bottom-0 p-5 ${tone ? `text-white ${tone.bg}` : 'bg-night/90 text-ivory'}`}
             role="status"
             aria-live="assertive"
           >

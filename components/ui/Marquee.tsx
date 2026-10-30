@@ -31,7 +31,7 @@ export default function Marquee({
       >
         {text}
       </span>
-      <span style={{ margin: '0 24px', color: '#C9A84C' }}>◆</span>
+      <span style={{ margin: '0 24px', color: 'var(--gold)' }}>◆</span>
     </span>
   )
 

@@ -31,7 +31,7 @@ export default async function EventPurchasePage({ params }: Props) {
 
   return (
     <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
-      <Adire variant="field" color="#E3B23C" opacity={0.06} />
+      <Adire variant="field" color="var(--gold)" opacity={0.06} />
       <div className="site-shell relative">
         <div className="mx-auto max-w-[760px] py-16 md:py-24">
           <Link href={`/events/${id}`} className="font-body text-sm font-semibold text-gold no-underline hover:underline">

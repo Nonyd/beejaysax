@@ -24,16 +24,16 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   return (
     <div>
       <nav className="mb-8 text-[13px]">
-        <Link href="/admin/events" className="text-[rgba(247,241,227,0.65)] no-underline">Events</Link>
-        <span className="mx-2 text-[rgba(247,241,227,0.35)]">/</span>
-        <span className="text-[#E3B23C]">{event.title}</span>
+        <Link href="/admin/events" className="text-ivory/65 no-underline">Events</Link>
+        <span className="mx-2 text-ivory/35">/</span>
+        <span className="text-gold">{event.title}</span>
       </nav>
       <AdminPageHeader
         eyebrow={event.status === 'DRAFT' ? 'Draft' : 'Events'}
         title="Edit event"
         action={
           event.status !== 'DRAFT' ? (
-            <Link href={`/events/${event.id}`} target="_blank" className="text-[14px] text-[#E3B23C] underline">
+            <Link href={`/events/${event.id}`} target="_blank" className="text-[14px] text-gold underline">
               View on site
             </Link>
           ) : undefined

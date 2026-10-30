@@ -5,32 +5,114 @@
   ink (indigo ground) · night (deep indigo) · gold · clay (terracotta) · ivory
   Display: Gloock · Body: Hanken Grotesk
 */
+/*
+  Two themes share one set of names. The utilities (bg-ink, text-gold, ...) read these variables,
+  so a whole page flips when <html data-theme> changes. Names keep their Night meaning:
+  "night" is the page ground, "ivory" the main text, "ink" a raised surface.
+  Dawn takes the golden-hour palette of the hero photo: parchment ground, indigo text, honey gold.
+*/
+:root,
+[data-theme='night'] {
+  color-scheme: dark;
+  --night: #11142f;
+  --night-2: #141838;
+  --ink: #1b1f4b;
+  --ink-2: #232861;
+  --surface-2: #20255a;
+  --surface-3: #2a3068;
+  --ivory: #f7f1e3;
+  --ivory-2: #ede4cf;
+  --gold: #e3b23c;
+  --gold-lt: #f0c75e;
+  --clay: #c4583a;
+  --clay-deep: #a9452c;
+  --danger: #f87171;
+  --success: #4ade80;
+  --warn: #f0a35e;
+  --violet: #a78bfa;
+  --forest: #24563f;
+  --line: color-mix(in srgb, var(--ivory) 14%, transparent);
+}
+
+[data-theme='dawn'] {
+  color-scheme: light;
+  --night: #f8ecd3;
+  --night-2: #f4e4c4;
+  --ink: #f3e3c1;
+  --ink-2: #ecd6aa;
+  --surface-2: #efdbb4;
+  --surface-3: #e7cc9c;
+  --ivory: #1b1f4b;
+  --ivory-2: #2a3068;
+  --gold: #835507;
+  --gold-lt: #9c6a10;
+  --clay: #b0432a;
+  --clay-deep: #93361f;
+  --danger: #b42318;
+  --success: #12703a;
+  --warn: #a14c05;
+  --violet: #6d28d9;
+  --forest: #1f6b45;
+  --line: color-mix(in srgb, var(--ivory) 16%, transparent);
+}
+
+/* Dawn: full-strength ivory blocks (the "light" bands in Night) turn indigo,
+   so the accents inside them switch back to their bright Night values. */
+[data-theme='dawn'] .bg-ivory {
+  --night: #11142f;
+  --gold: #e3b23c;
+  --gold-lt: #f0c75e;
+  --clay: #e8835f;
+  --clay-deep: #f09a78;
+  --danger: #f87171;
+  --success: #4ade80;
+  --forest: #6ee7a0;
+}
+
+/* ...and dark (bg-night) pieces inside them, like ticket buttons, keep light text. */
+[data-theme='dawn'] .bg-ivory :is(.bg-night, .bg-night\/85, .bg-night\/90) {
+  --ivory: #f7f1e3;
+}
+
+/* ...and the white form fields and rows inside them become a soft glass instead. */
+[data-theme='dawn'] .bg-ivory :is(.bg-white\/60, .bg-white\/70) {
+  background-color: rgb(247 241 227 / 0.08);
+}
+
 @theme inline {
-  --color-ink: #1b1f4b;
-  --color-ink-2: #232861;
-  --color-night: #11142f;
-  --color-gold: #e3b23c;
-  --color-gold-lt: #f0c75e;
-  --color-clay: #c4583a;
-  --color-clay-deep: #a9452c;
-  --color-ivory: #f7f1e3;
-  --color-ivory-2: #ede4cf;
-  --color-line: rgba(247, 241, 227, 0.14);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-gold: var(--gold);
+  --color-gold-lt: var(--gold-lt);
+  --color-clay: var(--clay);
+  --color-clay-deep: var(--clay-deep);
+  --color-ivory: var(--ivory);
+  --color-ivory-2: var(--ivory-2);
+  --color-line: var(--line);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-violet: var(--violet);
+  --color-forest: var(--forest);
 
   /* Legacy names (admin + shared components) mapped onto the new palette */
-  --color-bjs-black: #11142f;
-  --color-bjs-surface: #1b1f4b;
-  --color-bjs-surface2: #20255a;
-  --color-bjs-surface3: #2a3068;
-  --color-bjs-border: rgba(247, 241, 227, 0.14);
-  --color-bjs-border-lt: rgba(247, 241, 227, 0.24);
-  --color-bjs-white: #f7f1e3;
-  --color-bjs-white-dim: rgba(247, 241, 227, 0.62);
-  --color-bjs-gold: #e3b23c;
-  --color-bjs-gold-lt: #f0c75e;
-  --color-bjs-gold-dim: rgba(227, 178, 60, 0.12);
-  --color-bjs-gold-glow: rgba(227, 178, 60, 0.3);
-  --color-bjs-muted: rgba(247, 241, 227, 0.5);
+  --color-bjs-black: var(--night);
+  --color-bjs-surface: var(--ink);
+  --color-bjs-surface2: var(--surface-2);
+  --color-bjs-surface3: var(--surface-3);
+  --color-bjs-border: var(--line);
+  --color-bjs-border-lt: color-mix(in srgb, var(--ivory) 24%, transparent);
+  --color-bjs-white: var(--ivory);
+  --color-bjs-white-dim: color-mix(in srgb, var(--ivory) 62%, transparent);
+  --color-bjs-gold: var(--gold);
+  --color-bjs-gold-lt: var(--gold-lt);
+  --color-bjs-gold-dim: color-mix(in srgb, var(--gold) 12%, transparent);
+  --color-bjs-gold-glow: color-mix(in srgb, var(--gold) 30%, transparent);
+  --color-bjs-muted: color-mix(in srgb, var(--ivory) 50%, transparent);
 
   --font-display: var(--font-gloock), Georgia, serif;
   --font-body: var(--font-hanken), system-ui, sans-serif;
@@ -47,8 +129,8 @@
    inside @layer base, and an unlayered reset overrides every p-/m-/space- utility. */
 
 html {
-  background: #11142f;
-  color: #f7f1e3;
+  background: var(--night);
+  color: var(--ivory);
   scroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
   /* Gloock ships one weight; never fake-bold it */
@@ -57,13 +139,13 @@ html {
 
 body {
   font-family: var(--font-hanken), system-ui, sans-serif;
-  background: #11142f;
+  background: var(--night);
   overflow-x: hidden;
 }
 
 ::selection {
-  background: #e3b23c;
-  color: #11142f;
+  background: var(--gold);
+  color: var(--night);
 }
 
 ::-webkit-scrollbar {
@@ -71,15 +153,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #11142f;
+  background: var(--night);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e3b23c;
+  background: var(--gold);
 }
 
 :focus-visible {
-  outline: 2px solid #e3b23c;
+  outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
 
@@ -214,4 +296,17 @@ body {
   .no-print {
     display: none !important;
   }
+}
+
+/* Theme switch: show the icon for the theme you are not on */
+[data-theme='dawn'] .theme-when-night,
+:root:not([data-theme='dawn']) .theme-when-dawn {
+  display: none;
+}
+
+/* The switch's circular reveal replaces the default cross-fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

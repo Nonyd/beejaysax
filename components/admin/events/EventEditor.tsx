@@ -187,7 +187,7 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
             onUpload={(url) => set('posterImage', url)}
           />
           {ev.posterImage && (
-            <button type="button" onClick={() => set('posterImage', '')} className="mt-2 text-[13px] text-[#E3B23C] underline">
+            <button type="button" onClick={() => set('posterImage', '')} className="mt-2 text-[13px] text-gold underline">
               Remove poster
             </button>
           )}
@@ -249,21 +249,21 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
             />
           </AdminFormField>
         </div>
-        <p className="text-[12px] text-[rgba(247,241,227,0.55)]">If sales close is empty, sales stop when the event starts.</p>
+        <p className="text-[12px] text-ivory/55">If sales close is empty, sales stop when the event starts.</p>
 
         <ol className="mt-2 space-y-4">
           {ev.tiers.map((t, i) => (
-            <li key={t.id ?? `new-${i}`} className="rounded-[16px] border border-[rgba(247,241,227,0.14)] bg-[#11142F] p-5">
+            <li key={t.id ?? `new-${i}`} className="rounded-[16px] border border-ivory/14 bg-night p-5">
               <div className="mb-4 flex items-center justify-between gap-3">
-                <p className="font-semibold text-[#F7F1E3]">
+                <p className="font-semibold text-ivory">
                   {t.name || `Ticket type ${i + 1}`}
-                  {t.sold ? <span className="ml-2 text-[13px] font-normal text-[rgba(247,241,227,0.6)]">{t.sold} sold</span> : null}
+                  {t.sold ? <span className="ml-2 text-[13px] font-normal text-ivory/60">{t.sold} sold</span> : null}
                 </p>
                 <div className="flex items-center gap-1">
-                  <button type="button" aria-label="Move up" disabled={i === 0} onClick={() => moveTier(i, -1)} className="p-2 text-[rgba(247,241,227,0.7)] disabled:opacity-30">
+                  <button type="button" aria-label="Move up" disabled={i === 0} onClick={() => moveTier(i, -1)} className="p-2 text-ivory/70 disabled:opacity-30">
                     <ArrowUp className="h-4 w-4" />
                   </button>
-                  <button type="button" aria-label="Move down" disabled={i === ev.tiers.length - 1} onClick={() => moveTier(i, 1)} className="p-2 text-[rgba(247,241,227,0.7)] disabled:opacity-30">
+                  <button type="button" aria-label="Move down" disabled={i === ev.tiers.length - 1} onClick={() => moveTier(i, 1)} className="p-2 text-ivory/70 disabled:opacity-30">
                     <ArrowDown className="h-4 w-4" />
                   </button>
                   <button
@@ -271,16 +271,16 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
                     aria-label={t.isVisible ? 'Hide from sale' : 'Show for sale'}
                     title={t.isVisible ? 'Visible on the site' : 'Hidden from the site'}
                     onClick={() => setTier(i, { isVisible: !t.isVisible })}
-                    className="p-2 text-[rgba(247,241,227,0.7)]"
+                    className="p-2 text-ivory/70"
                   >
-                    {t.isVisible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-[#f0a35e]" />}
+                    {t.isVisible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-warn" />}
                   </button>
                   <button
                     type="button"
                     aria-label="Remove ticket type"
                     disabled={ev.tiers.length === 1}
                     onClick={() => setEv((e) => ({ ...e, tiers: e.tiers.filter((_, j) => j !== i) }))}
-                    className="p-2 text-[#f87171] disabled:opacity-30"
+                    className="p-2 text-danger disabled:opacity-30"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -322,7 +322,7 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
         <button
           type="button"
           onClick={() => setEv((e) => ({ ...e, tiers: [...e.tiers, blankTier(e.tiers.length ? 'VIP' : 'Regular')] }))}
-          className="inline-flex items-center gap-2 border border-[rgba(247,241,227,0.25)] px-5 py-2.5 font-semibold text-[#F7F1E3] hover:border-[#E3B23C]"
+          className="inline-flex items-center gap-2 border border-ivory/25 px-5 py-2.5 font-semibold text-ivory hover:border-gold"
         >
           <Plus className="h-4 w-4" /> Add ticket type
         </button>
@@ -350,7 +350,7 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
         title="Door check-in"
         description="Set a PIN so volunteers can scan tickets on their phones without an admin login."
       >
-        <p className="text-[14px] text-[rgba(247,241,227,0.75)]">
+        <p className="text-[14px] text-ivory/75">
           {initial.hasPin ? 'A check-in PIN is set.' : 'No check-in PIN yet. Only signed-in admins can scan.'}
         </p>
         <div className="flex flex-wrap items-end gap-3">
@@ -375,26 +375,26 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
                 setPin('')
                 setPinMode(pinMode === 'remove' ? 'keep' : 'remove')
               }}
-              className="pb-3 text-[13px] text-[#E3B23C] underline"
+              className="pb-3 text-[13px] text-gold underline"
             >
               {pinMode === 'remove' ? 'Keep the current PIN' : 'Turn off PIN check-in'}
             </button>
           )}
         </div>
-        {pinMode === 'remove' && <p className="text-[13px] text-[#f0a35e]">PIN check-in will be turned off when you save.</p>}
+        {pinMode === 'remove' && <p className="text-[13px] text-warn">PIN check-in will be turned off when you save.</p>}
       </AdminSectionCard>
 
       {footer}
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[rgba(247,241,227,0.12)] bg-[#11142F]/95 backdrop-blur md:left-[280px]">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-ivory/12 bg-night/95 backdrop-blur md:left-[280px]">
         <div className="mx-auto flex max-w-[900px] flex-wrap items-center justify-end gap-3 px-6 py-4">
           {ev.id && (
-            <Link href={`/admin/events/${ev.id}/tickets`} className="mr-auto text-[14px] text-[rgba(247,241,227,0.7)] underline">
+            <Link href={`/admin/events/${ev.id}/tickets`} className="mr-auto text-[14px] text-ivory/70 underline">
               Registrations
             </Link>
           )}
           {ev.status === 'DRAFT' && (
-            <button type="button" disabled={saving} onClick={() => save('DRAFT')} className="border border-[rgba(247,241,227,0.25)] px-6 py-3 font-semibold text-[#F7F1E3]">
+            <button type="button" disabled={saving} onClick={() => save('DRAFT')} className="border border-ivory/25 px-6 py-3 font-semibold text-ivory">
               Save draft
             </button>
           )}
@@ -402,7 +402,7 @@ export default function EventEditor({ initial, footer }: { initial: EditorEvent;
             type="button"
             disabled={saving}
             onClick={() => save(ev.status === 'DRAFT' ? 'UPCOMING' : undefined)}
-            className="inline-flex items-center gap-2 bg-[#E3B23C] px-7 py-3 font-semibold text-[#11142F] disabled:opacity-60"
+            className="inline-flex items-center gap-2 bg-gold px-7 py-3 font-semibold text-night disabled:opacity-60"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             {ev.status === 'DRAFT' ? 'Publish event' : 'Save changes'}

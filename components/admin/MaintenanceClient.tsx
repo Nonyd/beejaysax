@@ -39,13 +39,13 @@ export default function MaintenanceClient({ initial, defaultMessage }: { initial
     <div className="mx-auto max-w-[860px] space-y-6">
       <div
         className={`flex flex-wrap items-center justify-between gap-4 rounded-[14px] border px-5 py-4 ${
-          state.enabled ? 'border-[#f0a35e]/50 text-[#f0a35e]' : 'border-[#4ade80]/30 text-[#4ade80]'
+          state.enabled ? 'border-warn/50 text-warn' : 'border-success/30 text-success'
         }`}
       >
         <div>
           <p className="text-[16px] font-semibold">{state.enabled ? 'The site is in maintenance mode' : 'The site is live'}</p>
           {state.updatedAt && (
-            <p className="mt-1 text-[13px] text-[rgba(247,241,227,0.6)]">
+            <p className="mt-1 text-[13px] text-ivory/60">
               Last changed by {state.updatedBy} on {new Date(state.updatedAt).toLocaleString('en-NG')}
             </p>
           )}
@@ -55,7 +55,7 @@ export default function MaintenanceClient({ initial, defaultMessage }: { initial
           onClick={() => save(!state.enabled)}
           disabled={saving}
           className={`inline-flex items-center gap-2 px-6 py-3 font-semibold disabled:opacity-50 ${
-            state.enabled ? 'bg-[#4ade80] text-[#11142F]' : 'bg-[#f0a35e] text-[#11142F]'
+            state.enabled ? 'bg-success text-night' : 'bg-warn text-night'
           }`}
         >
           {saving && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -79,11 +79,11 @@ export default function MaintenanceClient({ initial, defaultMessage }: { initial
               type="button"
               onClick={() => save(state.enabled)}
               disabled={saving || (message === state.message && until === state.until)}
-              className="bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F] disabled:opacity-50"
+              className="bg-gold px-6 py-3 font-semibold text-night disabled:opacity-50"
             >
               Save message
             </button>
-            <a href="/maintenance" target="_blank" rel="noreferrer" className="text-[14px] text-[#E3B23C]">
+            <a href="/maintenance" target="_blank" rel="noreferrer" className="text-[14px] text-gold">
               {state.enabled ? 'Preview the maintenance page ↗' : 'Preview is available once maintenance mode is on'}
             </a>
           </div>
@@ -91,14 +91,14 @@ export default function MaintenanceClient({ initial, defaultMessage }: { initial
       </AdminSectionCard>
 
       <AdminSectionCard title="What keeps working" description="So nothing breaks for people already mid-purchase or at an event.">
-        <ul className="list-disc space-y-2 pl-5 text-[14px] text-[rgba(247,241,227,0.75)]">
+        <ul className="list-disc space-y-2 pl-5 text-[14px] text-ivory/75">
           <li>This admin area, for every account.</li>
           <li>Payments already in progress (Paystack confirmations) and email delivery updates.</li>
           <li>Attendees’ ticket links, ticket PDFs and QR codes.</li>
           <li>Door check-in, for admins and PIN volunteers.</li>
           <li>Scheduled jobs such as reminders.</li>
         </ul>
-        <p className="mt-4 text-[14px] text-[rgba(247,241,227,0.6)]">
+        <p className="mt-4 text-[14px] text-ivory/60">
           Everything else, including buying new tickets and the contact form, is paused. Search engines are told the outage is
           temporary (HTTP 503), so rankings are not affected by a short break.
         </p>

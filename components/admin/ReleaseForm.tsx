@@ -140,7 +140,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
               value={coverImage}
               onChange={(e) => setCoverImage(e.target.value)}
               placeholder="Or paste an image link..."
-              className="min-w-0 flex-1 bg-[#1B1F4B] border border-[rgba(247,241,227,0.12)] px-4 py-2 text-white text-sm focus:border-[#E3B23C] focus:outline-none"
+              className="min-w-0 flex-1 bg-ink border border-ivory/12 px-4 py-2 text-ivory text-sm focus:border-gold focus:outline-none"
               style={{ fontSize: 11 }}
             />
             <button
@@ -148,8 +148,8 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
               onClick={() => setCoverImage('')}
               style={{
                 fontSize: 11,
-                color: '#f87171',
-                border: '1px solid rgba(127,29,29,0.4)',
+                color: 'var(--danger)',
+                border: '1px solid color-mix(in srgb, var(--danger) 40%, transparent)',
                 padding: '8px 12px',
               }}
             >
@@ -179,14 +179,14 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
       </AdminSectionCard>
 
       <div
-        className="flex flex-wrap gap-3 border-t border-[rgba(247,241,227,0.12)] pt-5"
+        className="flex flex-wrap gap-3 border-t border-ivory/12 pt-5"
         style={{ marginTop: 4, marginBottom: 8 }}
       >
         <button
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="bg-[#E3B23C] px-8 py-3 font-semibold text-[#11142F] transition hover:bg-[#F0C75E] disabled:opacity-40"
+          className="bg-gold px-8 py-3 font-semibold text-night transition hover:bg-gold-lt disabled:opacity-40"
           style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
         >
           {loading ? 'Saving...' : mode === 'create' ? 'Create Release' : 'Save Changes'}
@@ -194,7 +194,7 @@ export default function ReleaseForm({ mode, release }: ReleaseFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-[rgba(247,241,227,0.2)] px-8 py-3 text-white transition hover:border-[rgba(247,241,227,0.55)]"
+          className="border border-ivory/20 px-8 py-3 text-ivory transition hover:border-ivory/55"
           style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
         >
           Cancel

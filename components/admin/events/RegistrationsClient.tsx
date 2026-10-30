@@ -119,7 +119,7 @@ export default function RegistrationsClient({
       type="button"
       onClick={() => setStatus(value)}
       aria-pressed={status === value}
-      className={status === value ? 'bg-[#E3B23C] px-4 py-2 text-[13px] font-semibold text-[#11142F]' : 'border border-[rgba(247,241,227,0.2)] px-4 py-2 text-[13px] text-[#F7F1E3]'}
+      className={status === value ? 'bg-gold px-4 py-2 text-[13px] font-semibold text-night' : 'border border-ivory/20 px-4 py-2 text-[13px] text-ivory'}
     >
       {label}
     </button>
@@ -129,7 +129,7 @@ export default function RegistrationsClient({
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <div className="relative min-w-[240px] flex-1">
-          <Search aria-hidden className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-[rgba(247,241,227,0.45)]" />
+          <Search aria-hidden className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-ivory/45" />
           <AdminInput value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search name, email, ticket or order number" className="pl-11" aria-label="Search registrations" />
         </div>
         {tiers.length > 1 && (
@@ -137,13 +137,13 @@ export default function RegistrationsClient({
             <AdminSelect aria-label="Ticket type" value={tier} onChange={(e) => setTier(e.target.value)} options={[{ value: 'all', label: 'All ticket types' }, ...tiers.map((t) => ({ value: t.id, label: t.name }))]} />
           </div>
         )}
-        <a href={`/api/admin/events/${eventId}/export`} className="inline-flex items-center gap-2 border border-[rgba(247,241,227,0.2)] px-5 py-3 text-[14px] font-semibold text-[#F7F1E3] no-underline">
+        <a href={`/api/admin/events/${eventId}/export`} className="inline-flex items-center gap-2 border border-ivory/20 px-5 py-3 text-[14px] font-semibold text-ivory no-underline">
           <Download className="h-4 w-4" /> Export CSV
         </a>
-        <button type="button" onClick={() => setMailOpen(true)} className="inline-flex items-center gap-2 border border-[rgba(247,241,227,0.2)] px-5 py-3 text-[14px] font-semibold text-[#F7F1E3]">
+        <button type="button" onClick={() => setMailOpen(true)} className="inline-flex items-center gap-2 border border-ivory/20 px-5 py-3 text-[14px] font-semibold text-ivory">
           <Mail className="h-4 w-4" /> Email attendees
         </button>
-        <button type="button" onClick={() => setCompOpen(true)} className="inline-flex items-center gap-2 bg-[#E3B23C] px-5 py-3 text-[14px] font-semibold text-[#11142F]">
+        <button type="button" onClick={() => setCompOpen(true)} className="inline-flex items-center gap-2 bg-gold px-5 py-3 text-[14px] font-semibold text-night">
           <UserPlus className="h-4 w-4" /> Add guest ticket
         </button>
       </div>
@@ -156,32 +156,32 @@ export default function RegistrationsClient({
       </div>
 
       {selected.size > 0 && (
-        <div className="sticky top-2 z-20 mb-4 flex flex-wrap items-center gap-3 rounded-[16px] border border-[#E3B23C]/40 bg-[#20255A] px-4 py-3">
-          <span className="text-[14px] font-semibold text-[#F7F1E3]">{selected.size} selected</span>
+        <div className="sticky top-2 z-20 mb-4 flex flex-wrap items-center gap-3 rounded-[16px] border border-gold/40 bg-surface-2 px-4 py-3">
+          <span className="text-[14px] font-semibold text-ivory">{selected.size} selected</span>
           {(Object.keys(ACTION_LABEL) as Action[]).map((a) => (
             <button
               key={a}
               type="button"
               disabled={busy !== null}
               onClick={() => run(a)}
-              className={`inline-flex items-center gap-2 border px-4 py-2 text-[13px] ${a === 'cancel' || a === 'refund' ? 'border-[#f87171]/50 text-[#f87171]' : 'border-[rgba(247,241,227,0.25)] text-[#F7F1E3]'}`}
+              className={`inline-flex items-center gap-2 border px-4 py-2 text-[13px] ${a === 'cancel' || a === 'refund' ? 'border-danger/50 text-danger' : 'border-ivory/25 text-ivory'}`}
             >
               {busy === a && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               {ACTION_LABEL[a]}
             </button>
           ))}
-          <button type="button" onClick={() => setSelected(new Set())} className="ml-auto text-[13px] text-[rgba(247,241,227,0.7)] underline">
+          <button type="button" onClick={() => setSelected(new Set())} className="ml-auto text-[13px] text-ivory/70 underline">
             Clear
           </button>
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-[18px] border border-[rgba(247,241,227,0.12)]">
+      <div className="overflow-x-auto rounded-[18px] border border-ivory/12">
         <table className="w-full min-w-[820px] text-left text-[14px]">
-          <thead className="bg-[#1B1F4B] text-[12px] text-[rgba(247,241,227,0.6)]">
+          <thead className="bg-ink text-[12px] text-ivory/60">
             <tr>
               <th className="w-10 px-4 py-3">
-                <input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label="Select all shown" className="accent-[#E3B23C]" />
+                <input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label="Select all shown" className="accent-gold" />
               </th>
               <th className="px-3 py-3 font-semibold">Attendee</th>
               <th className="px-3 py-3 font-semibold">Ticket</th>
@@ -190,7 +190,7 @@ export default function RegistrationsClient({
               <th className="px-3 py-3 font-semibold">Door</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[rgba(247,241,227,0.08)]">
+          <tbody className="divide-y divide-ivory/8">
             {filtered.map((r) => (
               <tr key={r.id} className={r.cancelled ? 'opacity-50' : undefined}>
                 <td className="px-4 py-3">
@@ -206,44 +206,44 @@ export default function RegistrationsClient({
                         return n
                       })
                     }
-                    className="accent-[#E3B23C]"
+                    className="accent-gold"
                   />
                 </td>
                 <td className="px-3 py-3">
-                  <p className="font-semibold text-[#F7F1E3]">{r.name}</p>
-                  <p className="text-[13px] text-[rgba(247,241,227,0.6)]">
+                  <p className="font-semibold text-ivory">{r.name}</p>
+                  <p className="text-[13px] text-ivory/60">
                     {r.email}
                     {r.phone ? ` · ${r.phone}` : ''}
                   </p>
                 </td>
                 <td className="px-3 py-3">
-                  <a href={`${siteUrl}/tickets/${r.qrToken}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-[#E3B23C] underline">
+                  <a href={`${siteUrl}/tickets/${r.qrToken}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-gold underline">
                     {r.ticketNumber}
                   </a>
-                  <p className="text-[13px] text-[rgba(247,241,227,0.6)]">
+                  <p className="text-[13px] text-ivory/60">
                     {r.tier}
-                    {r.source === 'COMPLIMENTARY' && <span className="ml-2 text-[#a78bfa]">Guest</span>}
+                    {r.source === 'COMPLIMENTARY' && <span className="ml-2 text-violet">Guest</span>}
                   </p>
                   {r.emailStatus && r.emailStatus !== 'SENT' && (
-                    <p className="text-[12px] font-semibold text-[#f87171]" title={r.emailError ?? undefined}>
+                    <p className="text-[12px] font-semibold text-danger" title={r.emailError ?? undefined}>
                       {r.emailStatus === 'SUPPRESSED' ? 'Email blocked (bounced before)' : 'Email not delivered'}
                     </p>
                   )}
                 </td>
-                <td className="px-3 py-3 text-[#F7F1E3]">{r.amount ? `${currencySymbol}${r.amount.toLocaleString()}` : 'Free'}</td>
-                <td className="px-3 py-3 text-[13px] text-[rgba(247,241,227,0.7)]">
+                <td className="px-3 py-3 text-ivory">{r.amount ? `${currencySymbol}${r.amount.toLocaleString()}` : 'Free'}</td>
+                <td className="px-3 py-3 text-[13px] text-ivory/70">
                   {r.reference ?? '—'}
                   <p>{new Date(r.createdAt).toLocaleDateString()}</p>
                 </td>
                 <td className="px-3 py-3 text-[13px]">
                   {r.cancelled ? (
-                    <span className="text-[#f87171]">Cancelled</span>
+                    <span className="text-danger">Cancelled</span>
                   ) : r.isUsed ? (
-                    <span className="text-[#4ade80]" title={r.usedBy ?? undefined}>
+                    <span className="text-success" title={r.usedBy ?? undefined}>
                       In at {r.usedAt ? new Date(r.usedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                     </span>
                   ) : (
-                    <span className="text-[rgba(247,241,227,0.6)]">Not yet</span>
+                    <span className="text-ivory/60">Not yet</span>
                   )}
                 </td>
               </tr>
@@ -251,7 +251,7 @@ export default function RegistrationsClient({
           </tbody>
         </table>
         {filtered.length === 0 && (
-          <p className="px-6 py-12 text-center text-[rgba(247,241,227,0.6)]">
+          <p className="px-6 py-12 text-center text-ivory/60">
             {rows.length === 0 ? 'No tickets yet. They appear here as soon as someone registers.' : 'No tickets match these filters.'}
           </p>
         )}
@@ -301,13 +301,13 @@ function CompDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal aria-labelledby="comp-title">
-      <form onSubmit={submit} className="w-full max-w-[520px] rounded-[24px] border border-[rgba(247,241,227,0.14)] bg-[#1B1F4B] p-7">
+      <form onSubmit={submit} className="w-full max-w-[520px] rounded-[24px] border border-ivory/14 bg-ink p-7">
         <div className="mb-5 flex items-start justify-between">
           <div>
-            <p id="comp-title" className="font-display text-2xl text-[#F7F1E3]">Add guest ticket</p>
-            <p className="mt-1 text-[14px] text-[rgba(247,241,227,0.65)]">Free complimentary or VIP tickets, emailed to the guest.</p>
+            <p id="comp-title" className="font-display text-2xl text-ivory">Add guest ticket</p>
+            <p className="mt-1 text-[14px] text-ivory/65">Free complimentary or VIP tickets, emailed to the guest.</p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close" className="p-1 text-[rgba(247,241,227,0.7)]">
+          <button type="button" onClick={onClose} aria-label="Close" className="p-1 text-ivory/70">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -336,10 +336,10 @@ function CompDialog({
           </div>
         </div>
         <div className="mt-6 flex justify-end gap-3">
-          <button type="button" onClick={onClose} className="border border-[rgba(247,241,227,0.25)] px-5 py-3 text-[#F7F1E3]">
+          <button type="button" onClick={onClose} className="border border-ivory/25 px-5 py-3 text-ivory">
             Cancel
           </button>
-          <button type="submit" disabled={busy || !f.tierId} className="inline-flex items-center gap-2 bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F]">
+          <button type="submit" disabled={busy || !f.tierId} className="inline-flex items-center gap-2 bg-gold px-6 py-3 font-semibold text-night">
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}Issue ticket
           </button>
         </div>

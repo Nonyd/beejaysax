@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Adire from '@/components/ui/Adire'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
@@ -83,33 +84,36 @@ export default function Navbar({ bookLabel = 'Book BeeJay' }: { bookLabel?: stri
             })}
           </div>
 
-          <Link
-            href="/contact?inquiry=booking"
-            className="hidden rounded-full bg-gold px-6 py-2.5 font-body text-sm font-semibold text-night no-underline transition-colors hover:bg-gold-lt lg:inline-flex"
-          >
-            {bookLabel}
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link
+              href="/contact?inquiry=booking"
+              className="hidden rounded-full bg-gold px-6 py-2.5 font-body text-sm font-semibold text-night no-underline transition-colors hover:bg-gold-lt lg:inline-flex"
+            >
+              {bookLabel}
+            </Link>
 
-          <button
-            type="button"
-            onClick={() => setOpen(!open)}
-            className="flex h-11 w-11 flex-col items-center justify-center gap-[6px] rounded-full border border-line lg:hidden"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-          >
-            <span
-              className={cn('block h-[1.5px] w-5 bg-ivory transition-transform duration-300', open && 'translate-y-[3.75px] rotate-45')}
-            />
-            <span
-              className={cn('block h-[1.5px] w-5 bg-ivory transition-transform duration-300', open && '-translate-y-[3.75px] -rotate-45')}
-            />
-          </button>
+            <button
+              type="button"
+              onClick={() => setOpen(!open)}
+              className="flex h-11 w-11 flex-col items-center justify-center gap-[6px] rounded-full border border-line lg:hidden"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              aria-expanded={open}
+            >
+              <span
+                className={cn('block h-[1.5px] w-5 bg-ivory transition-transform duration-300', open && 'translate-y-[3.75px] rotate-45')}
+              />
+              <span
+                className={cn('block h-[1.5px] w-5 bg-ivory transition-transform duration-300', open && '-translate-y-[3.75px] -rotate-45')}
+              />
+            </button>
+          </div>
         </div>
       </nav>
 
       {open && (
         <div className="fixed inset-0 z-[99] flex flex-col bg-ink pt-[72px] lg:hidden">
-          <Adire variant="field" color="#E3B23C" opacity={0.07} />
+          <Adire variant="field" color="var(--gold)" opacity={0.07} />
           <div className="site-shell relative flex flex-1 flex-col justify-center gap-1">
             {NAV_LINKS.map((l, i) => (
               <Link
@@ -133,7 +137,7 @@ export default function Navbar({ bookLabel = 'Book BeeJay' }: { bookLabel?: stri
               {bookLabel}
             </Link>
           </div>
-          <Adire variant="band" color="#E3B23C" opacity={0.6} height={36} />
+          <Adire variant="band" color="var(--gold)" opacity={0.6} height={36} />
         </div>
       )}
     </>

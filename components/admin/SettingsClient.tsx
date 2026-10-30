@@ -22,15 +22,15 @@ const SOURCE_LABEL: Record<SettingView['source'], string> = {
 function CopyRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-[13px] font-semibold text-[rgba(247,241,227,0.75)]">{label}</span>
+      <span className="text-[13px] font-semibold text-ivory/75">{label}</span>
       <div className="flex items-center gap-2">
-        <code className="min-w-0 flex-1 truncate rounded-[10px] border border-[rgba(247,241,227,0.14)] bg-[#11142F] px-3 py-2.5 text-[13px] text-[#F7F1E3]">
+        <code className="min-w-0 flex-1 truncate rounded-[10px] border border-ivory/14 bg-night px-3 py-2.5 text-[13px] text-ivory">
           {value}
         </code>
         <button
           type="button"
           onClick={() => navigator.clipboard.writeText(value).then(() => toast.success('Copied'))}
-          className="flex h-10 w-10 shrink-0 items-center justify-center border border-[rgba(247,241,227,0.2)] text-[#F7F1E3] hover:border-[#E3B23C] hover:text-[#E3B23C]"
+          className="flex h-10 w-10 shrink-0 items-center justify-center border border-ivory/20 text-ivory hover:border-gold hover:text-gold"
           aria-label={`Copy ${label}`}
         >
           <Copy className="h-4 w-4" />
@@ -159,11 +159,11 @@ export default function SettingsClient({
                         />
                       )}
                     </AdminFormField>
-                    <p className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[12px] text-[rgba(247,241,227,0.55)]">
-                      <span className={f.source === 'none' ? 'text-[#f0a35e]' : undefined}>{SOURCE_LABEL[f.source]}</span>
+                    <p className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[12px] text-ivory/55">
+                      <span className={f.source === 'none' ? 'text-warn' : undefined}>{SOURCE_LABEL[f.source]}</span>
                       {f.help && <span>{f.help}</span>}
                       {f.source === 'db' && !f.options && (
-                        <button type="button" onClick={() => clearValue(f.key)} className="text-[#E3B23C] underline">
+                        <button type="button" onClick={() => clearValue(f.key)} className="text-gold underline">
                           Remove saved value
                         </button>
                       )}
@@ -174,7 +174,7 @@ export default function SettingsClient({
             </div>
 
             {webhookUrls[g.id] && (
-              <div className="mt-6 space-y-4 border-t border-[rgba(247,241,227,0.12)] pt-6">
+              <div className="mt-6 space-y-4 border-t border-ivory/12 pt-6">
                 {webhookUrls[g.id]!.map((w) => (
                   <CopyRow key={w.label} label={w.label} value={w.value} />
                 ))}
@@ -182,17 +182,17 @@ export default function SettingsClient({
             )}
 
             {g.test && results[g.test] && (
-              <ul className="mt-6 space-y-2 rounded-[14px] bg-[#11142F] p-4" aria-live="polite">
+              <ul className="mt-6 space-y-2 rounded-[14px] bg-night p-4" aria-live="polite">
                 {results[g.test].map((c) => (
                   <li key={c.name} className="flex items-start gap-3 text-[14px]">
                     {c.ok ? (
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#4ade80]" aria-label="Passed" />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" aria-label="Passed" />
                     ) : (
-                      <X className="mt-0.5 h-4 w-4 shrink-0 text-[#f87171]" aria-label="Failed" />
+                      <X className="mt-0.5 h-4 w-4 shrink-0 text-danger" aria-label="Failed" />
                     )}
                     <span>
-                      <strong className="font-semibold text-[#F7F1E3]">{c.name}:</strong>{' '}
-                      <span className="text-[rgba(247,241,227,0.75)]">{c.detail}</span>
+                      <strong className="font-semibold text-ivory">{c.name}:</strong>{' '}
+                      <span className="text-ivory/75">{c.detail}</span>
                     </span>
                   </li>
                 ))}
@@ -204,7 +204,7 @@ export default function SettingsClient({
                 type="button"
                 onClick={() => save(g.id)}
                 disabled={saving === g.id || !dirty}
-                className="inline-flex items-center gap-2 bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F] disabled:opacity-50"
+                className="inline-flex items-center gap-2 bg-gold px-6 py-3 font-semibold text-night disabled:opacity-50"
               >
                 {saving === g.id && <Loader2 className="h-4 w-4 animate-spin" />}
                 Save {g.title.split(' ')[0].toLowerCase()} settings
@@ -215,7 +215,7 @@ export default function SettingsClient({
                   onClick={() => runTest(g.test!)}
                   disabled={testing === g.test || dirty}
                   title={dirty ? 'Save your changes first' : undefined}
-                  className="inline-flex items-center gap-2 border border-[rgba(247,241,227,0.25)] px-6 py-3 font-semibold text-[#F7F1E3] hover:border-[#E3B23C] disabled:opacity-50"
+                  className="inline-flex items-center gap-2 border border-ivory/25 px-6 py-3 font-semibold text-ivory hover:border-gold disabled:opacity-50"
                 >
                   {testing === g.test && <Loader2 className="h-4 w-4 animate-spin" />}
                   Test connection

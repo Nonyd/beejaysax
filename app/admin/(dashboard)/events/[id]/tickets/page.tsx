@@ -69,19 +69,19 @@ export default async function EventRegistrationsPage({ params }: { params: Promi
   }))
 
   const stat = (label: string, value: string | number, hint?: string) => (
-    <div className="rounded-[18px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-5">
-      <p className="text-[13px] font-semibold text-[#E3B23C]">{label}</p>
-      <p className="mt-2 font-display text-[34px] leading-none text-[#F7F1E3]">{value}</p>
-      {hint && <p className="mt-2 text-[12px] text-[rgba(247,241,227,0.55)]">{hint}</p>}
+    <div className="rounded-[18px] border border-ivory/12 bg-ink p-5">
+      <p className="text-[13px] font-semibold text-gold">{label}</p>
+      <p className="mt-2 font-display text-[34px] leading-none text-ivory">{value}</p>
+      {hint && <p className="mt-2 text-[12px] text-ivory/55">{hint}</p>}
     </div>
   )
 
   return (
     <div>
       <nav className="mb-8 text-[13px]">
-        <Link href="/admin/events" className="text-[rgba(247,241,227,0.65)] no-underline">Events</Link>
-        <span className="mx-2 text-[rgba(247,241,227,0.35)]">/</span>
-        <span className="text-[#E3B23C]">{event.title}</span>
+        <Link href="/admin/events" className="text-ivory/65 no-underline">Events</Link>
+        <span className="mx-2 text-ivory/35">/</span>
+        <span className="text-gold">{event.title}</span>
       </nav>
       <AdminPageHeader
         eyebrow="Registrations"
@@ -89,10 +89,10 @@ export default async function EventRegistrationsPage({ params }: { params: Promi
         subtitle="Everyone holding a ticket, sales by ticket type, and door check-in."
         action={
           <>
-            <Link href={`/admin/events/${id}/checkin`} className="bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F] no-underline">
+            <Link href={`/admin/events/${id}/checkin`} className="bg-gold px-6 py-3 font-semibold text-night no-underline">
               Open door scanner
             </Link>
-            <Link href={`/admin/events/${id}/edit`} className="border border-[rgba(247,241,227,0.25)] px-6 py-3 font-semibold text-[#F7F1E3] no-underline">
+            <Link href={`/admin/events/${id}/edit`} className="border border-ivory/25 px-6 py-3 font-semibold text-ivory no-underline">
               Edit event
             </Link>
           </>
@@ -107,28 +107,28 @@ export default async function EventRegistrationsPage({ params }: { params: Promi
       </div>
 
       {tierStats.length > 0 && (
-        <div className="mb-10 rounded-[20px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-6">
-          <p className="mb-4 font-display text-xl text-[#F7F1E3]">Sales by ticket type</p>
+        <div className="mb-10 rounded-[20px] border border-ivory/12 bg-ink p-6">
+          <p className="mb-4 font-display text-xl text-ivory">Sales by ticket type</p>
           <ul className="space-y-4">
             {tierStats.map((t) => {
               const pct = t.capacity ? Math.min(100, Math.round((t.sold / t.capacity) * 100)) : null
               return (
                 <li key={t.id}>
                   <div className="flex flex-wrap items-baseline justify-between gap-2 text-[14px]">
-                    <span className="font-semibold text-[#F7F1E3]">
+                    <span className="font-semibold text-ivory">
                       {t.name}
-                      {!t.isVisible && <span className="ml-2 text-[12px] font-normal text-[#f0a35e]">hidden</span>}
+                      {!t.isVisible && <span className="ml-2 text-[12px] font-normal text-warn">hidden</span>}
                     </span>
-                    <span className="text-[rgba(247,241,227,0.7)]">
+                    <span className="text-ivory/70">
                       {t.sold}
                       {t.capacity ? ` / ${t.capacity}` : ''} sold · {sym}
                       {t.revenue.toLocaleString()}
                     </span>
                   </div>
                   {pct !== null && (
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#11142F]">
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-night">
                       <div
-                        className={`h-full rounded-full ${pct >= 90 ? 'bg-[#f87171]' : pct >= 60 ? 'bg-[#f0a35e]' : 'bg-[#E3B23C]'}`}
+                        className={`h-full rounded-full ${pct >= 90 ? 'bg-danger' : pct >= 60 ? 'bg-warn' : 'bg-gold'}`}
                         style={{ width: `${pct}%` }}
                       />
                     </div>

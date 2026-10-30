@@ -31,7 +31,7 @@ export default async function OrderPage({ params }: { params: Promise<{ referenc
 
   return (
     <section className="relative -mt-[72px] min-h-[80vh] overflow-hidden bg-ink pt-[72px]">
-      <Adire variant="field" color="#E3B23C" opacity={0.05} />
+      <Adire variant="field" color="var(--gold)" opacity={0.05} />
       <div className="relative mx-auto max-w-[620px] px-6 py-16 md:py-24">
         {state === 'paid' ? (
           <div className="rounded-[32px] bg-ivory p-8 text-ink shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-12">

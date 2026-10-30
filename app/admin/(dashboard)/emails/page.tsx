@@ -14,13 +14,13 @@ const FILTERS = [
 ] as const
 
 const STATUS_CLS: Record<string, string> = {
-  SENT: 'text-[rgba(247,241,227,0.75)]',
-  DELIVERED: 'text-[#4ade80]',
-  QUEUED: 'text-[#f0a35e]',
-  FAILED: 'text-[#f87171]',
-  BOUNCED: 'text-[#f87171]',
-  COMPLAINED: 'text-[#f87171]',
-  SUPPRESSED: 'text-[#f0a35e]',
+  SENT: 'text-ivory/75',
+  DELIVERED: 'text-success',
+  QUEUED: 'text-warn',
+  FAILED: 'text-danger',
+  BOUNCED: 'text-danger',
+  COMPLAINED: 'text-danger',
+  SUPPRESSED: 'text-warn',
 }
 
 export default async function AdminEmailsPage({ searchParams }: { searchParams: Promise<{ f?: string; q?: string }> }) {
@@ -53,9 +53,9 @@ export default async function AdminEmailsPage({ searchParams }: { searchParams: 
           ['Waiting to retry', count(['QUEUED'])],
           ['Problems', count(['FAILED', 'BOUNCED', 'COMPLAINED', 'SUPPRESSED'])],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-[18px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-5">
-            <p className="text-[13px] font-semibold text-[#E3B23C]">{label}</p>
-            <p className="mt-2 font-display text-[34px] leading-none text-[#F7F1E3]">{value}</p>
+          <div key={label} className="rounded-[18px] border border-ivory/12 bg-ink p-5">
+            <p className="text-[13px] font-semibold text-gold">{label}</p>
+            <p className="mt-2 font-display text-[34px] leading-none text-ivory">{value}</p>
           </div>
         ))}
       </div>
@@ -67,7 +67,7 @@ export default async function AdminEmailsPage({ searchParams }: { searchParams: 
           <Link
             key={x.key}
             href={`/admin/emails?f=${x.key}${q ? `&q=${encodeURIComponent(q)}` : ''}`}
-            className={f === x.key ? 'bg-[#E3B23C] px-4 py-2 text-[13px] font-semibold text-[#11142F] no-underline' : 'border border-[rgba(247,241,227,0.2)] px-4 py-2 text-[13px] text-[#F7F1E3] no-underline'}
+            className={f === x.key ? 'bg-gold px-4 py-2 text-[13px] font-semibold text-night no-underline' : 'border border-ivory/20 px-4 py-2 text-[13px] text-ivory no-underline'}
           >
             {x.label}
           </Link>
@@ -79,14 +79,14 @@ export default async function AdminEmailsPage({ searchParams }: { searchParams: 
             defaultValue={q}
             placeholder="Search by recipient"
             aria-label="Search by recipient"
-            className="rounded-[12px] border border-[rgba(247,241,227,0.16)] bg-[#11142F] px-4 py-2.5 text-sm text-[#F7F1E3]"
+            className="rounded-[12px] border border-ivory/16 bg-night px-4 py-2.5 text-sm text-ivory"
           />
         </form>
       </div>
 
-      <div className="overflow-x-auto rounded-[18px] border border-[rgba(247,241,227,0.12)]">
+      <div className="overflow-x-auto rounded-[18px] border border-ivory/12">
         <table className="w-full min-w-[820px] text-left text-[14px]">
-          <thead className="bg-[#1B1F4B] text-[12px] text-[rgba(247,241,227,0.6)]">
+          <thead className="bg-ink text-[12px] text-ivory/60">
             <tr>
               <th className="px-4 py-3 font-semibold">When</th>
               <th className="px-3 py-3 font-semibold">To</th>
@@ -95,29 +95,29 @@ export default async function AdminEmailsPage({ searchParams }: { searchParams: 
               <th className="px-3 py-3 font-semibold">Provider</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[rgba(247,241,227,0.08)]">
+          <tbody className="divide-y divide-ivory/8">
             {logs.map((l) => (
               <tr key={l.id}>
-                <td className="px-4 py-3 whitespace-nowrap text-[13px] text-[rgba(247,241,227,0.7)]">{fmt(l.createdAt, 'd MMM, HH:mm')}</td>
-                <td className="px-3 py-3 text-[#F7F1E3]">{l.to}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-[13px] text-ivory/70">{fmt(l.createdAt, 'd MMM, HH:mm')}</td>
+                <td className="px-3 py-3 text-ivory">{l.to}</td>
                 <td className="px-3 py-3">
-                  <p className="text-[#F7F1E3]">{l.subject}</p>
-                  <p className="text-[12px] text-[rgba(247,241,227,0.55)]">{l.kind.toLowerCase()}</p>
+                  <p className="text-ivory">{l.subject}</p>
+                  <p className="text-[12px] text-ivory/55">{l.kind.toLowerCase()}</p>
                 </td>
                 <td className="px-3 py-3">
                   <p className={`font-semibold ${STATUS_CLS[l.status] ?? ''}`}>{l.status.charAt(0) + l.status.slice(1).toLowerCase()}</p>
-                  {l.error && <p className="max-w-[320px] text-[12px] text-[rgba(247,241,227,0.55)]">{l.error}</p>}
+                  {l.error && <p className="max-w-[320px] text-[12px] text-ivory/55">{l.error}</p>}
                   {l.status === 'QUEUED' && l.nextAttemptAt && (
-                    <p className="text-[12px] text-[rgba(247,241,227,0.55)]">Next try {fmt(l.nextAttemptAt, 'HH:mm')} · attempt {l.attempts}</p>
+                    <p className="text-[12px] text-ivory/55">Next try {fmt(l.nextAttemptAt, 'HH:mm')} · attempt {l.attempts}</p>
                   )}
                   {(l.status === 'QUEUED' || l.status === 'FAILED') && l.html && <RetryButton id={l.id} />}
                 </td>
-                <td className="px-3 py-3 text-[13px] text-[rgba(247,241,227,0.7)]">{l.provider ?? '—'}</td>
+                <td className="px-3 py-3 text-[13px] text-ivory/70">{l.provider ?? '—'}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        {logs.length === 0 && <p className="px-6 py-12 text-center text-[rgba(247,241,227,0.6)]">No emails match.</p>}
+        {logs.length === 0 && <p className="px-6 py-12 text-center text-ivory/60">No emails match.</p>}
       </div>
     </div>
   )

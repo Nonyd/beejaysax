@@ -17,7 +17,7 @@ export default function EventCard({
   showViewButton,
   dimmed,
   wide,
-  notchColor = '#11142F',
+  notchColor = 'var(--night)',
 }: {
   event: Event
   showViewButton?: boolean
@@ -60,11 +60,11 @@ export default function EventCard({
           />
         ) : (
           <>
-            <Adire variant="field" color="#E3B23C" opacity={0.22} />
+            <Adire variant="field" color="var(--gold)" opacity={0.22} />
             <div
               aria-hidden
               className="absolute inset-0"
-              style={{ background: 'radial-gradient(circle at 30% 30%, rgba(196,88,58,0.45), transparent 60%)' }}
+              style={{ background: 'radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--clay) 45%, transparent), transparent 60%)' }}
             />
           </>
         )}

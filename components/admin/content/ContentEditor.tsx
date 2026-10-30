@@ -16,7 +16,7 @@ type Values = Record<string, unknown>
 function Help({ f }: { f: Field }) {
   const empty = f.type !== 'list' ? 'Leave empty to use the original.' : null
   const text = [f.help, empty].filter(Boolean).join(' ')
-  return text ? <p className="mt-1.5 text-[12px] text-[rgba(247,241,227,0.55)]">{text}</p> : null
+  return text ? <p className="mt-1.5 text-[12px] text-ivory/55">{text}</p> : null
 }
 
 function ScalarInput({ f, value, onChange, id }: { f: ScalarField; value: unknown; onChange: (v: unknown) => void; id: string }) {
@@ -39,7 +39,7 @@ function ScalarInput({ f, value, onChange, id }: { f: ScalarField; value: unknow
         <>
           <AdminTextarea id={id} rows={f.rows ?? 4} value={s} maxLength={f.max} onChange={(e) => onChange(e.target.value)} className="resize-y" />
           {f.max && s.length > f.max * 0.8 && (
-            <p className="mt-1 text-right text-[12px] text-[rgba(247,241,227,0.55)]">
+            <p className="mt-1 text-right text-[12px] text-ivory/55">
               {s.length} / {f.max}
             </p>
           )}
@@ -61,7 +61,7 @@ function ScalarInput({ f, value, onChange, id }: { f: ScalarField; value: unknow
       return (
         <div className="flex flex-wrap items-start gap-4">
           {src && (
-            <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-[12px] bg-[#11142F]">
+            <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-[12px] bg-night">
               {/* plain img: the link may not be saved/validated yet */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt="" className="h-full w-full object-cover" />
@@ -149,19 +149,19 @@ export default function ContentEditor({ sectionKey, fields, initial }: { section
           <AdminSectionCard key={k} title={f.label} description={f.help}>
             <ol className="space-y-3">
               {rows.map((row, i) => (
-                <li key={i} className="rounded-[16px] border border-[rgba(247,241,227,0.14)] bg-[#11142F] p-4">
+                <li key={i} className="rounded-[16px] border border-ivory/14 bg-night p-4">
                   <div className="mb-3 flex items-center justify-between">
-                    <p className="text-[13px] font-semibold text-[rgba(247,241,227,0.75)]">
+                    <p className="text-[13px] font-semibold text-ivory/75">
                       {f.itemLabel} {i + 1}
                     </p>
                     <div className="flex items-center gap-1">
-                      <button type="button" aria-label="Move up" disabled={i === 0} onClick={() => move(i, -1)} className="p-2 text-[rgba(247,241,227,0.7)] disabled:opacity-30">
+                      <button type="button" aria-label="Move up" disabled={i === 0} onClick={() => move(i, -1)} className="p-2 text-ivory/70 disabled:opacity-30">
                         <ArrowUp className="h-4 w-4" />
                       </button>
-                      <button type="button" aria-label="Move down" disabled={i === rows.length - 1} onClick={() => move(i, 1)} className="p-2 text-[rgba(247,241,227,0.7)] disabled:opacity-30">
+                      <button type="button" aria-label="Move down" disabled={i === rows.length - 1} onClick={() => move(i, 1)} className="p-2 text-ivory/70 disabled:opacity-30">
                         <ArrowDown className="h-4 w-4" />
                       </button>
-                      <button type="button" aria-label={`Remove ${f.itemLabel.toLowerCase()}`} onClick={() => update(rows.filter((_, j) => j !== i))} className="p-2 text-[#f87171]">
+                      <button type="button" aria-label={`Remove ${f.itemLabel.toLowerCase()}`} onClick={() => update(rows.filter((_, j) => j !== i))} className="p-2 text-danger">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -185,7 +185,7 @@ export default function ContentEditor({ sectionKey, fields, initial }: { section
               <button
                 type="button"
                 onClick={() => update([...rows, Object.fromEntries(itemEntries.map(([sk, sf]) => [sk, sf.type === 'lines' ? [] : '']))])}
-                className="inline-flex items-center gap-2 self-start border border-[rgba(247,241,227,0.25)] px-5 py-2.5 font-semibold text-[#F7F1E3] hover:border-[#E3B23C]"
+                className="inline-flex items-center gap-2 self-start border border-ivory/25 px-5 py-2.5 font-semibold text-ivory hover:border-gold"
               >
                 <Plus className="h-4 w-4" /> Add {f.itemLabel.toLowerCase()}
               </button>
@@ -194,13 +194,13 @@ export default function ContentEditor({ sectionKey, fields, initial }: { section
         )
       })}
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[rgba(247,241,227,0.12)] bg-[#11142F]/95 backdrop-blur md:left-[280px]">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-ivory/12 bg-night/95 backdrop-blur md:left-[280px]">
         <div className="mx-auto flex max-w-[860px] flex-wrap items-center justify-end gap-3 px-6 py-4">
-          <button type="button" onClick={reset} className="mr-auto inline-flex items-center gap-2 text-[14px] text-[rgba(247,241,227,0.7)] underline">
+          <button type="button" onClick={reset} className="mr-auto inline-flex items-center gap-2 text-[14px] text-ivory/70 underline">
             <RotateCcw className="h-4 w-4" /> Restore original
           </button>
-          {dirty && <span className="text-[13px] text-[#f0a35e]">Unsaved changes</span>}
-          <button type="button" onClick={save} disabled={saving || !dirty} className="inline-flex items-center gap-2 bg-[#E3B23C] px-7 py-3 font-semibold text-[#11142F] disabled:opacity-50">
+          {dirty && <span className="text-[13px] text-warn">Unsaved changes</span>}
+          <button type="button" onClick={save} disabled={saving || !dirty} className="inline-flex items-center gap-2 bg-gold px-7 py-3 font-semibold text-night disabled:opacity-50">
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}Save changes
           </button>
         </div>

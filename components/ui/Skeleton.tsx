@@ -10,7 +10,7 @@ export function Skeleton({ className = '', style }: SkeletonProps) {
     <div
       className={className}
       style={{
-        background: 'linear-gradient(90deg, #111 25%, #1A1A1A 50%, #111 75%)',
+        background: 'linear-gradient(90deg, var(--ink) 25%, var(--ink-2) 50%, var(--ink) 75%)',
         backgroundSize: '200% 100%',
         animation: 'shimmer 1.5s infinite',
         ...style,
@@ -21,7 +21,7 @@ export function Skeleton({ className = '', style }: SkeletonProps) {
 
 export function EventCardSkeleton() {
   return (
-    <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
+    <div className="border border-line bg-night-2">
       <Skeleton style={{ aspectRatio: '16/9', width: '100%' }} />
       <div className="space-y-3 p-6">
         <Skeleton style={{ height: 28, width: '75%' }} />
@@ -35,7 +35,7 @@ export function EventCardSkeleton() {
 
 export function ReleaseCardSkeleton() {
   return (
-    <div className="border border-[#1E1E1E] bg-[#0F0F0F]">
+    <div className="border border-line bg-night-2">
       <Skeleton style={{ aspectRatio: '1/1', width: '100%' }} />
       <div className="space-y-2 p-4">
         <Skeleton style={{ height: 18, width: '80%' }} />

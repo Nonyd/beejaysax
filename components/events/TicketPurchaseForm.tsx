@@ -235,7 +235,7 @@ export default function TicketPurchaseForm({
             </p>
           )}
           {applied && (
-            <p className="mt-2 font-body text-sm text-[#24563f]">
+            <p className="mt-2 font-body text-sm text-forest">
               {applied.code} applied: {money(discount)} off
             </p>
           )}

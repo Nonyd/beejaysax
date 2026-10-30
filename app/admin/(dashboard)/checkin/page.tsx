@@ -20,14 +20,14 @@ export default async function AdminCheckinListPage() {
     <div>
       <AdminPageHeader eyebrow="At the door" title="Door check-in" subtitle="Choose an event to open its ticket scanner." />
       {events.length === 0 ? (
-        <p className="text-[15px] text-[rgba(247,241,227,0.6)]">No events today or coming up.</p>
+        <p className="text-[15px] text-ivory/60">No events today or coming up.</p>
       ) : (
-        <ul className="divide-y divide-[rgba(247,241,227,0.12)] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B]">
+        <ul className="divide-y divide-ivory/12 border border-ivory/12 bg-ink">
           {events.map((e) => (
             <li key={e.id} className="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
               <div className="min-w-0">
-                <p className="text-[16px] text-[#F7F1E3]">{e.title}</p>
-                <p className="mt-1 text-[13px] text-[rgba(247,241,227,0.6)]">
+                <p className="text-[16px] text-ivory">{e.title}</p>
+                <p className="mt-1 text-[13px] text-ivory/60">
                   {fmt(e.eventDate, 'EEE d MMM yyyy, HH:mm')} · {e.venue}, {e.city}
                 </p>
               </div>

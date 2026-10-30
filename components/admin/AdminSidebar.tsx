@@ -31,12 +31,12 @@ export default function AdminSidebar({
       style={{
         width,
         zIndex: 40,
-        background: '#141838',
-        borderColor: 'rgba(247,241,227,0.12)',
+        background: 'var(--night-2)',
+        borderColor: 'color-mix(in srgb, var(--ivory) 12%, transparent)',
         boxShadow: '4px 0 40px rgba(0,0,0,0.35)',
       }}
     >
-      <div style={{ borderBottom: '1px solid rgba(247,241,227,0.12)', padding: '24px 20px' }}>
+      <div style={{ borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', padding: '24px 20px' }}>
         <div className="flex items-center justify-between gap-2">
           <Link href="/admin" className="no-underline" aria-label="Admin dashboard">
             <Wordmark className="text-[22px]" />
@@ -48,9 +48,9 @@ export default function AdminSidebar({
               fontWeight: 600,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              color: '#E3B23C',
-              background: 'rgba(227,178,60,0.12)',
-              border: '1px solid rgba(227,178,60,0.35)',
+              color: 'var(--gold)',
+              background: 'color-mix(in srgb, var(--gold) 12%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--gold) 35%, transparent)',
               padding: '4px 8px',
             }}
           >
@@ -75,9 +75,9 @@ export default function AdminSidebar({
                 padding: '12px 14px',
                 borderRadius: 2,
                 textDecoration: 'none',
-                color: active ? '#F7F1E3' : 'rgba(247,241,227,0.65)',
-                background: active ? 'rgba(227,178,60,0.12)' : 'transparent',
-                borderLeft: active ? '3px solid #E3B23C' : '3px solid transparent',
+                color: active ? 'var(--ivory)' : 'color-mix(in srgb, var(--ivory) 65%, transparent)',
+                background: active ? 'color-mix(in srgb, var(--gold) 12%, transparent)' : 'transparent',
+                borderLeft: active ? '3px solid var(--gold)' : '3px solid transparent',
                 paddingLeft: active ? 11 : 14,
                 transition: 'background 200ms, color 200ms',
               }}
@@ -88,15 +88,15 @@ export default function AdminSidebar({
         })}
       </nav>
 
-      <div style={{ borderTop: '1px solid rgba(247,241,227,0.12)', padding: 20 }}>
+      <div style={{ borderTop: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', padding: 20 }}>
         <div className="mb-4 flex items-center gap-3">
           <div
             style={{
               width: 40,
               height: 40,
               borderRadius: '50%',
-              background: 'linear-gradient(145deg, #E3B23C, #C99A2E)',
-              color: '#11142F',
+              background: 'linear-gradient(145deg, var(--gold), #C99A2E)',
+              color: 'var(--night)',
               fontFamily: 'var(--font-sans)',
               fontSize: 15,
               fontWeight: 700,
@@ -113,7 +113,7 @@ export default function AdminSidebar({
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: 14,
-                color: '#F7F1E3',
+                color: 'var(--ivory)',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
@@ -122,7 +122,7 @@ export default function AdminSidebar({
             >
               {username}
             </span>
-            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(247,241,227,0.55)' }}>{roleLabel}</span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'color-mix(in srgb, var(--ivory) 55%, transparent)' }}>{roleLabel}</span>
           </div>
         </div>
         <button
@@ -137,8 +137,8 @@ export default function AdminSidebar({
             width: '100%',
             padding: '12px 16px',
             background: 'transparent',
-            color: 'rgba(247,241,227,0.7)',
-            border: '1px solid rgba(247,241,227,0.2)',
+            color: 'color-mix(in srgb, var(--ivory) 70%, transparent)',
+            border: '1px solid color-mix(in srgb, var(--ivory) 20%, transparent)',
             cursor: 'pointer',
             marginBottom: 12,
             transition: 'border-color 200ms, color 200ms',
@@ -151,7 +151,7 @@ export default function AdminSidebar({
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 12,
-            color: 'rgba(247,241,227,0.55)',
+            color: 'color-mix(in srgb, var(--ivory) 55%, transparent)',
             textAlign: 'center',
             display: 'block',
             textDecoration: 'none',

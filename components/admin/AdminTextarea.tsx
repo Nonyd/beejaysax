@@ -4,7 +4,7 @@ export default function AdminTextarea({ className = '', ...props }: AdminTextare
   return (
     <textarea
       {...props}
-      className={`w-full resize-none rounded-[12px] border border-[rgba(247,241,227,0.16)] bg-[#11142F] px-4 py-3 text-sm text-[#F7F1E3] transition-colors placeholder:text-[rgba(247,241,227,0.45)] focus:border-[#E3B23C] focus:outline-none ${className}`}
+      className={`w-full resize-none rounded-[12px] border border-ivory/16 bg-night px-4 py-3 text-sm text-ivory transition-colors placeholder:text-ivory/45 focus:border-gold focus:outline-none ${className}`}
     />
   )
 }

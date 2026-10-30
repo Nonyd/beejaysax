@@ -38,15 +38,15 @@ export default function BroadcastDialog({ eventId, recipients, onClose }: { even
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal aria-labelledby="bc-title">
-      <div className="w-full max-w-[600px] rounded-[24px] border border-[rgba(247,241,227,0.14)] bg-[#1B1F4B] p-7">
+      <div className="w-full max-w-[600px] rounded-[24px] border border-ivory/14 bg-ink p-7">
         <div className="mb-5 flex items-start justify-between">
           <div>
-            <p id="bc-title" className="font-display text-2xl text-[#F7F1E3]">Email attendees</p>
-            <p className="mt-1 text-[14px] text-[rgba(247,241,227,0.65)]">
+            <p id="bc-title" className="font-display text-2xl text-ivory">Email attendees</p>
+            <p className="mt-1 text-[14px] text-ivory/65">
               Goes to {recipients} ticket holder{recipients === 1 ? '' : 's'}, with the event details added at the bottom.
             </p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close" className="p-1 text-[rgba(247,241,227,0.7)]">
+          <button type="button" onClick={onClose} aria-label="Close" className="p-1 text-ivory/70">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -57,7 +57,7 @@ export default function BroadcastDialog({ eventId, recipients, onClose }: { even
           <AdminFormField label="Message">
             <AdminTextarea rows={8} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Leave a blank line between paragraphs." />
           </AdminFormField>
-          <div className="flex flex-wrap items-end gap-2 rounded-[14px] bg-[#11142F] p-4">
+          <div className="flex flex-wrap items-end gap-2 rounded-[14px] bg-night p-4">
             <div className="min-w-[220px] flex-1">
               <AdminFormField label="Send a preview to" optional>
                 <AdminInput type="email" value={testTo} onChange={(e) => setTestTo(e.target.value)} placeholder="you@example.com" />
@@ -67,21 +67,21 @@ export default function BroadcastDialog({ eventId, recipients, onClose }: { even
               type="button"
               disabled={!subject || !message || !testTo || busy !== null}
               onClick={() => send(true)}
-              className="inline-flex h-[46px] items-center gap-2 border border-[rgba(247,241,227,0.25)] px-5 text-[#F7F1E3] disabled:opacity-50"
+              className="inline-flex h-[46px] items-center gap-2 border border-ivory/25 px-5 text-ivory disabled:opacity-50"
             >
               {busy === 'test' && <Loader2 className="h-4 w-4 animate-spin" />}Send preview
             </button>
           </div>
         </div>
         <div className="mt-6 flex justify-end gap-3">
-          <button type="button" onClick={onClose} className="border border-[rgba(247,241,227,0.25)] px-5 py-3 text-[#F7F1E3]">
+          <button type="button" onClick={onClose} className="border border-ivory/25 px-5 py-3 text-ivory">
             Cancel
           </button>
           <button
             type="button"
             disabled={!subject || !message || recipients === 0 || busy !== null}
             onClick={() => send(false)}
-            className="inline-flex items-center gap-2 bg-[#E3B23C] px-6 py-3 font-semibold text-[#11142F] disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-gold px-6 py-3 font-semibold text-night disabled:opacity-50"
           >
             {busy === 'send' && <Loader2 className="h-4 w-4 animate-spin" />}Send to {recipients}
           </button>

@@ -21,19 +21,19 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
   const maintenance = await getMaintenance()
 
   return (
-    <div className="admin-ui min-h-screen antialiased" style={{ background: '#11142F', color: '#F7F1E3' }}>
+    <div className="admin-ui min-h-screen antialiased" style={{ background: 'var(--night)', color: 'var(--ivory)' }}>
       <AdminSidebar username={admin.name ?? admin.username} roleLabel={roleLabel} navItems={navItems} width={SIDEBAR_W} />
       <div className="flex flex-col" style={{ marginLeft: SIDEBAR_W, minHeight: '100vh' }}>
         {maintenance.enabled && (
           <div
             className="px-8 py-2.5 text-[13px]"
-            style={{ background: 'rgba(240,163,94,0.14)', borderBottom: '1px solid rgba(240,163,94,0.4)', color: '#f0a35e' }}
+            style={{ background: 'color-mix(in srgb, var(--warn) 14%, transparent)', borderBottom: '1px solid color-mix(in srgb, var(--warn) 40%, transparent)', color: 'var(--warn)' }}
           >
             Maintenance mode is on: visitors see the maintenance page. You can still browse the site because you are signed in.
           </div>
         )}
         <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto" style={{ background: '#11142F' }}>
+        <main className="flex-1 overflow-x-hidden overflow-y-auto" style={{ background: 'var(--night)' }}>
           <div className="admin-content py-10 pb-16">{children}</div>
         </main>
       </div>

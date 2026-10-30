@@ -6,6 +6,7 @@ import type { CSSProperties } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 const labelStyle = {
   fontFamily: 'var(--font-sans)',
@@ -13,7 +14,7 @@ const labelStyle = {
   fontWeight: 600,
   letterSpacing: '0.22em',
   textTransform: 'uppercase' as const,
-  color: '#E3B23C',
+  color: 'var(--gold)',
   display: 'block',
   marginBottom: 8,
 }
@@ -22,9 +23,9 @@ const inputStyle: CSSProperties = {
   width: '100%',
   fontFamily: 'var(--font-sans)',
   fontSize: 14,
-  color: '#F7F1E3',
-  background: '#1B1F4B',
-  border: '1px solid rgba(247,241,227,0.12)',
+  color: 'var(--ivory)',
+  background: 'var(--ink)',
+  border: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)',
   padding: '14px 16px',
   outline: 'none',
   boxSizing: 'border-box',
@@ -60,26 +61,27 @@ function LoginForm() {
   }
 
   const focusGold = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = '#E3B23C'
+    e.currentTarget.style.borderColor = 'var(--gold)'
   }
   const blurBorder = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = 'rgba(247,241,227,0.12)'
+    e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--ivory) 12%, transparent)'
   }
 
   return (
     <div
       className="admin-ui flex min-h-screen flex-col items-center justify-center px-4"
       style={{
-        background: '#11142F',
+        background: 'var(--night)',
         backgroundImage:
-          'radial-gradient(ellipse 80% 55% at 50% -10%, rgba(227,178,60,0.12) 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 100% 100%, rgba(227,178,60,0.06) 0%, transparent 45%)',
+          'radial-gradient(ellipse 80% 55% at 50% -10%, color-mix(in srgb, var(--gold) 12%, transparent) 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 100% 100%, color-mix(in srgb, var(--gold) 6%, transparent) 0%, transparent 45%)',
       }}
     >
+      <ThemeToggle className="fixed top-5 right-5" />
       <div
         className="w-full max-w-[420px]"
         style={{
-          border: '1px solid rgba(247,241,227,0.2)',
-          background: 'rgba(27,31,75,0.95)',
+          border: '1px solid color-mix(in srgb, var(--ivory) 20%, transparent)',
+          background: 'color-mix(in srgb, var(--ink) 95%, transparent)',
           boxShadow: '0 32px 120px rgba(0,0,0,0.55)',
           padding: '48px 40px',
         }}
@@ -95,18 +97,18 @@ function LoginForm() {
             fontWeight: 600,
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
-            color: '#E3B23C',
+            color: 'var(--gold)',
             textAlign: 'center',
             marginBottom: 8,
           }}
         >
           Admin Portal
         </p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'rgba(247,241,227,0.65)', textAlign: 'center', marginBottom: 0 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'color-mix(in srgb, var(--ivory) 65%, transparent)', textAlign: 'center', marginBottom: 0 }}>
           Sign in to continue
         </p>
 
-        <div style={{ width: 48, height: 2, background: '#E3B23C', margin: '28px auto', opacity: 0.7 }} />
+        <div style={{ width: 48, height: 2, background: 'var(--gold)', margin: '28px auto', opacity: 0.7 }} />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>
@@ -144,7 +146,7 @@ function LoginForm() {
         </div>
 
         {error && (
-          <p style={{ fontFamily: 'var(--font-sans)', color: '#f87171', fontSize: 14, textAlign: 'center', marginTop: 16 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', color: 'var(--danger)', fontSize: 14, textAlign: 'center', marginTop: 16 }}>
             {error}
           </p>
         )}
@@ -162,9 +164,9 @@ function LoginForm() {
             width: '100%',
             marginTop: 28,
             padding: '16px 24px',
-            background: '#E3B23C',
-            color: '#11142F',
-            border: '1px solid rgba(227,178,60,0.5)',
+            background: 'var(--gold)',
+            color: 'var(--night)',
+            border: '1px solid color-mix(in srgb, var(--gold) 50%, transparent)',
             cursor: loading || !username || !password ? 'not-allowed' : 'pointer',
             opacity: loading || !username || !password ? 0.45 : 1,
             transition: 'opacity 200ms',
@@ -178,7 +180,7 @@ function LoginForm() {
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 13,
-            color: 'rgba(247,241,227,0.55)',
+            color: 'color-mix(in srgb, var(--ivory) 55%, transparent)',
             textAlign: 'center',
             display: 'block',
             marginTop: 36,
@@ -196,7 +198,7 @@ export default function AdminLoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen" style={{ background: '#11142F' }} />
+        <div className="min-h-screen" style={{ background: 'var(--night)' }} />
       }
     >
       <LoginForm />

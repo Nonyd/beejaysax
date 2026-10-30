@@ -8,10 +8,10 @@ import { fmt } from '@/lib/time'
 export const dynamic = 'force-dynamic'
 
 const STATUS: Record<string, { label: string; cls: string }> = {
-  DRAFT: { label: 'Draft', cls: 'text-[rgba(247,241,227,0.7)]' },
-  SENDING: { label: 'Sending', cls: 'text-[#f0a35e]' },
-  SENT: { label: 'Sent', cls: 'text-[#4ade80]' },
-  CANCELLED: { label: 'Stopped', cls: 'text-[#f87171]' },
+  DRAFT: { label: 'Draft', cls: 'text-ivory/70' },
+  SENDING: { label: 'Sending', cls: 'text-warn' },
+  SENT: { label: 'Sent', cls: 'text-success' },
+  CANCELLED: { label: 'Stopped', cls: 'text-danger' },
 }
 
 export default async function AdminCampaignsPage() {
@@ -32,9 +32,9 @@ export default async function AdminCampaignsPage() {
         action={<NewCampaignButton />}
       />
 
-      <div className="overflow-x-auto rounded-[18px] border border-[rgba(247,241,227,0.12)]">
+      <div className="overflow-x-auto rounded-[18px] border border-ivory/12">
         <table className="w-full min-w-[760px] text-left text-[14px]">
-          <thead className="bg-[#1B1F4B] text-[12px] text-[rgba(247,241,227,0.6)]">
+          <thead className="bg-ink text-[12px] text-ivory/60">
             <tr>
               <th className="px-4 py-3 font-semibold">Campaign</th>
               <th className="px-3 py-3 font-semibold">Audience</th>
@@ -44,32 +44,32 @@ export default async function AdminCampaignsPage() {
               <th className="px-3 py-3 font-semibold">Bounced</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[rgba(247,241,227,0.08)]">
+          <tbody className="divide-y divide-ivory/8">
             {campaigns.map((c) => {
               const s = STATUS[c.status] ?? STATUS.DRAFT
               return (
                 <tr key={c.id}>
                   <td className="px-4 py-3">
-                    <Link href={`/admin/campaigns/${c.id}`} className="text-[#F7F1E3] underline-offset-4 hover:underline">
+                    <Link href={`/admin/campaigns/${c.id}`} className="text-ivory underline-offset-4 hover:underline">
                       {c.subject || 'Untitled campaign'}
                     </Link>
-                    <p className="text-[12px] text-[rgba(247,241,227,0.55)]">
+                    <p className="text-[12px] text-ivory/55">
                       {c.startedAt ? `Sent ${fmt(c.startedAt, 'd MMM yyyy, HH:mm')}` : `Created ${fmt(c.createdAt, 'd MMM yyyy')}`}
                     </p>
                   </td>
-                  <td className="px-3 py-3 text-[rgba(247,241,227,0.8)]">{c.audienceTag ?? 'Everyone subscribed'}</td>
+                  <td className="px-3 py-3 text-ivory/80">{c.audienceTag ?? 'Everyone subscribed'}</td>
                   <td className={`px-3 py-3 font-semibold ${s.cls}`}>{s.label}</td>
-                  <td className="px-3 py-3 text-[rgba(247,241,227,0.8)]">
+                  <td className="px-3 py-3 text-ivory/80">
                     {c.status === 'DRAFT' ? '—' : `${n(c.id, 'SENT', 'DELIVERED', 'BOUNCED', 'COMPLAINED').toLocaleString()} / ${c.recipients.toLocaleString()}`}
                   </td>
-                  <td className="px-3 py-3 text-[rgba(247,241,227,0.8)]">{c.status === 'DRAFT' ? '—' : n(c.id, 'DELIVERED').toLocaleString()}</td>
-                  <td className="px-3 py-3 text-[rgba(247,241,227,0.8)]">{c.status === 'DRAFT' ? '—' : n(c.id, 'BOUNCED', 'COMPLAINED').toLocaleString()}</td>
+                  <td className="px-3 py-3 text-ivory/80">{c.status === 'DRAFT' ? '—' : n(c.id, 'DELIVERED').toLocaleString()}</td>
+                  <td className="px-3 py-3 text-ivory/80">{c.status === 'DRAFT' ? '—' : n(c.id, 'BOUNCED', 'COMPLAINED').toLocaleString()}</td>
                 </tr>
               )
             })}
           </tbody>
         </table>
-        {campaigns.length === 0 && <p className="px-6 py-12 text-center text-[rgba(247,241,227,0.6)]">No campaigns yet. Start with “New campaign”.</p>}
+        {campaigns.length === 0 && <p className="px-6 py-12 text-center text-ivory/60">No campaigns yet. Start with “New campaign”.</p>}
       </div>
     </div>
   )

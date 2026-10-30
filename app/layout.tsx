@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { gloock, hanken } from '@/lib/fonts'
 import { getContent } from '@/lib/content/store'
+import { themeInitScript } from '@/lib/theme'
 
 /** Site title, description and share image are edited in Admin → Website content → Search & sharing. */
 export async function generateMetadata(): Promise<Metadata> {
@@ -20,6 +21,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${gloock.variable} ${hanken.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Sets data-theme before first paint; see lib/theme.ts */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-screen bg-bjs-black font-sans text-bjs-white antialiased">{children}</body>
     </html>
   )

@@ -18,10 +18,10 @@ const STATUSES = [
   { key: 'complained', label: 'Marked as spam' },
 ]
 const STATUS_CLS: Record<string, string> = {
-  SUBSCRIBED: 'text-[#4ade80]',
-  UNSUBSCRIBED: 'text-[rgba(247,241,227,0.6)]',
-  BOUNCED: 'text-[#f87171]',
-  COMPLAINED: 'text-[#f87171]',
+  SUBSCRIBED: 'text-success',
+  UNSUBSCRIBED: 'text-ivory/60',
+  BOUNCED: 'text-danger',
+  COMPLAINED: 'text-danger',
 }
 const STATUS_LABEL: Record<string, string> = { SUBSCRIBED: 'Subscribed', UNSUBSCRIBED: 'Unsubscribed', BOUNCED: 'Bounced', COMPLAINED: 'Marked as spam' }
 
@@ -62,9 +62,9 @@ export default async function AdminContactsPage({ searchParams }: { searchParams
           ['Bounced or spam', count('BOUNCED', 'COMPLAINED')],
           ['Everyone', count('SUBSCRIBED', 'UNSUBSCRIBED', 'BOUNCED', 'COMPLAINED')],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-[18px] border border-[rgba(247,241,227,0.12)] bg-[#1B1F4B] p-5">
-            <p className="text-[13px] font-semibold text-[#E3B23C]">{label}</p>
-            <p className="mt-2 font-display text-[34px] leading-none text-[#F7F1E3]">{Number(value).toLocaleString()}</p>
+          <div key={label} className="rounded-[18px] border border-ivory/12 bg-ink p-5">
+            <p className="text-[13px] font-semibold text-gold">{label}</p>
+            <p className="mt-2 font-display text-[34px] leading-none text-ivory">{Number(value).toLocaleString()}</p>
           </div>
         ))}
       </div>
@@ -73,11 +73,11 @@ export default async function AdminContactsPage({ searchParams }: { searchParams
 
       {tags.length > 0 && (
         <div className="mt-10">
-          <p className="mb-3 text-[13px] font-semibold text-[rgba(247,241,227,0.6)]">Tags</p>
+          <p className="mb-3 text-[13px] font-semibold text-ivory/60">Tags</p>
           <div className="flex flex-wrap gap-2">
             <Link
               href={link({ tag: '' })}
-              className={!f.tag ? 'bg-[#E3B23C] px-4 py-2 text-[13px] font-semibold text-[#11142F] no-underline' : 'border border-[rgba(247,241,227,0.2)] px-4 py-2 text-[13px] text-[#F7F1E3] no-underline'}
+              className={!f.tag ? 'bg-gold px-4 py-2 text-[13px] font-semibold text-night no-underline' : 'border border-ivory/20 px-4 py-2 text-[13px] text-ivory no-underline'}
             >
               All tags
             </Link>
@@ -85,7 +85,7 @@ export default async function AdminContactsPage({ searchParams }: { searchParams
               <Link
                 key={t.tag}
                 href={link({ tag: t.tag })}
-                className={f.tag === t.tag ? 'bg-[#E3B23C] px-4 py-2 text-[13px] font-semibold text-[#11142F] no-underline' : 'border border-[rgba(247,241,227,0.2)] px-4 py-2 text-[13px] text-[#F7F1E3] no-underline'}
+                className={f.tag === t.tag ? 'bg-gold px-4 py-2 text-[13px] font-semibold text-night no-underline' : 'border border-ivory/20 px-4 py-2 text-[13px] text-ivory no-underline'}
               >
                 {t.tag} <span className="opacity-70">({t.subscribed.toLocaleString()})</span>
               </Link>
@@ -99,7 +99,7 @@ export default async function AdminContactsPage({ searchParams }: { searchParams
           <Link
             key={s.key}
             href={link({ status: s.key })}
-            className={f.status === s.key ? 'bg-[#E3B23C] px-4 py-2 text-[13px] font-semibold text-[#11142F] no-underline' : 'border border-[rgba(247,241,227,0.2)] px-4 py-2 text-[13px] text-[#F7F1E3] no-underline'}
+            className={f.status === s.key ? 'bg-gold px-4 py-2 text-[13px] font-semibold text-night no-underline' : 'border border-ivory/20 px-4 py-2 text-[13px] text-ivory no-underline'}
           >
             {s.label}
           </Link>
@@ -112,17 +112,17 @@ export default async function AdminContactsPage({ searchParams }: { searchParams
             defaultValue={f.q}
             placeholder="Search name or email"
             aria-label="Search name or email"
-            className="rounded-[12px] border border-[rgba(247,241,227,0.16)] bg-[#11142F] px-4 py-2.5 text-sm text-[#F7F1E3]"
+            className="rounded-[12px] border border-ivory/16 bg-night px-4 py-2.5 text-sm text-ivory"
           />
         </form>
-        <a href={`/api/admin/contacts/export${exportQs ? `?${exportQs}` : ''}`} className="border border-[rgba(247,241,227,0.2)] px-4 py-2.5 text-[13px] text-[#F7F1E3] no-underline">
+        <a href={`/api/admin/contacts/export${exportQs ? `?${exportQs}` : ''}`} className="border border-ivory/20 px-4 py-2.5 text-[13px] text-ivory no-underline">
           Export CSV
         </a>
       </div>
 
-      <div className="overflow-x-auto rounded-[18px] border border-[rgba(247,241,227,0.12)]">
+      <div className="overflow-x-auto rounded-[18px] border border-ivory/12">
         <table className="w-full min-w-[860px] text-left text-[14px]">
-          <thead className="bg-[#1B1F4B] text-[12px] text-[rgba(247,241,227,0.6)]">
+          <thead className="bg-ink text-[12px] text-ivory/60">
             <tr>
               <th className="px-4 py-3 font-semibold">Person</th>
               <th className="px-3 py-3 font-semibold">Tags</th>
@@ -133,18 +133,18 @@ export default async function AdminContactsPage({ searchParams }: { searchParams
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[rgba(247,241,227,0.08)]">
+          <tbody className="divide-y divide-ivory/8">
             {contacts.map((c) => (
               <tr key={c.id}>
                 <td className="px-4 py-3">
-                  <p className="text-[#F7F1E3]">{c.name ?? '—'}</p>
-                  <p className="text-[13px] text-[rgba(247,241,227,0.6)]">{c.email}</p>
+                  <p className="text-ivory">{c.name ?? '—'}</p>
+                  <p className="text-[13px] text-ivory/60">{c.email}</p>
                 </td>
-                <td className="px-3 py-3 text-[13px] text-[rgba(247,241,227,0.75)]">{c.tags.join(', ') || '—'}</td>
+                <td className="px-3 py-3 text-[13px] text-ivory/75">{c.tags.join(', ') || '—'}</td>
                 <td className={`px-3 py-3 font-semibold ${STATUS_CLS[c.status] ?? ''}`}>{STATUS_LABEL[c.status] ?? c.status}</td>
-                <td className="px-3 py-3 whitespace-nowrap text-[13px] text-[rgba(247,241,227,0.7)]">
+                <td className="px-3 py-3 whitespace-nowrap text-[13px] text-ivory/70">
                   {fmt(c.createdAt, 'd MMM yyyy')}
-                  <span className="block text-[12px] text-[rgba(247,241,227,0.5)]">{c.source === 'SIGNUP' ? 'Website' : c.source === 'IMPORT' ? 'Imported' : 'Added by admin'}</span>
+                  <span className="block text-[12px] text-ivory/50">{c.source === 'SIGNUP' ? 'Website' : c.source === 'IMPORT' ? 'Imported' : 'Added by admin'}</span>
                 </td>
                 <td className="px-3 py-3 text-right">
                   <ContactRowActions id={c.id} email={c.email} name={c.name ?? ''} tags={c.tags} status={c.status} />
@@ -154,25 +154,25 @@ export default async function AdminContactsPage({ searchParams }: { searchParams
           </tbody>
         </table>
         {contacts.length === 0 && (
-          <p className="px-6 py-12 text-center text-[rgba(247,241,227,0.6)]">
+          <p className="px-6 py-12 text-center text-ivory/60">
             {f.q || f.tag || f.status ? 'Nobody matches these filters.' : 'The list is empty. Import a spreadsheet or add someone above.'}
           </p>
         )}
       </div>
 
       {pages > 1 && (
-        <div className="mt-5 flex items-center justify-between text-[14px] text-[rgba(247,241,227,0.7)]">
+        <div className="mt-5 flex items-center justify-between text-[14px] text-ivory/70">
           <span>
             {((page - 1) * PAGE + 1).toLocaleString()}–{Math.min(page * PAGE, matching).toLocaleString()} of {matching.toLocaleString()}
           </span>
           <div className="flex gap-2">
             {page > 1 && (
-              <Link href={link({ page: String(page - 1) })} className="border border-[rgba(247,241,227,0.2)] px-4 py-2 text-[#F7F1E3] no-underline">
+              <Link href={link({ page: String(page - 1) })} className="border border-ivory/20 px-4 py-2 text-ivory no-underline">
                 Previous
               </Link>
             )}
             {page < pages && (
-              <Link href={link({ page: String(page + 1) })} className="border border-[rgba(247,241,227,0.2)] px-4 py-2 text-[#F7F1E3] no-underline">
+              <Link href={link({ page: String(page + 1) })} className="border border-ivory/20 px-4 py-2 text-ivory no-underline">
                 Next
               </Link>
             )}

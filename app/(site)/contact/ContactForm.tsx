@@ -65,7 +65,7 @@ export default function ContactForm({ content, site }: { content: ContentOf<'con
 
   return (
     <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
-      <Adire variant="field" color="#E3B23C" opacity={0.06} />
+      <Adire variant="field" color="var(--gold)" opacity={0.06} />
       <div className="site-shell relative grid gap-14 py-16 md:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div className="min-w-0">
           <h1 className="font-display text-[clamp(56px,8vw,112px)] leading-[0.9] tracking-[-0.03em] text-ivory">
@@ -202,7 +202,7 @@ export default function ContactForm({ content, site }: { content: ContentOf<'con
               role="status"
               className={cn(
                 'mt-6 rounded-[14px] px-4 py-3 font-body text-sm',
-                toast.ok ? 'bg-[#2f6b4f]/10 text-[#24563f]' : 'bg-clay/10 text-clay-deep'
+                toast.ok ? 'bg-[#2f6b4f]/10 text-forest' : 'bg-clay/10 text-clay-deep'
               )}
             >
               {toast.text}

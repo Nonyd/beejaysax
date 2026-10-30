@@ -22,11 +22,11 @@ export default function EventRowActions({ id, status }: { id: string; status: st
     return data
   }
 
-  const item = 'flex w-full items-center gap-3 px-4 py-2.5 text-left text-[14px] text-[#F7F1E3] no-underline hover:bg-[#2a3068]'
+  const item = 'flex w-full items-center gap-3 px-4 py-2.5 text-left text-[14px] text-ivory no-underline hover:bg-surface-3'
 
   return (
     <div className="relative flex items-center justify-end gap-2">
-      <Link href={`/admin/events/${id}/tickets`} className="rounded-full border border-[rgba(247,241,227,0.2)] px-4 py-1.5 text-sm text-[#F7F1E3] no-underline hover:border-[#E3B23C]">
+      <Link href={`/admin/events/${id}/tickets`} className="rounded-full border border-ivory/20 px-4 py-1.5 text-sm text-ivory no-underline hover:border-gold">
         Registrations
       </Link>
       <button
@@ -34,14 +34,14 @@ export default function EventRowActions({ id, status }: { id: string; status: st
         aria-label="More actions"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="flex h-9 w-9 items-center justify-center text-[#F7F1E3]"
+        className="flex h-9 w-9 items-center justify-center text-ivory"
       >
         <MoreHorizontal className="h-5 w-5" />
       </button>
       {open && (
         <>
           <button type="button" aria-hidden tabIndex={-1} className="fixed inset-0 z-10 cursor-default" onClick={() => setOpen(false)} />
-          <div className="absolute top-11 right-0 z-20 w-56 overflow-hidden rounded-[14px] border border-[rgba(247,241,227,0.14)] bg-[#20255A] py-1 shadow-2xl">
+          <div className="absolute top-11 right-0 z-20 w-56 overflow-hidden rounded-[14px] border border-ivory/14 bg-surface-2 py-1 shadow-2xl">
             <Link href={`/admin/events/${id}/edit`} className={item}>
               <Pencil className="h-4 w-4" /> Edit
             </Link>
@@ -68,7 +68,7 @@ export default function EventRowActions({ id, status }: { id: string; status: st
             </button>
             <button
               type="button"
-              className={`${item} text-[#f87171]`}
+              className={`${item} text-danger`}
               onClick={async () => {
                 if (!confirm('Delete this event? This can’t be undone.')) return
                 if (await call(`/api/events/${id}`, { method: 'DELETE' }, 'Event deleted')) router.refresh()

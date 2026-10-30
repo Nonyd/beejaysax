@@ -4,7 +4,7 @@ import Adire from '@/components/ui/Adire'
 export default function NotFound() {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-6">
-      <Adire variant="field" color="#E3B23C" opacity={0.06} />
+      <Adire variant="field" color="var(--gold)" opacity={0.06} />
       <div className="relative max-w-lg text-center">
         <p className="font-display text-[clamp(120px,22vw,240px)] leading-none text-gold/25 select-none" aria-hidden>
           404

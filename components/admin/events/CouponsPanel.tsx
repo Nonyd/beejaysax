@@ -80,7 +80,7 @@ export default function CouponsPanel({ eventId, initial, currencySymbol }: { eve
           <select
             value={form.kind}
             onChange={(e) => setForm({ ...form, kind: e.target.value as 'percent' | 'amount' })}
-            className="w-full rounded-[12px] border border-[rgba(247,241,227,0.16)] bg-[#11142F] px-3 py-3 text-sm text-[#F7F1E3]"
+            className="w-full rounded-[12px] border border-ivory/16 bg-night px-3 py-3 text-sm text-ivory"
           >
             <option value="percent">% off</option>
             <option value="amount">{currencySymbol} off</option>
@@ -95,27 +95,27 @@ export default function CouponsPanel({ eventId, initial, currencySymbol }: { eve
         <AdminFormField label="Expires" optional>
           <AdminInput type="datetime-local" value={form.endsAt} onChange={(e) => setForm({ ...form, endsAt: e.target.value })} />
         </AdminFormField>
-        <button type="submit" disabled={busy} className="inline-flex h-[46px] items-center gap-2 bg-[#E3B23C] px-5 font-semibold text-[#11142F]">
+        <button type="submit" disabled={busy} className="inline-flex h-[46px] items-center gap-2 bg-gold px-5 font-semibold text-night">
           {busy && <Loader2 className="h-4 w-4 animate-spin" />}Add
         </button>
       </form>
 
       {coupons.length > 0 && (
-        <ul className="divide-y divide-[rgba(247,241,227,0.1)] rounded-[14px] border border-[rgba(247,241,227,0.12)]">
+        <ul className="divide-y divide-ivory/10 rounded-[14px] border border-ivory/12">
           {coupons.map((c) => (
             <li key={c.id} className="flex flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 text-[14px]">
-              <code className={`font-semibold ${c.isActive ? 'text-[#E3B23C]' : 'text-[rgba(247,241,227,0.4)] line-through'}`}>{c.code}</code>
-              <span className="text-[#F7F1E3]">{c.percentOff ? `${c.percentOff}% off` : `${currencySymbol}${c.amountOff?.toLocaleString()} off`}</span>
-              <span className="text-[rgba(247,241,227,0.6)]">
+              <code className={`font-semibold ${c.isActive ? 'text-gold' : 'text-ivory/40 line-through'}`}>{c.code}</code>
+              <span className="text-ivory">{c.percentOff ? `${c.percentOff}% off` : `${currencySymbol}${c.amountOff?.toLocaleString()} off`}</span>
+              <span className="text-ivory/60">
                 Used {c.usedCount}
                 {c.maxUses ? ` of ${c.maxUses}` : ''}
               </span>
-              {c.endsAt && <span className="text-[rgba(247,241,227,0.6)]">Until {new Date(c.endsAt).toLocaleDateString()}</span>}
+              {c.endsAt && <span className="text-ivory/60">Until {new Date(c.endsAt).toLocaleDateString()}</span>}
               <span className="ml-auto flex gap-4">
-                <button type="button" onClick={() => toggle(c)} className="text-[#E3B23C] underline">
+                <button type="button" onClick={() => toggle(c)} className="text-gold underline">
                   {c.isActive ? 'Turn off' : 'Turn on'}
                 </button>
-                <button type="button" onClick={() => remove(c)} className="text-[#f87171] underline">
+                <button type="button" onClick={() => remove(c)} className="text-danger underline">
                   Delete
                 </button>
               </span>

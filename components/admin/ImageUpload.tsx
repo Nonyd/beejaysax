@@ -73,7 +73,7 @@ export default function ImageUpload({
         <img
           src={currentUrl}
           alt="Current upload"
-          style={{ ...previewStyle, marginBottom: 12, border: '1px solid rgba(247,241,227,0.12)' }}
+          style={{ ...previewStyle, marginBottom: 12, border: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)' }}
         />
       )}
 
@@ -87,23 +87,23 @@ export default function ImageUpload({
           if (file) handleFile(file)
         }}
         style={{
-          border: '1px dashed rgba(247,241,227,0.2)',
+          border: '1px dashed color-mix(in srgb, var(--ivory) 20%, transparent)',
           padding: '20px 14px',
           textAlign: 'center',
           cursor: uploading ? 'not-allowed' : 'pointer',
-          background: '#141838',
+          background: 'var(--night-2)',
           transition: 'border-color 0.2s',
           width: '100%',
           boxSizing: 'border-box',
         }}
-        onMouseEnter={(e) => !uploading && ((e.currentTarget as HTMLDivElement).style.borderColor = '#E3B23C')}
-        onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(247,241,227,0.2)')}
+        onMouseEnter={(e) => !uploading && ((e.currentTarget as HTMLDivElement).style.borderColor = 'var(--gold)')}
+        onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = 'color-mix(in srgb, var(--ivory) 20%, transparent)')}
       >
         <p style={{ fontSize: 22, marginBottom: 6 }}>📁</p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: uploading ? '#E3B23C' : 'rgba(247,241,227,0.8)' }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: uploading ? 'var(--gold)' : 'color-mix(in srgb, var(--ivory) 80%, transparent)' }}>
           {uploading ? 'Uploading...' : label}
         </p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'rgba(247,241,227,0.55)', marginTop: 6, lineHeight: 1.4 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'color-mix(in srgb, var(--ivory) 55%, transparent)', marginTop: 6, lineHeight: 1.4 }}>
           {uploading ? 'Please wait' : 'Click or drag & drop · JPG, PNG, WebP · Max 10MB'}
         </p>
       </div>
@@ -120,7 +120,7 @@ export default function ImageUpload({
         }}
       />
 
-      {error && <p style={{ fontSize: 12, color: '#f87171', marginTop: 8 }}>{error}</p>}
+      {error && <p style={{ fontSize: 12, color: 'var(--danger)', marginTop: 8 }}>{error}</p>}
     </div>
   )
 }
