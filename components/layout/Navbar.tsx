@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Adire from '@/components/ui/Adire'
@@ -21,10 +22,12 @@ function isActive(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname.startsWith(href)
 }
 
-export function Wordmark({ className }: { className?: string }) {
+/** The logo: white on the dark Night ground, brown on the light Dawn ground. Size it with a height class. */
+export function Wordmark({ className = 'h-11' }: { className?: string }) {
   return (
-    <span className={cn('font-display text-[24px] leading-none tracking-[-0.01em]', className)}>
-      <span className="text-ivory">BeeJay</span> <span className="text-gold">Sax</span>
+    <span className="inline-flex">
+      <Image src="/brand/logo-white.png" alt="BeeJay Sax" width={325} height={200} loading="eager" className={cn('theme-when-night w-auto', className)} />
+      <Image src="/brand/logo-brown.png" alt="BeeJay Sax" width={325} height={200} loading="eager" className={cn('theme-when-dawn w-auto', className)} />
     </span>
   )
 }

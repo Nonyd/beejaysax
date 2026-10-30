@@ -32,7 +32,7 @@ export default async function Footer() {
       <div className="site-shell grid grid-cols-2 gap-x-6 gap-y-12 pt-20 pb-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="col-span-2 md:col-span-1">
           <Link href="/" className="no-underline" aria-label="BeeJay Sax home">
-            <Wordmark className="text-[34px]" />
+            <Wordmark className="h-20" />
           </Link>
           <p className="mt-4 max-w-[34ch] font-body text-base leading-relaxed text-ivory/65">
             {site.footerBlurb}

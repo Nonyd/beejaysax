@@ -39,7 +39,7 @@ export default function AdminSidebar({
       <div style={{ borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', padding: '24px 20px' }}>
         <div className="flex items-center justify-between gap-2">
           <Link href="/admin" className="no-underline" aria-label="Admin dashboard">
-            <Wordmark className="text-[22px]" />
+            <Wordmark className="h-10" />
           </Link>
           <span
             style={{

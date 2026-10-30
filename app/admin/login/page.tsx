@@ -87,7 +87,7 @@ function LoginForm() {
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 8 }}>
-          <Wordmark className="text-[32px]" />
+          <Wordmark className="h-16" />
         </div>
 
         <p
