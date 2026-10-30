@@ -6,6 +6,7 @@ import SignupForm from '@/components/mailing/SignupForm'
 
 const NAV = [
   { label: 'Music', href: '/releases' },
+  { label: 'Videos', href: '/videos' },
   { label: 'Events', href: '/events' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'About', href: '/about' },

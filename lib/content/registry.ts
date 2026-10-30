@@ -244,12 +244,14 @@ export const CONTENT = {
   pageHeaders: section({
     title: 'Page headers',
     group: 'Pages',
-    description: 'The big heading and introduction at the top of the Events, Music and Gallery pages.',
+    description: 'The big heading and introduction at the top of the Events, Music, Videos and Gallery pages.',
     fields: {
       eventsTitle: text('Events: heading', 'On stage', { max: 60 }),
       eventsIntro: area('Events: introduction', 'Concerts and worship nights with BeeJay Sax. Buy your ticket here and it arrives by email with a QR code for the door.', { rows: 2, max: 300 }),
       musicTitle: text('Music: heading', 'The music', { max: 60 }),
       musicIntro: area('Music: introduction', 'Albums, singles and EPs of gospel saxophone. Stream them wherever you listen.', { rows: 2, max: 300 }),
+      videosTitle: text('Videos: heading', 'Watch', { max: 60 }),
+      videosIntro: area('Videos: introduction', 'Live ministrations, worship sessions and performances. Pick any video to watch it here.', { rows: 2, max: 300 }),
       galleryTitle: text('Gallery: heading', 'Moments', { max: 60 }),
       galleryIntro: area('Gallery: introduction', 'On stage, backstage and in worship. Tap any photo to see it full size.', { rows: 2, max: 300 }),
     },

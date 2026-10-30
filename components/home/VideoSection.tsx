@@ -2,12 +2,15 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Play } from 'lucide-react'
+import { usePlayer } from '@/components/player/PlayerProvider'
 
 export type HomeVideo = { id: string; title: string; thumbnail?: string | null }
 
 function VideoCard({ video, large = false }: { video: HomeVideo; large?: boolean }) {
   const [playing, setPlaying] = useState(false)
+  const player = usePlayer()
 
   return (
     <div className="relative aspect-video overflow-hidden rounded-[28px] bg-night shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
@@ -22,7 +25,11 @@ function VideoCard({ video, large = false }: { video: HomeVideo; large?: boolean
       ) : (
         <button
           type="button"
-          onClick={() => setPlaying(true)}
+          onClick={() => {
+            // Don't play a video over a music preview
+            if (player.playing) player.toggle()
+            setPlaying(true)
+          }}
           className="group absolute inset-0 h-full w-full cursor-pointer border-0 bg-transparent p-0 text-left"
           aria-label={`Play video: ${video.title}`}
         >
@@ -73,14 +80,22 @@ export default function VideoSection({
               </span>
             ))}
           </h2>
-          <a
-            href={linkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="self-start font-body text-base font-semibold text-gold underline decoration-gold/40 underline-offset-[6px] transition-colors hover:decoration-gold md:self-auto"
-          >
-            {linkLabel}
-          </a>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 self-start md:self-auto">
+            <Link
+              href="/videos"
+              className="rounded-full bg-gold px-6 py-3 font-body text-[15px] font-semibold text-night no-underline transition-colors hover:bg-gold-lt"
+            >
+              All videos
+            </Link>
+            <a
+              href={linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body text-base font-semibold text-gold underline decoration-gold/40 underline-offset-[6px] transition-colors hover:decoration-gold"
+            >
+              {linkLabel}
+            </a>
+          </div>
         </div>
 
         {/* Feature the first video only when the rest pair up evenly, so no half-empty row. */}
