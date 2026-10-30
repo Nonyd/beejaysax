@@ -7,6 +7,8 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { fmt } from '@/lib/time'
+import { releasePlayers } from '@/lib/embeds'
+import { ReleasePlayer } from '@/components/releases/ReleasePreview'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -44,6 +46,7 @@ export default async function ReleaseDetailPage({ params }: Props) {
     { url: release.boomplayUrl, label: 'Boomplay' },
   ].filter((l): l is { url: string; label: string } => !!l.url)
 
+  const players = releasePlayers(release)
   const yt = release.youtubeUrl?.match(/(?:v=|youtu\.be\/)([\w-]{11})/)
 
   return (
@@ -72,6 +75,13 @@ export default async function ReleaseDetailPage({ params }: Props) {
             </h1>
             {release.description && (
               <p className="mt-6 max-w-[52ch] font-body text-lg leading-relaxed text-ivory/80">{release.description}</p>
+            )}
+
+            {players.length > 0 && (
+              <div className="mt-10">
+                <p className="mb-4 font-body text-sm text-ivory/60">Preview</p>
+                <ReleasePlayer players={players} title={release.title} />
+              </div>
             )}
 
             <div className="mt-10">

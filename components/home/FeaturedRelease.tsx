@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import PlatformStreamPills from '@/components/home/PlatformStreamPills'
 import RecordSleeve from '@/components/ui/RecordSleeve'
+import { releasePlayers } from '@/lib/embeds'
+import { ReleasePlayer } from '@/components/releases/ReleasePreview'
 
 const TYPE_LABEL: Record<string, string> = { ALBUM: 'Album', SINGLE: 'Single', EP: 'EP' }
 
@@ -25,6 +27,8 @@ export default async function FeaturedRelease() {
     { label: 'Boomplay', url: release.boomplayUrl },
   ].filter((p): p is { label: string; url: string } => Boolean(p.url))
 
+  const players = releasePlayers(release)
+
   return (
     <section className="bg-night py-24 md:py-32">
       <div className="site-shell grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
@@ -45,6 +49,8 @@ export default async function FeaturedRelease() {
           {release.description && (
             <p className="mt-6 max-w-[50ch] font-body text-lg leading-relaxed text-ivory/75">{release.description}</p>
           )}
+
+          {players.length > 0 && <ReleasePlayer players={players} title={release.title} className="mt-10" />}
 
           {platforms.length > 0 ? (
             <div className="mt-10">

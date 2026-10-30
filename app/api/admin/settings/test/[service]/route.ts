@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { requireAdminApi } from '@/lib/admin-auth'
 import { getPaystackKeys, getSetting } from '@/lib/settings'
 import { parseSpotifyArtistId, parseYouTubeChannel } from '@/lib/music-ids'
+import { youtubeErrorMessage, youtubeHeaders } from '@/lib/sync/youtube'
 
 export const dynamic = 'force-dynamic'
 
@@ -114,13 +115,15 @@ async function testMusic(): Promise<Check[]> {
   else if (!channel) checks.push({ name: 'YouTube', ok: false, detail: 'Add the channel link, @handle or ID' })
   else {
     const q = channel.id ? `id=${channel.id}` : `forHandle=${encodeURIComponent(channel.handle!)}`
-    const { res, data } = await fetchJson(`https://www.googleapis.com/youtube/v3/channels?part=snippet&${q}&key=${ytKey}`)
+    const { res, data } = await fetchJson(`https://www.googleapis.com/youtube/v3/channels?part=snippet&${q}&key=${ytKey}`, {
+      headers: youtubeHeaders(),
+    })
     const item = (data.items as { snippet: { title: string } }[] | undefined)?.[0]
     checks.push({
       name: 'YouTube',
       ok: res.ok && Boolean(item),
       detail: !res.ok
-        ? String((data.error as { message?: string } | undefined)?.message ?? `YouTube returned ${res.status}`)
+        ? youtubeErrorMessage(String((data.error as { message?: string } | undefined)?.message ?? `YouTube returned ${res.status}`))
         : item
           ? `Channel: ${item.snippet.title}`
           : 'Channel not found',

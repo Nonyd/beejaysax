@@ -7,10 +7,29 @@ const API = 'https://www.googleapis.com/youtube/v3'
 const SHORTS_MAX_SEC = 60
 const MAX_VIDEOS = 200
 
+/**
+ * API keys restricted to "Websites" (HTTP referrers) reject calls with no Referer, and server
+ * requests send none. Sending the site's own address lets a key locked to beejaysax.com work.
+ */
+export function youtubeHeaders() {
+  const site = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://beejaysax.com').replace(/\/$/, '')
+  return { Referer: `${site}/` }
+}
+
+/** Makes YouTube's key-restriction errors say what to change. */
+export function youtubeErrorMessage(message: string) {
+  return /referer|referrer/i.test(message)
+    ? `${message} The API key only allows certain websites. In Google Cloud → Credentials, add beejaysax.com/* to its website list, or set its restriction to the server's IP address.`
+    : message
+}
+
 async function yt<T>(path: string, key: string): Promise<T> {
-  const res = await fetch(`${API}${path}${path.includes('?') ? '&' : '?'}key=${key}`, { signal: AbortSignal.timeout(15_000) })
+  const res = await fetch(`${API}${path}${path.includes('?') ? '&' : '?'}key=${key}`, {
+    headers: youtubeHeaders(),
+    signal: AbortSignal.timeout(15_000),
+  })
   const d = (await res.json().catch(() => ({}))) as T & { error?: { message?: string } }
-  if (!res.ok) throw new Error(`YouTube: ${d.error?.message ?? res.status}`)
+  if (!res.ok) throw new Error(`YouTube: ${youtubeErrorMessage(d.error?.message ?? String(res.status))}`)
   return d
 }
 

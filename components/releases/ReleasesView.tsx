@@ -7,6 +7,8 @@ import { ReleaseType } from '@prisma/client'
 import { format } from 'date-fns'
 import FilterPills from '@/components/ui/FilterPills'
 import RecordSleeve from '@/components/ui/RecordSleeve'
+import { releasePlayers } from '@/lib/embeds'
+import { PreviewButton } from '@/components/releases/ReleasePreview'
 
 type Filter = 'ALL' | ReleaseType
 
@@ -44,6 +46,7 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
         <div className="mt-12 grid grid-cols-1 gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((r) => {
             const streams = STREAMS.filter(([key]) => r[key])
+            const players = releasePlayers(r)
             return (
               <article key={r.id} className="group min-w-0">
                 <Link href={`/releases/${r.slug}`} className="block no-underline">
@@ -61,6 +64,11 @@ export default function ReleasesView({ releases }: { releases: Release[] }) {
                     {r.title}
                   </h2>
                 </Link>
+                {players.length > 0 && (
+                  <div className="mt-4">
+                    <PreviewButton players={players} title={r.title} />
+                  </div>
+                )}
                 {streams.length > 0 && (
                   <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-body text-sm">
                     {streams.map(([key, label]) => (
