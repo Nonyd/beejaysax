@@ -44,3 +44,4 @@ next-env.d.ts
 
 # photos uploaded in the admin (stored on the server)
 /uploads/
+scripts/brand/og.png

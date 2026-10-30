@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import ReleasesView from '@/components/releases/ReleasesView'
 import PageHero from '@/components/ui/PageHero'
 import { prisma } from '@/lib/prisma'
@@ -6,16 +7,13 @@ import { safeDb } from '@/lib/db-safe'
 import { getContent } from '@/lib/content/store'
 import { toPreviewRelease } from '@/lib/previews'
 
-export const metadata: Metadata = {
-  title: { absolute: 'Music — BeeJay Sax' },
-  description:
-    'Discography of BeeJay Sax — gospel saxophone albums, singles, and EPs. Stream on Spotify, Apple Music, Audiomack, and YouTube.',
-  openGraph: {
-    title: 'BeeJay Sax — Discography',
-    description: 'Albums, singles, and EPs. Gospel saxophone music for every season.',
-    url: 'https://beejaysax.com/releases',
-  },
-}
+export const metadata: Metadata = pageMetadata({
+  title: 'Music — BeeJay Sax Albums, EPs & Singles',
+  description: 'Discography of BeeJay Sax: gospel saxophone albums, singles and EPs. Stream on Spotify, Apple Music, Audiomack and YouTube.',
+  path: '/releases',
+  shareTitle: 'BeeJay Sax — Discography',
+  shareDescription: 'Albums, singles and EPs. Gospel saxophone music for every season.',
+})
 
 export const dynamic = 'force-dynamic'
 

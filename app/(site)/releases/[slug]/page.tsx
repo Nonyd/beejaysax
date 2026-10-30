@@ -9,24 +9,26 @@ import { safeDb } from '@/lib/db-safe'
 import { fmt } from '@/lib/time'
 import { toPreviewRelease } from '@/lib/previews'
 import { PreviewButton, Tracklist } from '@/components/player/PreviewControls'
+import JsonLd from '@/components/seo/JsonLd'
+import { breadcrumbJsonLd, pageMetadata, releaseJsonLd } from '@/lib/seo'
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const release = await safeDb(() => prisma.release.findFirst({ where: { slug, isHidden: false } }), null)
-  if (!release) return { title: { absolute: 'Release Not Found — BeeJay Sax' } }
+  if (!release) return { title: { absolute: 'Release Not Found — BeeJay Sax' }, robots: { index: false } }
 
-  return {
-    title: { absolute: `${release.title} — BeeJay Sax` },
-    description: release.description ?? `${release.title} by BeeJay Sax. Stream now on all platforms.`,
-    openGraph: {
-      title: release.title,
-      description: release.description ?? `Gospel saxophone — ${release.releaseType.toLowerCase()} by BeeJay Sax`,
-      url: `https://beejaysax.com/releases/${slug}`,
-      images: release.coverImage ? [{ url: release.coverImage, width: 1200, height: 1200 }] : [],
-    },
-  }
+  const kind = release.releaseType === 'SINGLE' ? 'single' : release.releaseType === 'EP' ? 'EP' : 'album'
+  return pageMetadata({
+    title: `${release.title} — BeeJay Sax (${kind})`,
+    description: release.description?.slice(0, 160) ?? `${release.title}, a gospel saxophone ${kind} by BeeJay Sax. Stream on Spotify, Apple Music, Audiomack and YouTube.`,
+    path: `/releases/${slug}`,
+    shareTitle: release.title,
+    shareDescription: release.description?.slice(0, 160) ?? `Gospel saxophone ${kind} by BeeJay Sax`,
+    image: release.coverImage ? { url: release.coverImage, width: 1200, height: 1200, alt: `${release.title} cover art` } : null,
+    type: release.releaseType === 'SINGLE' ? 'music.song' : 'music.album',
+  })
 }
 
 export const dynamic = 'force-dynamic'
@@ -51,6 +53,7 @@ export default async function ReleaseDetailPage({ params }: Props) {
 
   return (
     <article className="relative -mt-[72px] overflow-hidden bg-night pt-[72px]">
+      <JsonLd data={[releaseJsonLd(release), breadcrumbJsonLd([{ name: 'Music', path: '/releases' }, { name: release.title, path: `/releases/${release.slug}` }])]} />
       <Adire variant="field" color="var(--gold)" opacity={0.05} />
       <div className="site-shell relative py-16 md:py-24">
         <Link href="/releases" className="font-body text-sm font-semibold text-gold no-underline hover:underline">

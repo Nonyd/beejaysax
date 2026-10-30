@@ -4,6 +4,7 @@ import VideoGallery from '@/components/videos/VideoGallery'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { getContent } from '@/lib/content/store'
+import { pageMetadata } from '@/lib/seo'
 
 type Props = { searchParams: Promise<{ v?: string }> }
 
@@ -11,16 +12,16 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const { v } = await searchParams
   const video = v ? await safeDb(() => prisma.video.findFirst({ where: { youtubeId: v, isHidden: false } }), null) : null
   const image = video ? (video.thumbnailUrl ?? `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`) : undefined
-  return {
-    title: { absolute: video ? `${video.title} — BeeJay Sax` : 'Videos — BeeJay Sax' },
-    description: 'Live ministrations, worship sessions and performances by BeeJay Sax.',
-    openGraph: {
-      title: video?.title ?? 'BeeJay Sax — Videos',
-      description: 'Live ministrations, worship sessions and performances.',
-      url: `https://beejaysax.com/videos${video ? `?v=${video.youtubeId}` : ''}`,
-      images: image ? [{ url: image }] : undefined,
-    },
-  }
+  // A shared ?v= link previews that video, but search engines index only the one /videos page.
+  const meta = pageMetadata({
+    title: video ? `${video.title} — BeeJay Sax` : 'Videos — BeeJay Sax Live Ministrations',
+    description: 'Live ministrations, worship sessions and saxophone performances by BeeJay Sax.',
+    path: '/videos',
+    shareTitle: video?.title ?? 'BeeJay Sax — Videos',
+    shareDescription: 'Live ministrations, worship sessions and performances.',
+    image: image ? { url: image, width: 480, height: 360, alt: video?.title } : null,
+  })
+  return video ? { ...meta, openGraph: { ...meta.openGraph, url: `/videos?v=${video.youtubeId}` } } : meta
 }
 
 export const dynamic = 'force-dynamic'

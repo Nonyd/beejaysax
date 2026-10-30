@@ -8,13 +8,15 @@ import { prisma } from '@/lib/prisma'
 import { fmt } from '@/lib/time'
 import { getTierAvailability } from '@/lib/events/availability'
 import { currencySymbol } from '@/lib/events/editor-data'
+import JsonLd from '@/components/seo/JsonLd'
+import { breadcrumbJsonLd, eventJsonLd, pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ id: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const event = await prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } } })
-  if (!event) return { title: { absolute: 'Event Not Found — BeeJay Sax' } }
+  if (!event) return { title: { absolute: 'Event Not Found — BeeJay Sax' }, robots: { index: false } }
 
   const formattedDate = new Date(event.eventDate).toLocaleDateString('en-NG', {
     year: 'numeric',
@@ -22,16 +24,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     day: 'numeric',
   })
 
-  return {
-    title: { absolute: `${event.title} — BeeJay Sax` },
-    description: `${event.title} at ${event.venue}, ${event.city} on ${formattedDate}. ${event.description?.slice(0, 100) ?? ''}`,
-    openGraph: {
-      title: event.title,
-      description: `${event.venue} · ${event.city} · ${formattedDate}`,
-      url: `https://beejaysax.com/events/${id}`,
-      images: event.posterImage ? [{ url: event.posterImage, width: 1200, height: 630 }] : [],
-    },
-  }
+  return pageMetadata({
+    title: `${event.title} — BeeJay Sax`,
+    description: `${event.title} at ${event.venue}, ${event.city} on ${formattedDate}. ${(event.excerpt ?? event.description ?? '').slice(0, 110)}`.trim(),
+    path: `/events/${id}`,
+    shareTitle: event.title,
+    shareDescription: `${event.venue} · ${event.city} · ${formattedDate}`,
+    image: event.posterImage ? { url: event.posterImage, alt: event.title } : null,
+  })
 }
 
 // Cached for a minute and rebuilt in the background, so a rush of visitors doesn't rebuild the page
@@ -70,6 +70,12 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        data={[
+          eventJsonLd(event, tiers, tiers.length > 0 && tiers.every((t) => t.state === 'sold_out')),
+          breadcrumbJsonLd([{ name: 'Events', path: '/events' }, { name: event.title, path: `/events/${event.id}` }]),
+        ]}
+      />
       <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
         <Adire variant="field" color="var(--gold)" opacity={0.06} />
         <div className="site-shell relative grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.3fr_0.7fr]">

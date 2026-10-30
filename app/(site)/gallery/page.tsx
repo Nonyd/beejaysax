@@ -1,19 +1,18 @@
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import GalleryView from '@/components/gallery/GalleryView'
 import PageHero from '@/components/ui/PageHero'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { getContent } from '@/lib/content/store'
 
-export const metadata: Metadata = {
-  title: { absolute: 'Gallery — BeeJay Sax' },
-  description: 'Photos of BeeJay Sax in performance — concerts, events, and behind the scenes moments.',
-  openGraph: {
-    title: 'BeeJay Sax — Gallery',
-    description: 'Performance photos and ministry moments.',
-    url: 'https://beejaysax.com/gallery',
-  },
-}
+export const metadata: Metadata = pageMetadata({
+  title: 'Gallery — BeeJay Sax',
+  description: 'Photos of BeeJay Sax in performance: concerts, events and behind-the-scenes moments.',
+  path: '/gallery',
+  shareTitle: 'BeeJay Sax — Gallery',
+  shareDescription: 'Performance photos and ministry moments.',
+})
 
 export const dynamic = 'force-dynamic'
 

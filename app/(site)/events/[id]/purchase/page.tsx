@@ -20,8 +20,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const event = await prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } }, select: { title: true } })
-  if (!event) return { title: 'Tickets' }
-  return { title: `Tickets — ${event.title}` }
+  // A checkout step: keep it out of search results, but let crawlers follow links back to the event.
+  const robots = { index: false, follow: true }
+  if (!event) return { title: 'Tickets', robots }
+  return { title: `Tickets — ${event.title}`, robots }
 }
 
 export default async function EventPurchasePage({ params }: Props) {

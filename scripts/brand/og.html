@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Hanken+Grotesk:wght@500;600&display=block" rel="stylesheet">
+<style>
+*{margin:0;box-sizing:border-box}
+html,body{width:1200px;height:630px;overflow:hidden}
+body{position:relative;background:#11142f;font-family:'Hanken Grotesk',sans-serif;color:#f7f1e3}
+.glow{position:absolute;inset:0;background:
+ radial-gradient(620px 520px at 900px 300px, rgba(227,178,60,.28), transparent 70%),
+ radial-gradient(500px 400px at 120px 640px, rgba(196,88,58,.22), transparent 70%)}
+.dots{position:absolute;inset:0;opacity:.07;background-image:radial-gradient(#e3b23c 1.4px,transparent 1.6px);background-size:26px 26px}
+.arch{position:absolute;left:715px;top:70px;width:370px;height:600px;border-radius:185px 185px 0 0;
+ background:linear-gradient(180deg,#f8d98a 0%,#e3b23c 38%,#c4583a 100%);box-shadow:0 0 0 10px rgba(227,178,60,.18)}
+.arch::after{content:'';position:absolute;inset:-26px;border-radius:211px 211px 0 0;border:1.5px dashed rgba(240,199,94,.45);border-bottom:0}
+.photo{position:absolute;left:690px;top:28px;height:640px;filter:drop-shadow(0 24px 40px rgba(0,0,0,.45))}
+.copy{position:absolute;left:84px;top:84px;width:560px}
+.logo{height:212px;display:block}
+.kicker{margin-top:40px;font-size:19px;font-weight:600;letter-spacing:.16em;white-space:nowrap;text-transform:uppercase;color:#e3b23c}
+.motto{margin-top:16px;font-family:'Gloock',serif;font-size:54px;line-height:1.05;letter-spacing:-.01em}
+.url{position:absolute;left:84px;bottom:58px;font-size:22px;font-weight:500;color:rgba(247,241,227,.7);display:flex;align-items:center;gap:14px}
+.url i{display:block;width:9px;height:9px;background:#e3b23c;transform:rotate(45deg)}
+.band{position:absolute;left:0;right:0;bottom:0;height:12px;background:repeating-linear-gradient(90deg,#e3b23c 0 22px,transparent 22px 30px,#c4583a 30px 40px,transparent 40px 48px);opacity:.85}
+</style></head><body>
+<div class="glow"></div><div class="dots"></div>
+<div class="arch"></div>
+<img class="photo" src="../../public/images/beejay-leap.webp">
+<div class="copy">
+ <img class="logo" src="../../public/brand/logo-white.png">
+ <p class="kicker">Gospel saxophonist &amp; music minister</p>
+ <p class="motto">Blessed &amp; Highly Favoured.</p>
+</div>
+<p class="url"><i></i>beejaysax.com</p>
+<div class="band"></div>
+</body></html>

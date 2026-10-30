@@ -1,18 +1,16 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import ContactForm from './ContactForm'
 import { getContent } from '@/lib/content/store'
 
-export const metadata: Metadata = {
-  title: { absolute: 'Contact — BeeJay Sax' },
-  description:
-    'Book BeeJay Sax for concerts, gospel events, corporate functions, and collaborations. Get in touch with the team.',
-  openGraph: {
-    title: 'Contact BeeJay Sax',
-    description: 'Available for bookings, collaborations, and media inquiries.',
-    url: 'https://beejaysax.com/contact',
-  },
-}
+export const metadata: Metadata = pageMetadata({
+  title: 'Book BeeJay Sax — Contact',
+  description: 'Book BeeJay Sax for concerts, church programmes, weddings, corporate events and collaborations. Get in touch with the team.',
+  path: '/contact',
+  shareTitle: 'Contact BeeJay Sax',
+  shareDescription: 'Available for bookings, collaborations and media enquiries.',
+})
 
 // Rendered per request; see app/(site)/layout.tsx.
 export const dynamic = 'force-dynamic'

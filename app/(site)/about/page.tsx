@@ -1,29 +1,36 @@
 import type { Metadata } from 'next'
+import { artistJsonLd, breadcrumbJsonLd, pageMetadata } from '@/lib/seo'
+import JsonLd from '@/components/seo/JsonLd'
 import ContactCTA from '@/components/home/ContactCTA'
 import Adire from '@/components/ui/Adire'
 import ArchPhoto from '@/components/ui/ArchPhoto'
 import GoldButton from '@/components/ui/GoldButton'
 import { getContent, paragraphs } from '@/lib/content/store'
 
-export const metadata: Metadata = {
-  title: { absolute: 'About — BeeJay Sax' },
+export const metadata: Metadata = pageMetadata({
+  title: 'About BeeJay Sax — Abolaji David Banjoko',
   description:
-    "Abolaji David Banjoko — gospel saxophonist, music minister, and convener of the Beejay Sax Live Concert. From engineering graduate to one of Nigeria's finest saxophonists.",
-  openGraph: {
-    title: 'About BeeJay Sax',
-    description: 'From engineering to ministry — the story of Abolaji David Banjoko.',
-    url: 'https://beejaysax.com/about',
-  },
-}
+    "Abolaji David Banjoko (BeeJay Sax) is a Nigerian gospel saxophonist, music minister and convener of the Beejay Sax Live Concert. From engineering graduate to one of Nigeria's finest saxophonists.",
+  path: '/about',
+  shareTitle: 'About BeeJay Sax',
+  shareDescription: 'From engineering to ministry: the story of Abolaji David Banjoko.',
+  type: 'profile',
+})
 
 // Rendered per request; see app/(site)/layout.tsx.
 export const dynamic = 'force-dynamic'
 
 export default async function AboutPage() {
-  const c = await getContent('about')
+  const [c, site] = await Promise.all([getContent('about'), getContent('site')])
 
   return (
     <>
+      <JsonLd
+        data={[
+          ...artistJsonLd({ description: `${c.intro} ${c.storyLead}`, socials: site.socials, image: c.image.startsWith("/") ? c.image : undefined }),
+          breadcrumbJsonLd([{ name: "About", path: "/about" }]),
+        ]}
+      />
       {/* header */}
       <section className="relative -mt-[72px] overflow-hidden bg-ink pt-[72px]">
         <Adire variant="field" color="var(--gold)" opacity={0.06} />
