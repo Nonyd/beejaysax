@@ -8,6 +8,8 @@ interface ImageUploadProps {
   label?: string
   currentUrl?: string
   aspectRatio?: 'square' | 'poster' | 'free'
+  /** Accept several files at once; onUpload is called once per uploaded image. */
+  multiple?: boolean
 }
 
 export default function ImageUpload({
@@ -16,43 +18,61 @@ export default function ImageUpload({
   label = 'Upload Image',
   currentUrl,
   aspectRatio = 'free',
+  multiple = false,
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null)
   const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
-  async function handleFile(file: File) {
-    if (!file) return
-
-    // Validate
+  function validate(file: File) {
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      setError('Only JPG, PNG, and WebP images are allowed')
-      return
+      return `${file.name}: only JPG, PNG, and WebP images are allowed`
     }
-    if (file.size > 10 * 1024 * 1024) {
-      setError('Image must be under 10MB')
-      return
-    }
+    if (file.size > 10 * 1024 * 1024) return `${file.name}: image must be under 10MB`
+    return null
+  }
+
+  async function uploadOne(file: File) {
+    // Saved on our own server, under /uploads
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('folder', folder)
+
+    const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+    const data = await uploadRes.json().catch(() => ({}))
+    if (!uploadRes.ok || !data.url) throw new Error(data.error || 'Upload failed')
+    return data.url as string
+  }
+
+  async function handleFiles(list: FileList | File[]) {
+    const files = Array.from(list).slice(0, multiple ? undefined : 1)
+    if (files.length === 0) return
+
+    const errors: string[] = []
+    const valid = files.filter((file) => {
+      const problem = validate(file)
+      if (problem) errors.push(problem)
+      return !problem
+    })
 
     setUploading(true)
     setError('')
+    setProgress({ done: 0, total: valid.length })
 
-    try {
-      // Saved on our own server, under /uploads
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('folder', folder)
-
-      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
-      const data = await uploadRes.json().catch(() => ({}))
-      if (!uploadRes.ok || !data.url) throw new Error(data.error || 'Upload failed')
-
-      onUpload(data.url)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed')
-    } finally {
-      setUploading(false)
+    // One at a time keeps the order the admin picked and spares the server
+    for (const [i, file] of valid.entries()) {
+      try {
+        onUpload(await uploadOne(file))
+      } catch (err) {
+        errors.push(`${file.name}: ${err instanceof Error ? err.message : 'upload failed'}`)
+      }
+      setProgress({ done: i + 1, total: valid.length })
     }
+
+    setError(errors.join('\n'))
+    setUploading(false)
+    setProgress(null)
   }
 
   const dropMaxW =
@@ -79,12 +99,11 @@ export default function ImageUpload({
 
       {/* Drop zone — width capped so it doesn’t span the whole dashboard */}
       <div
-        onClick={() => inputRef.current?.click()}
+        onClick={() => !uploading && inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault()
-          const file = e.dataTransfer.files[0]
-          if (file) handleFile(file)
+          if (!uploading) handleFiles(e.dataTransfer.files)
         }}
         style={{
           border: '1px dashed color-mix(in srgb, var(--ivory) 20%, transparent)',
@@ -101,10 +120,16 @@ export default function ImageUpload({
       >
         <p style={{ fontSize: 22, marginBottom: 6 }}>📁</p>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: uploading ? 'var(--gold)' : 'color-mix(in srgb, var(--ivory) 80%, transparent)' }}>
-          {uploading ? 'Uploading...' : label}
+          {uploading
+            ? progress && progress.total > 1
+              ? `Uploading ${Math.min(progress.done + 1, progress.total)} of ${progress.total}...`
+              : 'Uploading...'
+            : label}
         </p>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'color-mix(in srgb, var(--ivory) 55%, transparent)', marginTop: 6, lineHeight: 1.4 }}>
-          {uploading ? 'Please wait' : 'Click or drag & drop · JPG, PNG, WebP · Max 10MB'}
+          {uploading
+            ? 'Please wait'
+            : `Click or drag & drop${multiple ? ' · select several at once' : ''} · JPG, PNG, WebP · Max 10MB${multiple ? ' each' : ''}`}
         </p>
       </div>
 
@@ -112,15 +137,15 @@ export default function ImageUpload({
         ref={inputRef}
         type="file"
         accept="image/jpeg,image/png,image/webp"
+        multiple={multiple}
         className="hidden"
         onChange={(e) => {
-          const file = e.target.files?.[0]
-          if (file) handleFile(file)
+          if (e.target.files) handleFiles(e.target.files)
           e.target.value = ''
         }}
       />
 
-      {error && <p style={{ fontSize: 12, color: 'var(--danger)', marginTop: 8 }}>{error}</p>}
+      {error && <p style={{ fontSize: 12, color: 'var(--danger)', marginTop: 8, whiteSpace: 'pre-line' }}>{error}</p>}
     </div>
   )
 }

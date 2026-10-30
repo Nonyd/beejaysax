@@ -21,44 +21,46 @@ const CATEGORIES = ['PERFORMANCE', 'PORTRAIT', 'EVENTS', 'BACKSTAGE']
 export default function GalleryManager({ initialImages }: { initialImages: GalleryImageRow[] }) {
   const [images, setImages] = useState(initialImages)
   const [uploading, setUploading] = useState(false)
-  const [imageUrl, setImageUrl] = useState('')
+  const [pending, setPending] = useState<string[]>([])
   const [caption, setCaption] = useState('')
   const [category, setCategory] = useState('PERFORMANCE')
   const [filter, setFilter] = useState('ALL')
 
   const filtered = filter === 'ALL' ? images : images.filter((img) => img.category === filter)
 
-  async function handleAddImage() {
-    if (!imageUrl.trim()) {
-      toast.error('Please enter an image URL')
+  async function handleAddImages() {
+    if (pending.length === 0) {
+      toast.error('Upload at least one image first')
       return
     }
     setUploading(true)
-    try {
-      const res = await fetch('/api/gallery', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imagePath: imageUrl.trim(),
-          caption: caption.trim() || null,
-          category,
-          sortOrder: images.length,
-        }),
-      })
-      if (res.ok) {
-        const newImage = (await res.json()) as GalleryImageRow
-        setImages((prev) => [...prev, newImage])
-        setImageUrl('')
-        setCaption('')
-        toast.success('Image added!')
-      } else {
-        toast.error('Failed to add image')
+    const added: GalleryImageRow[] = []
+    const failed: string[] = []
+    // Saved in order so the gallery keeps the order the photos were picked in
+    for (const [i, imagePath] of pending.entries()) {
+      try {
+        const res = await fetch('/api/gallery', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imagePath,
+            caption: caption.trim() || null,
+            category,
+            sortOrder: images.length + i,
+          }),
+        })
+        if (!res.ok) throw new Error()
+        added.push((await res.json()) as GalleryImageRow)
+      } catch {
+        failed.push(imagePath)
       }
-    } catch {
-      toast.error('Network error')
-    } finally {
-      setUploading(false)
     }
+    setImages((prev) => [...prev, ...added])
+    setPending(failed)
+    if (failed.length === 0) setCaption('')
+    if (added.length > 0) toast.success(added.length === 1 ? 'Image added!' : `${added.length} images added!`)
+    if (failed.length > 0) toast.error(`${failed.length} image${failed.length === 1 ? '' : 's'} could not be saved`)
+    setUploading(false)
   }
 
   async function handleDelete(id: string) {
@@ -85,24 +87,35 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
       <AdminFormShell maxWidth={800}>
         <div className="mb-8">
           <AdminSectionCard
-            title="Add image"
-            description="Upload a photo, then add a caption and category before saving."
+            title="Add images"
+            description="Upload one or more photos, then pick a category (and optional caption) for the batch before saving."
           >
-            <AdminFormField label="Upload Image *">
+            <AdminFormField label="Upload Images *">
               <ImageUpload
-                onUpload={(url) => setImageUrl(url)}
+                onUpload={(url) => setPending((prev) => [...prev, url])}
                 folder="beejaysax/gallery"
-                label="Upload Gallery Photo"
-                currentUrl={imageUrl || undefined}
+                label="Upload Gallery Photos"
                 aspectRatio="free"
+                multiple
               />
-              {imageUrl && (
-                <input
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="Image link"
-                  className="mt-2 w-full border border-ivory/12 bg-ink px-4 py-2 text-xs text-ivory focus:border-gold focus:outline-none"
-                />
+              {pending.length > 0 && (
+                <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6">
+                  {pending.map((url, i) => (
+                    <div key={`${url}-${i}`} className="relative aspect-square border border-ivory/12">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt={`Upload ${i + 1}`} className="h-full w-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setPending((prev) => prev.filter((_, j) => j !== i))}
+                        disabled={uploading}
+                        aria-label="Remove from batch"
+                        className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-xs text-white transition hover:bg-red-800"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </AdminFormField>
           <div className="grid grid-cols-2 gap-3">
@@ -122,7 +135,7 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
               <input
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
-                placeholder="Optional caption..."
+                placeholder="Optional, applied to every image..."
                 className="w-full border border-ivory/12 bg-ink px-4 py-2.5 text-sm text-ivory focus:border-gold focus:outline-none"
               />
             </div>
@@ -154,12 +167,16 @@ export default function GalleryManager({ initialImages }: { initialImages: Galle
           </div>
             <button
               type="button"
-              onClick={handleAddImage}
-              disabled={uploading || !imageUrl.trim()}
+              onClick={handleAddImages}
+              disabled={uploading || pending.length === 0}
               className="bg-gold px-6 py-2.5 font-semibold text-night transition hover:bg-gold-lt disabled:opacity-40"
               style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}
             >
-              {uploading ? 'Adding...' : 'Add Image'}
+              {uploading
+                ? 'Adding...'
+                : pending.length > 1
+                  ? `Add ${pending.length} Images`
+                  : 'Add Image'}
             </button>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'color-mix(in srgb, var(--ivory) 55%, transparent)', margin: 0 }}>
               Folder: <code style={{ color: 'color-mix(in srgb, var(--ivory) 70%, transparent)' }}>beejaysax/gallery</code>
