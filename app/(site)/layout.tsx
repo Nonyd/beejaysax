@@ -6,9 +6,9 @@ import { PlayerProvider } from '@/components/player/PlayerProvider'
 import MiniPlayer from '@/components/player/MiniPlayer'
 import { getContent } from '@/lib/content/store'
 
-// Public pages read events and editable content from the database on every request,
-// so nothing is frozen at build time (CI builds have no access to the production DB).
-export const dynamic = 'force-dynamic'
+// Public pages read events and editable content from the database, and CI builds have no access to
+// the production DB, so every page must opt out of build-time rendering itself: either
+// `dynamic = 'force-dynamic'`, or (event pages) a revalidate time with an empty generateStaticParams.
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const site = await getContent('site')

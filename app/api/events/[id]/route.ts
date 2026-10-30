@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
+import { revalidateEventPages } from '@/lib/events/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminApi } from '@/lib/admin-auth'
 import { saveEvent, ValidationError } from '@/lib/events/admin'
@@ -16,7 +17,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
 function revalidate(id: string) {
   revalidatePath('/events')
-  revalidatePath(`/events/${id}`)
+  revalidateEventPages(id)
   revalidatePath('/')
 }
 

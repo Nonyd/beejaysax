@@ -20,11 +20,24 @@ const OFF: MaintenanceState = { enabled: false, message: '', until: '' }
 // The proxy and the app are bundled separately but run in one Node process, so the cache lives
 // on globalThis: clearing it after a change takes effect everywhere at once in that process.
 // Other processes (if the host runs several) pick it up within TTL_MS.
-const store = globalThis as unknown as { __maintenance?: { at: number; value: MaintenanceState } }
+const store = globalThis as unknown as {
+  __maintenance?: { at: number; value: MaintenanceState }
+  __maintenanceLoad?: Promise<MaintenanceState>
+}
 
+// Runs on every request (the proxy), so once the state is known it never makes a visitor wait:
+// an expired state is served while one background read refreshes it.
 export async function getMaintenance(): Promise<MaintenanceState> {
   const hit = store.__maintenance
   if (hit && Date.now() - hit.at < TTL_MS) return hit.value
+  store.__maintenanceLoad ??= readMaintenance().finally(() => {
+    store.__maintenanceLoad = undefined
+  })
+  return hit ? hit.value : store.__maintenanceLoad
+}
+
+async function readMaintenance(): Promise<MaintenanceState> {
+  const hit = store.__maintenance
   let value = OFF
   try {
     const row = await prisma.siteSetting.findUnique({ where: { key: KEY } })

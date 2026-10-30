@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   },
 }
 
+// Rendered per request; see app/(site)/layout.tsx.
+export const dynamic = 'force-dynamic'
+
 export default async function AboutPage() {
   const c = await getContent('about')
 

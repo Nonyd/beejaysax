@@ -7,6 +7,9 @@ import GalleryStrip from '@/components/home/GalleryStrip'
 import TestimonialsSection from '@/components/home/TestimonialsSection'
 import ContactCTA from '@/components/home/ContactCTA'
 
+// Rendered per request; see app/(site)/layout.tsx.
+export const dynamic = 'force-dynamic'
+
 export default function HomePage() {
   return (
     <>

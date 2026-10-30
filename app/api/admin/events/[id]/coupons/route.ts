@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdminApi } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
+import { revalidateEventPages } from '@/lib/events/cache'
 
 type Params = { params: Promise<{ id: string }> }
 
@@ -48,5 +49,6 @@ export async function POST(req: NextRequest, { params }: Params) {
       endsAt: endsAt && !Number.isNaN(endsAt.getTime()) ? endsAt : null,
     },
   })
+  revalidateEventPages(id) // the checkout shows the discount field only when a code exists
   return NextResponse.json({ coupon })
 }

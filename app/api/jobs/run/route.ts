@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
+import { revalidateEventPages } from '@/lib/events/cache'
 import { prisma } from '@/lib/prisma'
 import { getSetting } from '@/lib/settings'
 import { safeEqual } from '@/lib/secret-box'
@@ -40,7 +41,10 @@ async function run(req: NextRequest) {
   await task('reminders', () => sendDueReminders())
   await task('pastEvents', async () => {
     const n = await markPastEvents()
-    if (n) revalidatePath('/events')
+    if (n) {
+      revalidatePath('/events')
+      revalidateEventPages()
+    }
     return n
   })
   await task('musicSync', () => runScheduledSync())

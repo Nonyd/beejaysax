@@ -43,7 +43,9 @@ export default function TicketPurchaseForm({
 }) {
   const router = useRouter()
   const firstOnSale = tiers.find((t) => t.state === 'on_sale')
-  const [tierId, setTierId] = useState(firstOnSale?.id ?? '')
+  const [picked, setTierId] = useState(firstOnSale?.id ?? '')
+  // Live availability can open or close tiers after the page loads; never stay on one that closed.
+  const tierId = tiers.some((t) => t.id === picked && t.state === 'on_sale') ? picked : (firstOnSale?.id ?? '')
   const [quantity, setQuantity] = useState(1)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')

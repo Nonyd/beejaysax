@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import Adire from '@/components/ui/Adire'
 import ArchPhoto from '@/components/ui/ArchPhoto'
 import Link from 'next/link'
+import EventTicketBox from '@/components/events/EventTicketBox'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { safeDb } from '@/lib/db-safe'
 import { fmt } from '@/lib/time'
 import { getTierAvailability } from '@/lib/events/availability'
 import { currencySymbol } from '@/lib/events/editor-data'
@@ -13,7 +13,7 @@ type Props = { params: Promise<{ id: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
-  const event = await safeDb(() => prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } } }), null)
+  const event = await prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } } })
   if (!event) return { title: { absolute: 'Event Not Found — BeeJay Sax' } }
 
   const formattedDate = new Date(event.eventDate).toLocaleDateString('en-NG', {
@@ -34,14 +34,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export const dynamic = 'force-dynamic'
+// Cached for a minute and rebuilt in the background, so a rush of visitors doesn't rebuild the page
+// for each of them. Admin edits refresh it at once (lib/events/cache.ts); seat counts load live in the
+// browser (EventTicketBox). Database errors throw instead of falling back, so a failed rebuild keeps
+// serving the last good page rather than caching an empty one.
+export const revalidate = 60
+
+// Built on first visit, never at build time (the CI build has no database).
+export async function generateStaticParams() {
+  return []
+}
 
 export default async function EventDetailPage({ params }: Props) {
   const { id } = await params
-  const event = await safeDb(() => prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } } }), null)
+  const event = await prisma.event.findFirst({ where: { id, status: { not: 'DRAFT' } } })
   if (!event) notFound()
 
-  const avail = await safeDb(() => getTierAvailability(id), null)
+  const avail = await getTierAvailability(id)
   const tiers = avail?.tiers ?? []
   const sym = currencySymbol(event.currency)
 
@@ -53,11 +62,6 @@ export default async function EventDetailPage({ params }: Props) {
   const waText = encodeURIComponent(`${event.title}\n${eventUrl}`)
 
 
-  const canBuy = tiers.some((t) => t.state === 'on_sale')
-  const soldOut = tiers.length > 0 && tiers.every((t) => t.state === 'sold_out')
-  const allFree = tiers.length > 0 && tiers.every((t) => t.price === 0)
-  const price = (n: number) => (n === 0 ? 'Free' : `${sym}${n.toLocaleString()}`)
-  const stateLabel: Record<string, string> = { sold_out: 'Sold out', ended: 'Sales ended', not_started: 'Not on sale yet' }
   const details: [string, string][] = [
     ['Date', fmt(event.eventDate, 'EEEE, d MMMM yyyy')],
     ...(event.eventTime ? ([['Doors', event.eventTime]] as [string, string][]) : []),
@@ -147,42 +151,11 @@ export default async function EventDetailPage({ params }: Props) {
               </div>
 
               <div className="p-8">
-                {tiers.length === 0 ? (
-                  <p className="font-body text-base text-ink/70">Tickets aren’t on sale yet.</p>
-                ) : (
-                  <ul className="space-y-3">
-                    {tiers.map((t) => (
-                      <li key={t.id} className="flex items-start justify-between gap-4">
-                        <div className="min-w-0">
-                          <p className="font-body text-base font-semibold">{t.name}</p>
-                          {t.description && <p className="font-body text-sm text-ink/60">{t.description}</p>}
-                          {t.state !== 'on_sale' ? (
-                            <p className="font-body text-sm font-semibold text-clay">{stateLabel[t.state]}</p>
-                          ) : t.remaining !== null && t.remaining <= 20 ? (
-                            <p className="font-body text-sm font-semibold text-clay">Only {t.remaining} left</p>
-                          ) : null}
-                        </div>
-                        <p className={`shrink-0 font-display text-2xl ${t.state === 'on_sale' ? '' : 'text-ink/40 line-through'}`}>{price(t.price)}</p>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {canBuy ? (
-                  <Link
-                    href={`/events/${event.id}/purchase`}
-                    className="mt-6 flex w-full justify-center rounded-full bg-ink px-8 py-4 font-body text-base font-semibold text-ivory no-underline transition-colors hover:bg-night"
-                  >
-                    {allFree ? 'Register free' : 'Get tickets'}
-                  </Link>
-                ) : (
-                  <Link
-                    href="/contact?inquiry=booking"
-                    className="mt-6 flex w-full justify-center rounded-full border border-ink/30 px-8 py-4 font-body text-base font-semibold text-ink no-underline hover:border-ink"
-                  >
-                    {soldOut ? 'Ask about tickets' : 'Book BeeJay for your event'}
-                  </Link>
-                )}
+                <EventTicketBox
+                  eventId={event.id}
+                  currencySymbol={sym}
+                  tiers={tiers.map((t) => ({ id: t.id, name: t.name, description: t.description, price: t.price, state: t.state, remaining: t.remaining }))}
+                />
 
                 <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-ink/15 pt-5 font-body text-sm">
                   <span className="text-ink/55">Share</span>
