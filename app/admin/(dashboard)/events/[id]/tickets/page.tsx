@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import RegistrationsClient, { type RegRow } from '@/components/admin/events/RegistrationsClient'
 import { currencySymbol } from '@/lib/events/editor-data'
-import { expireStaleOrders } from '@/lib/events/orders'
+import { expireStaleOrders, HOLD_MINUTES } from '@/lib/events/orders'
 
 export const dynamic = 'force-dynamic'
 
@@ -103,7 +103,7 @@ export default async function EventRegistrationsPage({ params }: { params: Promi
         {stat('Tickets issued', live.length, event.totalTickets ? `of ${event.totalTickets} capacity` : undefined)}
         {stat('Checked in', live.filter((t) => t.isUsed).length, live.length ? `${Math.round((live.filter((t) => t.isUsed).length / live.length) * 100)}% of tickets` : undefined)}
         {stat('Revenue', `${sym}${revenue.toLocaleString()}`, `${paidOrders.length} paid orders`)}
-        {stat('Awaiting payment', pending.length, pending.length ? 'Seats are held for 30 minutes' : 'No open checkouts')}
+        {stat('Awaiting payment', pending.length, pending.length ? `Seats are held for ${HOLD_MINUTES} minutes` : 'No open checkouts')}
       </div>
 
       {tierStats.length > 0 && (

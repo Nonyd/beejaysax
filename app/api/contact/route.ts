@@ -4,12 +4,17 @@ import { InquiryType } from '@prisma/client'
 import { getSetting } from '@/lib/settings'
 import { sendEmail } from '@/lib/email/send'
 import { adminContactNotice, contactAutoReply } from '@/lib/email/templates'
+import { clientIp, rateLimit, tooMany } from '@/lib/rate-limit'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
+    // Hidden field real visitors never fill in.
+    if (typeof body.website === 'string' && body.website) return NextResponse.json({ success: true })
+    // Each message emails the sender and the team, so cap it per visitor.
+    if (!rateLimit('contact', clientIp(req), 5, 60 * 60_000)) return NextResponse.json(tooMany('an hour'), { status: 429 })
     const s = (v: unknown, max: number) => String(v ?? '').trim().slice(0, max)
     const firstName = s(body.firstName, 80)
     const lastName = s(body.lastName, 80)
@@ -34,7 +39,7 @@ export async function POST(req: Request) {
     // Emails are best-effort: the message is already saved in the admin inbox.
     const adminTo = await getSetting('email.adminNotify')
     await Promise.allSettled([
-      sendEmail({ to: email, ...contactAutoReply({ firstName, subject }), kind: 'CONTACT', related: { type: 'contactMessage', id: saved.id } }),
+      sendEmail({ to: email, ...contactAutoReply(), kind: 'CONTACT', related: { type: 'contactMessage', id: saved.id } }),
       adminTo
         ? sendEmail({
             to: adminTo,

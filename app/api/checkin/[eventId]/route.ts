@@ -40,7 +40,8 @@ export async function POST(req: NextRequest, { params }: Params) {
     tier: ticket.tierName ?? ticket.ticketType,
   }
   if (ticket.eventId !== eventId) {
-    return NextResponse.json({ result: 'wrong_event', message: `This ticket is for ${ticket.event.title}.`, holder })
+    // No holder name: a volunteer for this event has no reason to see who holds tickets to another one.
+    return NextResponse.json({ result: 'wrong_event', message: 'This ticket is for a different event.' })
   }
   if (ticket.cancelledAt || ticket.paymentStatus === 'REFUNDED' || ticket.order?.status === 'REFUNDED') {
     return NextResponse.json({ result: 'cancelled', message: 'This ticket was cancelled or refunded.', holder })

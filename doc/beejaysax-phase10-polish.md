@@ -728,7 +728,7 @@ NextAuth v5 · GSAP 3 · Lenis · Cloudinary · Resend · QR Tickets
 Open http://localhost:3000
 
 Admin: http://localhost:3000/admin
-Login: `admin` / `BeejaySax2026!` — **change immediately after first login**
+Login: `admin` / `<SEED_ADMIN_PASSWORD>` — **change immediately after first login**
 
 ## Deployment (Vercel — Staging)
 
@@ -898,7 +898,7 @@ SEO
 
 ADMIN
 □ /admin — redirects to login if not authenticated
-□ /admin/login — login with admin / BeejaySax2026!
+□ /admin/login — login with admin / <SEED_ADMIN_PASSWORD>
 □ Dashboard stats load correctly
 □ Create a test event, verify on /events
 □ Create a test release, verify on /releases

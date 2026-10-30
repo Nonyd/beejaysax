@@ -153,13 +153,13 @@ export async function subscribeFromWebsite(email: string, name: string | null) {
     await prisma.contact.create({ data: { email, name, source: 'SIGNUP', tags: ['Website signup'], token: newContactToken() } })
     return
   }
-  // Someone who unsubscribed can rejoin; bounced or spam-flagged addresses stay blocked.
+  // Status never changes here: anyone can type any address into the form, so an unsubscribe is only
+  // undone through the resubscribe link in our emails. Bounced or spam-flagged addresses stay blocked.
   await prisma.contact.update({
     where: { email },
     data: {
       name: existing.name ?? name,
       tags: existing.tags.includes('Website signup') ? undefined : { push: 'Website signup' },
-      ...(existing.status === 'UNSUBSCRIBED' ? { status: 'SUBSCRIBED', unsubscribedAt: null } : {}),
     },
   })
 }

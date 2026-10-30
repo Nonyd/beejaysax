@@ -8,13 +8,16 @@ const prisma = new PrismaClient()
 const STATS = HOMEPAGE_ABOUT_STATS
 
 async function main() {
+  // No default password in the code: the repo is public. Set SEED_ADMIN_PASSWORD (12+ characters) to seed.
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD
+  if (!adminPassword || adminPassword.length < 12) throw new Error('Set SEED_ADMIN_PASSWORD (at least 12 characters) before seeding.')
   await prisma.adminUser.upsert({
     where: { username: 'admin' },
     update: {},
     create: {
       username: 'admin',
       email: 'admin@beejaysax.com',
-      passwordHash: await hash('BeejaySax2026!', 12),
+      passwordHash: await hash(adminPassword, 12),
       name: 'Admin',
     },
   })
@@ -135,7 +138,7 @@ async function main() {
     },
   })
 
-  console.log('✅ Seed complete. Admin login: admin / BeejaySax2026!')
+  console.log('✅ Seed complete. Admin login: admin / the SEED_ADMIN_PASSWORD you set')
   console.log(
     `   Homepage stats — Albums: ${STATS.albums}, Years in Ministry: ${STATS.yearsMinistry}${STATS.yearsMinistrySuffix}, Continents: ${STATS.continents}`
   )

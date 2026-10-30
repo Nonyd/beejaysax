@@ -49,6 +49,7 @@ export default async function TicketViewPage({ params }: Props) {
   const siteBase = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://beejaysax.com').replace(/\/$/, '')
   const ticketPageUrl = `${siteBase}/tickets/${token}`
   const tokenTail = token.slice(-8)
+  const cancelled = Boolean(ticket.cancelledAt) || ticket.paymentStatus === 'REFUNDED'
 
   return (
     <>
@@ -151,14 +152,16 @@ export default async function TicketViewPage({ params }: Props) {
 
             <footer
               className={
-                ticket.isUsed
+                ticket.isUsed || cancelled
                   ? 'bg-clay-deep px-6 py-4 text-center font-body text-sm font-semibold text-white'
                   : 'bg-[#2f6b4f] px-6 py-4 text-center font-body text-sm font-semibold text-white'
               }
             >
-              {ticket.isUsed
-                ? `This ticket was used${ticket.usedAt ? ` on ${fmt(ticket.usedAt, 'd MMM yyyy, h:mm a')}` : ''}`
-                : 'Valid ticket'}
+              {cancelled
+                ? 'This ticket was cancelled or refunded'
+                : ticket.isUsed
+                  ? `This ticket was used${ticket.usedAt ? ` on ${fmt(ticket.usedAt, 'd MMM yyyy, h:mm a')}` : ''}`
+                  : 'Valid ticket'}
             </footer>
           </article>
 

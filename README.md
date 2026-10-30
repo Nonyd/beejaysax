@@ -19,7 +19,7 @@ NextAuth v5 · GSAP 3 · Lenis · Resend · QR Tickets
 Open http://localhost:3000
 
 Admin: http://localhost:3000/admin
-Login: `admin` / `BeejaySax2026!` — **change immediately after first login**
+Login: `admin` / `<SEED_ADMIN_PASSWORD>` — **change immediately after first login**
 
 ## Deployment (Vercel — Staging)
 

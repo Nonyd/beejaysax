@@ -200,7 +200,7 @@ async function main() {
     create: {
       username: 'admin',
       email: 'admin@beejaysax.com',
-      passwordHash: await hash('BeejaySax2026!', 12),
+      passwordHash: await hash('<SEED_ADMIN_PASSWORD>', 12),
       name: 'Admin',
     },
   })
@@ -283,7 +283,7 @@ async function main() {
     },
   })
 
-  console.log('✅ Seed complete. Admin login: admin / BeejaySax2026!')
+  console.log('✅ Seed complete. Admin login: admin / <SEED_ADMIN_PASSWORD>')
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect())
@@ -2706,7 +2706,7 @@ npx prisma db seed
 
 Default login credentials:
 - **Username:** `admin`
-- **Password:** `BeejaySax2026!`
+- **Password:** `<SEED_ADMIN_PASSWORD>`
 
 Change immediately after first login.
 
@@ -2717,7 +2717,7 @@ Change immediately after first login.
 ```
 1. npm run dev
 2. Visit http://localhost:3000/admin → should redirect to /admin/login
-3. Login with admin / BeejaySax2026!
+3. Login with admin / <SEED_ADMIN_PASSWORD>
 4. Should land on dashboard with stats
 5. Test Events: create event, view ticket list, use QR scanner
 6. Test Releases: create release, verify it appears on public /releases

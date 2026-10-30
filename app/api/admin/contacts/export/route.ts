@@ -5,7 +5,8 @@ import { contactFilter } from '@/lib/mailing/filter'
 
 export const runtime = 'nodejs'
 
-const cell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v)
+/** Quotes every cell and neutralises spreadsheet formulas (names come from the public signup form). */
+const cell = (v: string) => `"${(/^[=+\-@\t\r]/.test(v) ? `'${v}` : v).replace(/"/g, '""')}"`
 
 /** CSV of the contacts matching the list's current filters (same query string as the admin page). */
 export async function GET(req: NextRequest) {

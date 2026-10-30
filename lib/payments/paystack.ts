@@ -80,11 +80,13 @@ export async function refundPayment(reference: string, amount?: number) {
 /**
  * Paystack signs webhooks with HMAC-SHA512 of the raw body using the secret key.
  * Both the test and live keys are tried, so switching modes never drops in-flight webhooks.
+ * Returns the mode whose key matched (null if none), so callers can trust only the active mode.
  */
-export async function verifyWebhookSignature(rawBody: string, signature: string | null): Promise<boolean> {
-  if (!signature) return false
-  const keys = (await Promise.all([getSetting('paystack.test.secretKey'), getSetting('paystack.live.secretKey')])).filter(
-    (k): k is string => Boolean(k)
-  )
-  return keys.some((k) => safeEqual(createHmac('sha512', k).update(rawBody).digest('hex'), signature))
+export async function verifyWebhookSignature(rawBody: string, signature: string | null): Promise<'test' | 'live' | null> {
+  if (!signature) return null
+  for (const mode of ['live', 'test'] as const) {
+    const key = await getSetting(`paystack.${mode}.secretKey`)
+    if (key && safeEqual(createHmac('sha512', key).update(rawBody).digest('hex'), signature)) return mode
+  }
+  return null
 }

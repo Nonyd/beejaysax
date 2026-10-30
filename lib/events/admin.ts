@@ -107,7 +107,7 @@ export function parseEventInput(body: unknown) {
   if (typeof b.checkInPin === 'string') {
     const pin = b.checkInPin.trim()
     if (pin === '') checkInPinHash = null
-    else if (!isValidPin(pin)) throw new ValidationError('The check-in PIN must be 4 to 8 digits.')
+    else if (!isValidPin(pin)) throw new ValidationError('The check-in PIN must be 6 to 8 digits.')
     else checkInPinHash = hashPin(pin)
   }
 

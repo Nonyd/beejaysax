@@ -20,6 +20,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ token: 
     color: { dark: '#11142F', light: '#FFFFFF' },
   })
   return new Response(new Uint8Array(png), {
-    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=31536000, immutable' },
+    headers: { 'Content-Type': 'image/png', 'Cache-Control': 'private, max-age=31536000, immutable' },
   })
 }

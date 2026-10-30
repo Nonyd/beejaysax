@@ -1,4 +1,7 @@
-import { createHmac, randomBytes, scryptSync } from 'crypto'
+import { createHmac, randomBytes, scrypt as scryptCb, scryptSync } from 'crypto'
+import { promisify } from 'util'
+
+const scrypt = promisify(scryptCb) as (pin: string, salt: string, len: number) => Promise<Buffer>
 import { safeEqual } from '@/lib/secret-box'
 
 /** Volunteer check-in PINs are stored as salted scrypt hashes, never in plain text. */
@@ -7,15 +10,17 @@ export function hashPin(pin: string): string {
   return `${salt}:${scryptSync(pin, salt, 32).toString('hex')}`
 }
 
-export function verifyPin(pin: string, stored: string | null | undefined): boolean {
+/** Async so a flood of guesses can't block the server while each one is hashed. */
+export async function verifyPin(pin: string, stored: string | null | undefined): Promise<boolean> {
   if (!stored) return false
   const [salt, hash] = stored.split(':')
   if (!salt || !hash) return false
-  return safeEqual(scryptSync(pin, salt, 32).toString('hex'), hash)
+  return safeEqual((await scrypt(pin, salt, 32)).toString('hex'), hash)
 }
 
+/** New PINs need 6 to 8 digits; 4-digit PINs are too quick to guess. */
 export function isValidPin(pin: string) {
-  return /^\d{4,8}$/.test(pin)
+  return /^\d{6,8}$/.test(pin)
 }
 
 /* Check-in pass: a signed cookie that lets a volunteer scan for one event without an admin login. */

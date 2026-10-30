@@ -34,7 +34,9 @@ const inputStyle: CSSProperties = {
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/admin'
+  // Only same-site paths, so a crafted login link can't send the admin to another website.
+  const requested = searchParams.get('callbackUrl') ?? ''
+  const callbackUrl = /^\/(?![/\\])/.test(requested) ? requested : '/admin'
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

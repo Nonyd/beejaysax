@@ -3,8 +3,10 @@ import { prisma } from '@/lib/prisma'
 import { createOrder, expireStaleOrders, isBusyError, OrderError, priceWithCoupon, siteBase } from '@/lib/events/orders'
 import { sendTicketsEmail } from '@/lib/events/notify'
 import { initializePayment, PaymentError } from '@/lib/payments/paystack'
+import { clientIp, rateLimit, tooMany } from '@/lib/rate-limit'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const MAX_PENDING_PER_EMAIL = 2
 
 /**
  * Checkout. Free orders get tickets straight away; paid orders hold seats and return a
@@ -23,6 +25,18 @@ export async function POST(req: NextRequest) {
   if (!EMAIL_RE.test(buyer.email)) return NextResponse.json({ error: 'Add a valid email address. Your ticket is sent there.' }, { status: 400 })
   const quantity = Math.floor(Number(b.quantity ?? 1))
   if (!Number.isFinite(quantity) || quantity < 1) return NextResponse.json({ error: 'Choose how many tickets.' }, { status: 400 })
+
+  // Every unpaid checkout holds seats, so a script must not be able to hold the whole event.
+  if (!rateLimit('checkout-ip', clientIp(req), 10, 10 * 60_000) || !rateLimit('checkout-email', buyer.email, 5, 10 * 60_000)) {
+    return NextResponse.json(tooMany(), { status: 429 })
+  }
+  const holding = await prisma.order.count({ where: { email: buyer.email, status: 'PENDING', expiresAt: { gt: new Date() } } })
+  if (holding >= MAX_PENDING_PER_EMAIL) {
+    return NextResponse.json(
+      { error: 'You already have unpaid checkouts open. Finish paying for one, or wait a few minutes for them to expire.' },
+      { status: 429 }
+    )
+  }
 
   await expireStaleOrders()
   try {
@@ -73,6 +87,8 @@ export async function POST(req: NextRequest) {
 
 /** Live price check for a discount code before paying. */
 export async function PUT(req: NextRequest) {
+  // Limited so discount codes can't be guessed by trying a word list.
+  if (!rateLimit('coupon', clientIp(req), 15, 10 * 60_000)) return NextResponse.json(tooMany(), { status: 429 })
   const b = (await req.json().catch(() => ({}))) as { eventId?: string; tierId?: string; quantity?: number; couponCode?: string }
   const tier = await prisma.ticketTier.findFirst({ where: { id: String(b.tierId ?? ''), eventId: String(b.eventId ?? '') } })
   if (!tier) return NextResponse.json({ error: 'Choose a ticket type.' }, { status: 400 })

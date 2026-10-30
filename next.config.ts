@@ -39,6 +39,13 @@ const nextConfig: NextConfig = {
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          // HTTPS only from the first visit on. No includeSubDomains: cPanel subdomains may still be plain HTTP.
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000' },
+          // Only the rules that can't break embeds or Cloudflare's injected scripts; script-src is not locked down yet.
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests",
+          },
         ],
       },
       { source: '/checkin/:path*', headers: [camera] },

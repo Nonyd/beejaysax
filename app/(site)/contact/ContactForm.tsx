@@ -34,6 +34,7 @@ export default function ContactForm({ content, site }: { content: ContentOf<'con
   const [inquiryType, setInquiryType] = useState<string>(initialInquiry)
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
+  const [website, setWebsite] = useState('')
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<{ ok: boolean; text: string } | null>(null)
 
@@ -45,7 +46,7 @@ export default function ContactForm({ content, site }: { content: ContentOf<'con
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, phone, inquiryType, subject, message }),
+        body: JSON.stringify({ firstName, lastName, email, phone, inquiryType, subject, message, website }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error((data as { error?: string }).error ?? 'Your message was not sent. Try again.')
@@ -124,6 +125,17 @@ export default function ContactForm({ content, site }: { content: ContentOf<'con
         </div>
 
         <form onSubmit={submit} className="min-w-0 rounded-[32px] bg-ivory p-6 text-ink shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-10">
+          {/* Hidden from people; bots that fill every field are ignored. */}
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            className="hidden"
+            aria-hidden="true"
+          />
           <fieldset>
             <legend className={label}>What is this about?</legend>
             <div className="flex flex-wrap gap-2">

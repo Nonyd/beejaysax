@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyWebhookSignature } from '@/lib/payments/paystack'
 import { confirmOrderPayment } from '@/lib/payments/fulfil'
+import { getPaystackKeys } from '@/lib/settings'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -13,9 +14,8 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(req: NextRequest) {
   const raw = await req.text()
-  if (!(await verifyWebhookSignature(raw, req.headers.get('x-paystack-signature')))) {
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
-  }
+  const signedBy = await verifyWebhookSignature(raw, req.headers.get('x-paystack-signature'))
+  if (!signedBy) return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
   let event: { event?: string; data?: { reference?: string; transaction_reference?: string } }
   try {
     event = JSON.parse(raw)
@@ -26,7 +26,9 @@ export async function POST(req: NextRequest) {
   try {
     if (event.event === 'charge.success' && event.data?.reference) {
       await confirmOrderPayment(event.data.reference)
-    } else if (event.event === 'refund.processed') {
+    } else if (event.event === 'refund.processed' && signedBy === (await getPaystackKeys()).mode) {
+      // Refunds aren't re-checked with Paystack, so only the active mode's key may cancel tickets
+      // (a test-key signature must never refund a live order).
       // Also covers refunds started from the Paystack dashboard.
       const ref = event.data?.transaction_reference
       const order = ref ? await prisma.order.findUnique({ where: { reference: ref } }) : null

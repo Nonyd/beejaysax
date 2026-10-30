@@ -2,18 +2,21 @@ import { prisma } from '@/lib/prisma'
 import { markOrderPaid, OrderError } from '@/lib/events/orders'
 import { sendTicketsEmail } from '@/lib/events/notify'
 import { PaymentError, refundPayment, verifyPayment } from '@/lib/payments/paystack'
+import { rateLimit } from '@/lib/rate-limit'
 
 /**
  * Confirms an order with Paystack and issues tickets. Called from both the browser return
  * page and the webhook; whichever arrives first does the work, the other is a no-op.
  * Tickets are emailed only by the caller that actually issued them.
+ * `throttle` (the order page, which refreshes itself) asks Paystack at most once every few seconds per order.
  */
-export async function confirmOrderPayment(reference: string) {
+export async function confirmOrderPayment(reference: string, opts: { throttle?: boolean } = {}) {
   const order = await prisma.order.findUnique({ where: { reference } })
   if (!order) return { state: 'not_found' as const }
   if (order.status === 'PAID' || order.status === 'FREE') return { state: 'paid' as const, order }
   if (order.status === 'REFUNDED' || order.status === 'CANCELLED') return { state: 'closed' as const, order }
 
+  if (opts.throttle && !rateLimit('paystack-verify', reference, 1, 4_000)) return { state: 'pending' as const, order }
   const payment = await verifyPayment(reference)
   if (payment.status !== 'success') {
     if (payment.status === 'failed' || payment.status === 'reversed') {
@@ -37,6 +40,22 @@ export async function confirmOrderPayment(reference: string) {
     if (e instanceof OrderError && e.status === 409) {
       console.error(`[payments] ${e.message}`)
       return { state: 'mismatch' as const, order }
+    }
+    if (e instanceof OrderError && e.status === 410) {
+      // Paid after the seat hold ran out and the event filled up meanwhile: give the money back
+      // rather than oversell.
+      console.error(`[payments] ${e.message}; refunding`)
+      const refund = await refundPayment(reference)
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          status: 'REFUNDED',
+          refundedAt: new Date(),
+          refundRef: String(refund.id),
+          note: `${order.note ? `${order.note}\n` : ''}Paid after the seat hold expired and no seats were left; refunded automatically.`,
+        },
+      })
+      return { state: 'closed' as const, order }
     }
     throw e
   }

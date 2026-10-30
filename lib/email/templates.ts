@@ -154,15 +154,16 @@ export function broadcastEmail(args: { subject: string; message: string; event: 
   return { subject: args.subject, html: layout({ preheader: args.message.slice(0, 120), body }), text: `${args.subject}\n\n${args.message}` }
 }
 
-export function contactAutoReply(args: { firstName: string; subject: string }) {
+/** Fixed wording on purpose: echoing the form's name or subject would let anyone send their own text to any address. */
+export function contactAutoReply() {
   const body = `
-    <h1 style="margin:0 0 14px;font-family:${SERIF};font-weight:400;font-size:30px;line-height:1.1;">Thanks, ${esc(args.firstName)}</h1>
-    <p style="margin:0 0 12px;">We’ve received your message about <strong>${esc(args.subject)}</strong>. The team will reply by email, usually within two working days.</p>
+    <h1 style="margin:0 0 14px;font-family:${SERIF};font-weight:400;font-size:30px;line-height:1.1;">Thanks for getting in touch</h1>
+    <p style="margin:0 0 12px;">We’ve received your message. The team will reply by email, usually within two working days.</p>
     <p style="margin:0;color:${C.muted};font-size:14px;">For bookings, it helps to include the date, city and type of event if you haven’t already.</p>`
   return {
     subject: 'We received your message',
     html: layout({ preheader: 'The BeeJay Sax team will reply soon.', body }),
-    text: `Thanks, ${args.firstName}. We've received your message about "${args.subject}" and will reply soon.`,
+    text: "Thanks for getting in touch. We've received your message and will reply soon.",
   }
 }
 

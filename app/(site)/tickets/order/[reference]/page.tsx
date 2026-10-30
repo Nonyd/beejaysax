@@ -15,7 +15,7 @@ export default async function OrderPage({ params }: { params: Promise<{ referenc
   const { reference } = await params
   let state: string
   try {
-    state = (await confirmOrderPayment(reference)).state
+    state = (await confirmOrderPayment(reference, { throttle: true })).state
   } catch (e) {
     console.error('[order page] verify failed', e)
     state = 'pending'
@@ -72,13 +72,13 @@ export default async function OrderPage({ params }: { params: Promise<{ referenc
         ) : (
           <div className="text-center text-ivory">
             <h1 className="font-display text-[clamp(36px,6vw,52px)] leading-[0.95]">
-              {state === 'failed' ? 'Payment didn’t go through' : state === 'closed' ? 'This order was cancelled' : 'We need to check this payment'}
+              {state === 'failed' ? 'Payment didn’t go through' : state === 'closed' ? 'This order was cancelled or refunded' : 'We need to check this payment'}
             </h1>
             <p className="mx-auto mt-4 max-w-[46ch] font-body text-lg text-ivory/75">
               {state === 'failed'
                 ? 'Your card was not charged. You can try again; your seats are released if you don’t.'
                 : state === 'closed'
-                  ? 'If you think this is a mistake, contact the team with your order number.'
+                  ? 'If you paid, the money is being returned to your card. Contact the team with your order number if you have questions.'
                   : 'Something about this payment needs a manual check. Contact the team with your order number and we’ll sort it out.'}
             </p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">

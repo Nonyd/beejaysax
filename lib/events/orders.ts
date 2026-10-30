@@ -13,7 +13,7 @@ export function isBusyError(e: unknown) {
 }
 
 /** Unpaid checkouts hold their seats this long, then expire. */
-export const HOLD_MINUTES = 30
+export const HOLD_MINUTES = 15
 
 export class OrderError extends Error {
   constructor(
@@ -29,7 +29,8 @@ export function siteBase() {
 }
 
 export function newOrderReference() {
-  return `BJS-${Date.now().toString(36).toUpperCase()}-${randomBytes(4).toString('hex').toUpperCase()}`
+  // The reference alone opens the order page, so it carries 96 random bits.
+  return `BJS-${Date.now().toString(36).toUpperCase()}-${randomBytes(12).toString('hex').toUpperCase()}`
 }
 
 function newTicketNumber() {
@@ -48,11 +49,10 @@ export async function priceWithCoupon(
 ): Promise<{ coupon: Coupon | null; discount: number }> {
   if (!code?.trim()) return { coupon: null, discount: 0 }
   const coupon = await db.coupon.findUnique({ where: { code: code.trim().toUpperCase() } })
-  const invalid = () => new OrderError('That discount code is not valid for this event.')
+  // One message for every reason, so the form can't be used to learn which codes exist.
+  const invalid = () => new OrderError('That discount code can’t be used for this event.')
   if (!coupon || !coupon.isActive || (coupon.eventId && coupon.eventId !== eventId)) throw invalid()
-  if ((coupon.startsAt && now < coupon.startsAt) || (coupon.endsAt && now > coupon.endsAt)) {
-    throw new OrderError('That discount code has expired.')
-  }
+  if ((coupon.startsAt && now < coupon.startsAt) || (coupon.endsAt && now > coupon.endsAt)) throw invalid()
   if (coupon.maxUses != null) {
     const used = await db.order.count({
       where: {
@@ -60,7 +60,7 @@ export async function priceWithCoupon(
         OR: [{ status: { in: ['PAID', 'FREE'] } }, { status: 'PENDING', expiresAt: { gt: now } }],
       },
     })
-    if (used >= coupon.maxUses) throw new OrderError('That discount code has been fully used.')
+    if (used >= coupon.maxUses) throw invalid()
   }
   const raw = coupon.percentOff ? (subtotal * coupon.percentOff) / 100 : (coupon.amountOff ?? 0)
   return { coupon, discount: Math.min(subtotal, Math.round(raw * 100) / 100) }
@@ -202,6 +202,13 @@ export async function markOrderPaid(reference: string, args: { gateway: string; 
       if (Math.abs(args.amountPaid - order.total) > 0.01) {
         throw new OrderError(`Amount mismatch for ${reference}: paid ${args.amountPaid}, expected ${order.total}`, 409)
       }
+      // A payment that lands after the hold ran out: its seats may have gone to someone else since,
+      // so check again under the event lock before issuing anything.
+      const now = new Date()
+      const lapsed = order.status !== 'PENDING' || (order.expiresAt != null && order.expiresAt < now)
+      if (lapsed && !(await stillFits(tx, order, now))) {
+        throw new OrderError(`No seats left for late payment on ${reference}`, 410)
+      }
       // Claim the order atomically: only one caller moves it to PAID.
       const claimed = await tx.order.updateMany({
         where: { id: order.id, status: { in: ['PENDING', 'EXPIRED', 'FAILED'] } },
@@ -214,6 +221,29 @@ export async function markOrderPaid(reference: string, args: { gateway: string; 
     },
     TX_OPTIONS
   )
+}
+
+/** Whether a lapsed order's seats and discount code are still free (call inside a transaction). */
+async function stillFits(tx: Prisma.TransactionClient, order: Order, now: Date) {
+  await tx.$queryRaw`SELECT id FROM "Event" WHERE id = ${order.eventId} FOR UPDATE`
+  const [event, tier] = await Promise.all([
+    tx.event.findUnique({ where: { id: order.eventId } }),
+    order.tierId ? tx.ticketTier.findUnique({ where: { id: order.tierId } }) : null,
+  ])
+  if (!event) return false
+  const { admissions, byTier } = await seatsTaken(tx, event.id, now)
+  if (tier?.capacity != null && (byTier.get(tier.id) ?? 0) + order.quantity > tier.capacity) return false
+  if (event.totalTickets != null && admissions + order.quantity * (tier?.admits ?? 1) > event.totalTickets) return false
+  if (order.couponId) {
+    const coupon = await tx.coupon.findUnique({ where: { id: order.couponId } })
+    if (coupon?.maxUses != null) {
+      const used = await tx.order.count({
+        where: { couponId: coupon.id, id: { not: order.id }, OR: [{ status: { in: ['PAID', 'FREE'] } }, { status: 'PENDING', expiresAt: { gt: now } }] },
+      })
+      if (used >= coupon.maxUses) return false
+    }
+  }
+  return true
 }
 
 /** Releases seats held by checkouts that were never paid. */

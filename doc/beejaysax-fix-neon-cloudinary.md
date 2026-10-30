@@ -80,7 +80,7 @@ npx prisma db seed
 
 Expected output from seed:
 ```
-✅ Seed complete. Admin login: admin / BeejaySax2026!
+✅ Seed complete. Admin login: admin / <SEED_ADMIN_PASSWORD>
 ```
 
 If `db push` fails:
@@ -594,7 +594,7 @@ NEXT_PUBLIC_SITE_URL  → https://beejaysax.com  (or your vercel preview URL fir
 □ npx prisma db push     → no errors
 □ npx prisma db seed     → "✅ Seed complete"
 □ npm run dev            → homepage loads
-□ /admin login works     → admin / BeejaySax2026!
+□ /admin login works     → admin / <SEED_ADMIN_PASSWORD>
 □ Dashboard shows stats  → numbers from DB (not zeros)
 □ Upload event poster    → image appears in Cloudinary dashboard
 □ Upload release cover   → image appears in Cloudinary dashboard

@@ -2,6 +2,12 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { compare } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+import { clearHits, clientIp, isLimited, recordHit } from '@/lib/rate-limit'
+
+// Wrong passwords: 5 per username and 20 per IP in 15 minutes, then sign-in waits.
+const LOGIN_WINDOW = 15 * 60_000
+// Compared against when the username doesn't exist, so timing doesn't reveal which usernames do.
+const DUMMY_HASH = '$2b$12$a.vWKHp6Jofgf5yb/0m7Geruj/hmNr.eR53oFgPVP11rsGHZH6BK2'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
@@ -13,14 +19,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         if (!credentials?.username || !credentials?.password) return null
-        const admin = await prisma.adminUser.findUnique({
-          where: { username: credentials.username as string },
-        })
-        if (!admin || !admin.active) return null
-        const valid = await compare(credentials.password as string, admin.passwordHash)
-        if (!valid) return null
+        const username = String(credentials.username).slice(0, 100)
+        const ip = clientIp(request)
+        if (isLimited('login-user', username.toLowerCase(), 5, LOGIN_WINDOW) || isLimited('login-ip', ip, 20, LOGIN_WINDOW)) return null
+        const admin = await prisma.adminUser.findUnique({ where: { username } })
+        const valid = await compare(String(credentials.password), admin?.passwordHash ?? DUMMY_HASH)
+        if (!admin || !admin.active || !valid) {
+          recordHit('login-user', username.toLowerCase(), LOGIN_WINDOW)
+          recordHit('login-ip', ip, LOGIN_WINDOW)
+          return null
+        }
+        clearHits('login-user', username.toLowerCase())
         await prisma.adminUser.update({ where: { id: admin.id }, data: { lastLoginAt: new Date() } }).catch(() => {})
         return {
           id: admin.id,
