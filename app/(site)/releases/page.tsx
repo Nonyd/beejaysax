@@ -4,6 +4,7 @@ import PageHero from '@/components/ui/PageHero'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { getContent } from '@/lib/content/store'
+import { toPreviewRelease } from '@/lib/previews'
 
 export const metadata: Metadata = {
   title: { absolute: 'Music — BeeJay Sax' },
@@ -21,6 +22,8 @@ export const dynamic = 'force-dynamic'
 export default async function ReleasesPage() {
   const h = await getContent('pageHeaders')
   const releases = await safeDb(() => prisma.release.findMany({ where: { isHidden: false }, orderBy: { releaseDate: 'desc' } }), [])
+  // Track previews come from Apple's catalogue (cached for a day); lookups run side by side.
+  const previews = Object.fromEntries(await Promise.all(releases.map(async (r) => [r.id, await toPreviewRelease(r)] as const)))
 
   return (
     <>
@@ -28,7 +31,7 @@ export default async function ReleasesPage() {
         title={[h.musicTitle]}
         intro={h.musicIntro}
       />
-      <ReleasesView releases={releases} />
+      <ReleasesView releases={releases} previews={previews} />
     </>
   )
 }

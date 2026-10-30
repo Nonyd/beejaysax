@@ -7,8 +7,8 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { safeDb } from '@/lib/db-safe'
 import { fmt } from '@/lib/time'
-import { releasePlayers } from '@/lib/embeds'
-import { ReleasePlayer } from '@/components/releases/ReleasePreview'
+import { toPreviewRelease } from '@/lib/previews'
+import { PreviewButton, Tracklist } from '@/components/player/PreviewControls'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -46,7 +46,7 @@ export default async function ReleaseDetailPage({ params }: Props) {
     { url: release.boomplayUrl, label: 'Boomplay' },
   ].filter((l): l is { url: string; label: string } => !!l.url)
 
-  const players = releasePlayers(release)
+  const preview = await toPreviewRelease(release)
   const yt = release.youtubeUrl?.match(/(?:v=|youtu\.be\/)([\w-]{11})/)
 
   return (
@@ -77,12 +77,7 @@ export default async function ReleaseDetailPage({ params }: Props) {
               <p className="mt-6 max-w-[52ch] font-body text-lg leading-relaxed text-ivory/80">{release.description}</p>
             )}
 
-            {players.length > 0 && (
-              <div className="mt-10">
-                <p className="mb-4 font-body text-sm text-ivory/60">Preview</p>
-                <ReleasePlayer players={players} title={release.title} />
-              </div>
-            )}
+            <PreviewButton release={preview} className="mt-8" />
 
             <div className="mt-10">
               {links.length > 0 ? (
@@ -96,6 +91,18 @@ export default async function ReleaseDetailPage({ params }: Props) {
             </div>
           </div>
         </div>
+
+        {preview.tracks.length > 0 && (
+          <section className="mt-20" aria-labelledby="tracks-heading">
+            <h2 id="tracks-heading" className="mb-6 font-display text-[clamp(32px,4vw,48px)] leading-none text-ivory">
+              Tracks
+            </h2>
+            <Tracklist release={preview} />
+            {preview.tracks.some((t) => t.previewUrl) && (
+              <p className="mt-4 font-body text-sm text-ivory/50">Tap a track to hear a 30-second preview.</p>
+            )}
+          </section>
+        )}
 
         {yt?.[1] && (
           <div className="mt-20 aspect-video overflow-hidden rounded-[28px] bg-ink shadow-[0_30px_80px_rgba(0,0,0,0.45)]">

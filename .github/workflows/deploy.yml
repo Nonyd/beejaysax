@@ -100,9 +100,11 @@ jobs:
 
       - name: Upload app
         run: |
+          # Leading "/" pins each rule to the app folder's top level. Without it, 'uploads/' also matched
+          # .next/server/app/uploads/ and the route that serves uploaded photos was never deployed.
           rsync -az --delete \
-            --exclude '.env' --exclude 'tmp/' --exclude '_deploy/' --exclude 'uploads/' --exclude '.next/cache/' \
-            --exclude 'stderr.log' --exclude '.htaccess' \
+            --exclude '/.env' --exclude '/tmp/' --exclude '/_deploy/' --exclude '/uploads/' --exclude '/.next/cache/' \
+            --exclude '/stderr.log' --exclude '/.htaccess' \
             -e "ssh $SSH_OPTS" release/ "$REMOTE:$APP_DIR/"
 
       - name: Restart

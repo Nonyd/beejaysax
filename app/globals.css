@@ -310,3 +310,18 @@ body {
   animation: none;
   mix-blend-mode: normal;
 }
+
+/* Mini player: the page makes room for the bar while a preview is loaded */
+body {
+  padding-bottom: var(--player-offset, 0px);
+}
+
+@keyframes eq {
+  0%,
+  100% {
+    height: 4px;
+  }
+  50% {
+    height: 12px;
+  }
+}

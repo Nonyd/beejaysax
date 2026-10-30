@@ -2,6 +2,8 @@ import LenisProvider from '@/components/providers/LenisProvider'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import BackToTop from '@/components/ui/BackToTop'
+import { PlayerProvider } from '@/components/player/PlayerProvider'
+import MiniPlayer from '@/components/player/MiniPlayer'
 import { getContent } from '@/lib/content/store'
 
 // Public pages read events and editable content from the database on every request,
@@ -12,10 +14,14 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const site = await getContent('site')
   return (
     <LenisProvider>
-      <Navbar bookLabel={site.bookLabel} />
-      <main style={{ paddingTop: 72, minHeight: '100vh' }}>{children}</main>
-      <Footer />
-      <BackToTop />
+      {/* One preview player for the whole site, so music keeps playing between pages */}
+      <PlayerProvider>
+        <Navbar bookLabel={site.bookLabel} />
+        <main style={{ paddingTop: 72, minHeight: '100vh' }}>{children}</main>
+        <Footer />
+        <BackToTop />
+        <MiniPlayer />
+      </PlayerProvider>
     </LenisProvider>
   )
 }
