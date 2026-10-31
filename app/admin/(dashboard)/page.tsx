@@ -4,6 +4,7 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import AdminPageHeader, { adminOutlineLinkStyle, adminPrimaryLinkStyle } from '@/components/admin/AdminPageHeader'
 import { requireAdmin } from '@/lib/admin-auth'
 import { ADMIN_NAV, can } from '@/lib/permissions'
+import { getRevenueReport, money } from '@/lib/revenue'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,6 +13,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   const { denied } = await searchParams
   const show = {
     events: can(admin, 'events'),
+    revenue: can(admin, 'revenue'),
     releases: can(admin, 'releases'),
     gallery: can(admin, 'gallery'),
     messages: can(admin, 'messages'),
@@ -21,9 +23,10 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
   const [
     upcomingEvents,
-    totalTickets,
+    soldTickets,
+    freeTickets,
     usedTickets,
-    revenueData,
+    revenue,
     releaseCount,
     galleryCount,
     unreadMessages,
@@ -31,9 +34,11 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     recentMessages,
   ] = await Promise.all([
     when(show.events, () => prisma.event.count({ where: { status: 'UPCOMING' } }), 0),
-    when(show.events, () => prisma.ticket.count(), 0),
-    when(show.events, () => prisma.ticket.count({ where: { isUsed: true } }), 0),
-    when(show.events, () => prisma.ticket.aggregate({ _sum: { totalAmount: true } }), { _sum: { totalAmount: 0 } }),
+    // Sold = tickets on live, paid orders. Test payments and tickets made outside checkout don't count.
+    when(show.events, () => prisma.order.aggregate({ where: { status: 'PAID', paymentMode: 'live' }, _sum: { quantity: true } }).then((r) => r._sum.quantity ?? 0), 0),
+    when(show.events, () => prisma.order.aggregate({ where: { status: 'FREE' }, _sum: { quantity: true } }).then((r) => r._sum.quantity ?? 0), 0),
+    when(show.events, () => prisma.ticket.count({ where: { isUsed: true, orderId: { not: null } } }), 0),
+    when(show.revenue, () => getRevenueReport({ mode: 'live' }).then((r) => r.totals), []),
     when(show.releases, () => prisma.release.count(), 0),
     when(show.gallery, () => prisma.galleryImage.count(), 0),
     when(show.messages, () => prisma.contactMessage.count({ where: { isRead: false } }), 0),
@@ -41,17 +46,27 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     when(show.messages, () => prisma.contactMessage.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }), []),
   ])
 
-  const totalRevenue = revenueData._sum.totalAmount ?? 0
+  // Main currency first; any others are listed under it.
+  const [mainRevenue, ...otherRevenue] = [...revenue].sort((a, b) => (a.currency === 'NGN' ? -1 : b.currency === 'NGN' ? 1 : b.collected - a.collected))
 
   const stats = [
     { label: 'Upcoming Events', value: upcomingEvents, sub: 'concerts scheduled', allowed: show.events },
-    { label: 'Tickets Sold', value: totalTickets, sub: `${usedTickets} used at door`, allowed: show.events },
     {
-      label: 'Total Revenue',
-      value: `₦${totalRevenue.toLocaleString()}`,
-      sub: 'from ticket sales',
-      isText: true,
+      label: 'Tickets Sold',
+      value: soldTickets,
+      sub: `${freeTickets ? `${freeTickets} free or complimentary · ` : ''}${usedTickets} used at door`,
       allowed: show.events,
+    },
+    {
+      label: 'Net Revenue',
+      value: mainRevenue ? money(mainRevenue.net, mainRevenue.currency) : '₦0',
+      sub: [
+        'after Paystack fees and refunds',
+        ...otherRevenue.map((r) => `plus ${money(r.net, r.currency)}`),
+      ].join(' · '),
+      isText: true,
+      href: '/admin/revenue',
+      allowed: show.revenue,
     },
     { label: 'Unread Messages', value: unreadMessages, sub: 'awaiting reply', allowed: show.messages },
     { label: 'Releases', value: releaseCount, sub: 'in discography', allowed: show.releases },
@@ -114,6 +129,11 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
               {stat.value}
             </p>
             <p style={{ fontFamily: 'var(--font-sans)', color: 'color-mix(in srgb, var(--ivory) 60%, transparent)', fontSize: 13, marginTop: 10 }}>{stat.sub}</p>
+            {'href' in stat && stat.href && (
+              <Link href={stat.href} style={{ display: 'inline-block', marginTop: 12, fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--gold)' }}>
+                See revenue →
+              </Link>
+            )}
           </div>
         ))}
       </div>

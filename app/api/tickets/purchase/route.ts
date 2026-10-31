@@ -4,6 +4,7 @@ import { createOrder, expireStaleOrders, isBusyError, OrderError, priceWithCoupo
 import { sendTicketsEmail } from '@/lib/events/notify'
 import { initializePayment, PaymentError } from '@/lib/payments/paystack'
 import { clientIp, rateLimit, tooMany } from '@/lib/rate-limit'
+import { processingFee } from '@/lib/payments/fees'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MAX_PENDING_PER_EMAIL = 2
@@ -67,6 +68,8 @@ export async function POST(req: NextRequest) {
         callbackUrl: `${siteBase()}/tickets/order/${order.reference}`,
         metadata: { orderId: order.id, eventId: order.eventId, quantity: order.quantity },
       })
+      // Tag the order with the Paystack mode now, so test checkouts never mix into live revenue.
+      await prisma.order.update({ where: { id: order.id }, data: { paymentMode: pay.mode } })
       return NextResponse.json({ status: 'payment', reference: order.reference, authorizationUrl: pay.authorization_url })
     } catch (e) {
       // Release the held seats straight away if we can't start payment.
@@ -95,7 +98,9 @@ export async function PUT(req: NextRequest) {
   const subtotal = tier.price * Math.max(1, Math.floor(Number(b.quantity ?? 1)))
   try {
     const { coupon, discount } = await priceWithCoupon(prisma, b.couponCode, tier.eventId, subtotal)
-    return NextResponse.json({ code: coupon?.code ?? null, discount, total: subtotal - discount })
+    const event = await prisma.event.findUnique({ where: { id: tier.eventId }, select: { currency: true } })
+    const serviceFee = processingFee(subtotal - discount, event?.currency ?? 'NGN')
+    return NextResponse.json({ code: coupon?.code ?? null, discount, serviceFee, total: subtotal - discount + serviceFee })
   } catch (e) {
     if (e instanceof OrderError) return NextResponse.json({ error: e.message }, { status: 400 })
     throw e

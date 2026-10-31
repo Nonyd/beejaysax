@@ -3,6 +3,7 @@ import { Prisma, type Coupon, type Order, type Ticket } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { generateQRCodeDataURL, generateQRToken } from '@/lib/qrcode'
 import { seatsTaken } from '@/lib/events/availability'
+import { processingFee } from '@/lib/payments/fees'
 
 /** Wait for a free DB connection (busy sales) and allow time for QR generation. */
 const TX_OPTIONS = { maxWait: 15_000, timeout: 20_000 }
@@ -118,7 +119,10 @@ export async function createOrder(input: {
       const { coupon, discount } = isPublic
         ? await priceWithCoupon(tx, input.couponCode, event.id, subtotal, now)
         : { coupon: null, discount: 0 }
-      const total = Math.max(0, subtotal - discount)
+      // The buyer pays Paystack's processing fee on top, so the full ticket price reaches us.
+      const ticketsTotal = Math.max(0, subtotal - discount)
+      const serviceFee = processingFee(ticketsTotal, event.currency)
+      const total = ticketsTotal + serviceFee
       const free = total === 0
 
       const order = await tx.order.create({
@@ -134,6 +138,7 @@ export async function createOrder(input: {
           unitPrice,
           subtotal,
           discount,
+          serviceFee,
           total,
           currency: event.currency,
           couponId: coupon?.id,
@@ -159,7 +164,8 @@ async function issueTicketsTx(tx: Prisma.TransactionClient, orderId: string): Pr
   const order = await tx.order.findUniqueOrThrow({ where: { id: orderId }, include: { tier: true, tickets: true } })
   if (order.tickets.length > 0) return order.tickets
   const base = siteBase()
-  const perTicket = order.quantity > 0 ? order.total / order.quantity : 0
+  // Each ticket carries its share of the ticket price; the processing fee isn't part of it.
+  const perTicket = order.quantity > 0 ? (order.total - order.serviceFee) / order.quantity : 0
   const created: Ticket[] = []
   for (let i = 0; i < order.quantity; i++) {
     const qrToken = generateQRToken()
@@ -193,7 +199,10 @@ async function issueTicketsTx(tx: Prisma.TransactionClient, orderId: string): Pr
  * Marks a pending order paid and issues its tickets, exactly once even if the webhook and
  * the browser redirect arrive together. Returns null if the order was already handled.
  */
-export async function markOrderPaid(reference: string, args: { gateway: string; gatewayRef: string; amountPaid: number }) {
+export async function markOrderPaid(
+  reference: string,
+  args: { gateway: string; gatewayRef: string; amountPaid: number; mode?: 'live' | 'test'; fee?: number | null }
+) {
   return prisma.$transaction(
     async (tx) => {
       const order = await tx.order.findUnique({ where: { reference } })
@@ -212,7 +221,15 @@ export async function markOrderPaid(reference: string, args: { gateway: string; 
       // Claim the order atomically: only one caller moves it to PAID.
       const claimed = await tx.order.updateMany({
         where: { id: order.id, status: { in: ['PENDING', 'EXPIRED', 'FAILED'] } },
-        data: { status: 'PAID', paidAt: new Date(), gateway: args.gateway, gatewayRef: args.gatewayRef, expiresAt: null },
+        data: {
+          status: 'PAID',
+          paidAt: new Date(),
+          gateway: args.gateway,
+          gatewayRef: args.gatewayRef,
+          expiresAt: null,
+          ...(args.mode ? { paymentMode: args.mode } : {}),
+          ...(args.fee != null ? { gatewayFee: args.fee } : {}),
+        },
       })
       if (claimed.count === 0) return { order, tickets: await tx.ticket.findMany({ where: { orderId: order.id } }), fresh: false }
       if (order.couponId) await tx.coupon.update({ where: { id: order.couponId }, data: { usedCount: { increment: 1 } } })

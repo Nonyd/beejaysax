@@ -30,7 +30,13 @@ export async function confirmOrderPayment(reference: string, opts: { throttle?: 
     return { state: 'mismatch' as const, order }
   }
   try {
-    const r = await markOrderPaid(reference, { gateway: 'paystack', gatewayRef: String(payment.id), amountPaid: payment.amount })
+    const r = await markOrderPaid(reference, {
+      gateway: 'paystack',
+      gatewayRef: String(payment.id),
+      amountPaid: payment.amount,
+      mode: payment.mode,
+      fee: payment.fee,
+    })
     if (r.fresh) {
       const mail = await sendTicketsEmail(r.tickets.map((t) => t.id))
       if (mail.failed.length) console.error(`[payments] tickets for ${reference} issued but email failed: ${mail.failed[0].error}`)
@@ -52,6 +58,12 @@ export async function confirmOrderPayment(reference: string, opts: { throttle?: 
           status: 'REFUNDED',
           refundedAt: new Date(),
           refundRef: String(refund.id),
+          paidAt: new Date(),
+          gateway: 'paystack',
+          gatewayRef: String(payment.id),
+          paymentMode: payment.mode,
+          gatewayFee: payment.fee,
+          refundedAmount: order.total,
           note: `${order.note ? `${order.note}\n` : ''}Paid after the seat hold expired and no seats were left; refunded automatically.`,
         },
       })
@@ -66,12 +78,14 @@ export async function refundOrder(orderId: string, by: string) {
   const order = await prisma.order.findUnique({ where: { id: orderId } })
   if (!order) throw new PaymentError('Order not found.')
   if (order.status !== 'PAID') throw new PaymentError(`Order ${order.reference} is not a paid order, so it can’t be refunded.`)
-  const refund = await refundPayment(order.reference)
+  // The processing fee covered Paystack's charge, which Paystack doesn't return, so it isn't refunded.
+  const amount = Math.round((order.total - order.serviceFee) * 100) / 100
+  const refund = await refundPayment(order.reference, order.serviceFee > 0 ? amount : undefined)
   const now = new Date()
   await prisma.$transaction([
     prisma.order.update({
       where: { id: order.id },
-      data: { status: 'REFUNDED', refundedAt: now, refundRef: String(refund.id), note: `${order.note ? `${order.note}\n` : ''}Refunded by ${by}` },
+      data: { status: 'REFUNDED', refundedAt: now, refundRef: String(refund.id), refundedAmount: amount, note: `${order.note ? `${order.note}\n` : ''}Refunded by ${by}` },
     }),
     prisma.ticket.updateMany({ where: { orderId: order.id }, data: { paymentStatus: 'REFUNDED', cancelledAt: now } }),
   ])

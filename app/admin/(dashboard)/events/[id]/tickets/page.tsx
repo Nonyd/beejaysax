@@ -25,14 +25,14 @@ export default async function EventRegistrationsPage({ params }: { params: Promi
       include: { order: { select: { reference: true, status: true, source: true } } },
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.order.findMany({ where: { eventId: id }, select: { status: true, total: true, tierId: true, quantity: true } }),
+    prisma.order.findMany({ where: { eventId: id }, select: { status: true, total: true, tierId: true, quantity: true, paymentMode: true } }),
   ])
 
   const sym = currencySymbol(event.currency)
   const live = tickets.filter((t) => !t.cancelledAt && t.paymentStatus !== 'REFUNDED')
-  const paidOrders = orders.filter((o) => o.status === 'PAID')
-  const legacyRevenue = tickets.filter((t) => !t.orderId && t.paymentStatus === 'PAID').reduce((s, t) => s + t.totalAmount, 0)
-  const revenue = paidOrders.reduce((s, o) => s + o.total, 0) + legacyRevenue
+  // Live Paystack payments only: test-mode orders and tickets made outside checkout are not money.
+  const paidOrders = orders.filter((o) => o.status === 'PAID' && o.paymentMode === 'live')
+  const revenue = paidOrders.reduce((s, o) => s + o.total, 0)
   const pending = orders.filter((o) => o.status === 'PENDING')
 
   const tierStats = event.tiers.map((t) => {

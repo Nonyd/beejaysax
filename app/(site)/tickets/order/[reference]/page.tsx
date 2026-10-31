@@ -39,7 +39,7 @@ export default async function OrderPage({ params }: { params: Promise<{ referenc
             <h1 className="mt-6 font-display text-[clamp(36px,6vw,52px)] leading-[0.95]">You’re going to {order.event.title}</h1>
             <p className="mt-4 font-body text-base text-ink/70">
               {order.quantity} × {order.tier?.name ?? 'ticket'}
-              {order.total > 0 ? `, ${sym}${order.total.toLocaleString()} paid` : ''}. Your tickets are on their way to{' '}
+              {order.total > 0 ? `, ${sym}${order.total.toLocaleString()} paid${order.serviceFee > 0 ? ` (including a ${sym}${order.serviceFee.toLocaleString()} processing fee)` : ''}` : ''}. Your tickets are on their way to{' '}
               <strong>{order.email}</strong>. You can also open them below.
             </p>
             <ul className="mt-8 space-y-3">

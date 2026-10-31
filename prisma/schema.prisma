@@ -75,38 +75,46 @@ model TicketTier {
 
 /// One checkout: groups the tickets bought together and tracks payment.
 model Order {
-  id         String      @id @default(cuid())
-  reference  String      @unique
-  eventId    String
-  event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  tierId     String?
-  tier       TicketTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
-  firstName  String
-  lastName   String
-  email      String
-  phone      String?
-  quantity   Int
-  unitPrice  Float
-  subtotal   Float
-  discount   Float       @default(0)
-  total      Float
-  currency   String      @default("NGN")
-  couponId   String?
-  coupon     Coupon?     @relation(fields: [couponId], references: [id], onDelete: SetNull)
-  status     OrderStatus @default(PENDING)
-  source     OrderSource @default(PUBLIC)
-  gateway    String?
-  gatewayRef String?
-  paidAt     DateTime?
+  id             String      @id @default(cuid())
+  reference      String      @unique
+  eventId        String
+  event          Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tierId         String?
+  tier           TicketTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  firstName      String
+  lastName       String
+  email          String
+  phone          String?
+  quantity       Int
+  unitPrice      Float
+  subtotal       Float
+  discount       Float       @default(0)
+  /// Payment processing fee the buyer pays on top of the ticket price (part of total)
+  serviceFee     Float       @default(0)
+  total          Float
+  currency       String      @default("NGN")
+  couponId       String?
+  coupon         Coupon?     @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  status         OrderStatus @default(PENDING)
+  source         OrderSource @default(PUBLIC)
+  gateway        String?
+  gatewayRef     String?
+  paidAt         DateTime?
   /// Unpaid orders hold seats until this time, then expire
-  expiresAt  DateTime?
-  refundedAt DateTime?
-  refundRef  String?
-  note       String?
-  createdBy  String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  tickets    Ticket[]
+  expiresAt      DateTime?
+  refundedAt     DateTime?
+  refundRef      String?
+  /// Which Paystack mode took the payment: "live" or "test" (null for free and comp orders)
+  paymentMode    String?
+  /// Paystack's processing fee, in the order currency
+  gatewayFee     Float?
+  /// Money returned to the buyer (the full total for a full refund)
+  refundedAmount Float?
+  note           String?
+  createdBy      String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  tickets        Ticket[]
 
   @@index([eventId, status])
   @@index([email])

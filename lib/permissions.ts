@@ -14,6 +14,7 @@ export const ROLES: { value: Role; label: string; description: string }[] = [
 export const PERMISSIONS = [
   { key: 'content', label: 'Website content', description: 'Edit page text and images.' },
   { key: 'events', label: 'Events & tickets', description: 'Create events, see sales, comp tickets, coupons, exports and attendee emails.' },
+  { key: 'revenue', label: 'Revenue', description: 'See ticket sales, Paystack fees, refunds and net revenue, and export them.' },
   { key: 'checkin', label: 'Door check-in', description: 'Scan tickets at the door. Already included with Events & tickets.' },
   { key: 'releases', label: 'Releases', description: 'Edit releases and run the Spotify sync.' },
   { key: 'videos', label: 'Videos', description: 'Edit videos and run the YouTube sync.' },
@@ -51,6 +52,7 @@ export const ADMIN_NAV: { href: string; label: string; permission?: Permission }
   { href: '/admin', label: 'Dashboard' },
   { href: '/admin/content', label: 'Website content', permission: 'content' },
   { href: '/admin/events', label: 'Events', permission: 'events' },
+  { href: '/admin/revenue', label: 'Revenue', permission: 'revenue' },
   { href: '/admin/checkin', label: 'Door check-in', permission: 'checkin' },
   { href: '/admin/releases', label: 'Releases', permission: 'releases' },
   { href: '/admin/videos', label: 'Videos', permission: 'videos' },

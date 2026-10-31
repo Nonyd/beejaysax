@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   const raw = await req.text()
   const signedBy = await verifyWebhookSignature(raw, req.headers.get('x-paystack-signature'))
   if (!signedBy) return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
-  let event: { event?: string; data?: { reference?: string; transaction_reference?: string } }
+  let event: { event?: string; data?: { reference?: string; transaction_reference?: string; amount?: number } }
   try {
     event = JSON.parse(raw)
   } catch {
@@ -35,7 +35,11 @@ export async function POST(req: NextRequest) {
       if (order && order.status === 'PAID') {
         const now = new Date()
         await prisma.$transaction([
-          prisma.order.update({ where: { id: order.id }, data: { status: 'REFUNDED', refundedAt: now } }),
+          prisma.order.update({
+            where: { id: order.id },
+            // Paystack reports the refund in kobo/cents; a partial refund keeps its real amount.
+            data: { status: 'REFUNDED', refundedAt: now, refundedAmount: event.data?.amount ? event.data.amount / 100 : order.total },
+          }),
           prisma.ticket.updateMany({ where: { orderId: order.id }, data: { paymentStatus: 'REFUNDED', cancelledAt: now } }),
         ])
       }

@@ -92,7 +92,7 @@ export default function RegistrationsClient({
     if (action === 'cancel' && !confirm(`Cancel ${ids.length} ticket(s)? They will no longer get in at the door.`)) return
     if (
       action === 'refund' &&
-      !confirm('Refund the selected orders through Paystack? Every ticket in those orders is cancelled and the buyer gets their money back.')
+      !confirm('Refund the selected orders through Paystack? Every ticket in those orders is cancelled and the buyer gets the ticket price back (the payment processing fee is not refunded).')
     )
       return
     setBusy(action)

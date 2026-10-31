@@ -58,15 +58,27 @@ export type VerifiedPayment = {
   currency: string
   reference: string
   id: number
+  /** 'live' or 'test', from Paystack itself */
+  mode: 'live' | 'test'
+  /** Paystack's fee in the payment currency (null if not reported yet) */
+  fee: number | null
 }
 
 export async function verifyPayment(reference: string): Promise<VerifiedPayment> {
   const { secretKey } = await activeSecret()
-  const d = await call<{ status: string; amount: number; currency: string; reference: string; id: number }>(
+  const d = await call<{ status: string; amount: number; currency: string; reference: string; id: number; domain?: string; fees?: number | null }>(
     secretKey,
     `/transaction/verify/${encodeURIComponent(reference)}`
   )
-  return { status: d.status, amount: d.amount / 100, currency: d.currency, reference: d.reference, id: d.id }
+  return {
+    status: d.status,
+    amount: d.amount / 100,
+    currency: d.currency,
+    reference: d.reference,
+    id: d.id,
+    mode: d.domain === 'live' ? 'live' : 'test',
+    fee: typeof d.fees === 'number' ? d.fees / 100 : null,
+  }
 }
 
 export async function refundPayment(reference: string, amount?: number) {

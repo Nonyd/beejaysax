@@ -44,6 +44,7 @@ export default async function EventPurchasePage({ params }: Props) {
           <PurchasePanel
             eventId={event.id}
             eventTitle={event.title}
+            currency={event.currency}
             currencySymbol={currencySymbol(event.currency)}
             tiers={tiers.map((t) => ({
               id: t.id,

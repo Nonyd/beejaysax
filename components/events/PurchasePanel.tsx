@@ -11,12 +11,14 @@ type Tier = Parameters<typeof TicketPurchaseForm>[0]['tiers'][number]
 export default function PurchasePanel({
   eventId,
   eventTitle,
+  currency,
   currencySymbol,
   tiers: initial,
   hasCoupons,
 }: {
   eventId: string
   eventTitle: string
+  currency: string
   currencySymbol: string
   tiers: Tier[]
   hasCoupons: boolean
@@ -44,7 +46,7 @@ export default function PurchasePanel({
     <>
       <p className="mt-8 font-body text-lg font-medium text-gold">Tickets for</p>
       <h1 className="mt-3 font-display text-[clamp(40px,6vw,72px)] leading-[0.95] tracking-[-0.02em] text-ivory">{eventTitle}</h1>
-      <TicketPurchaseForm eventId={eventId} currencySymbol={currencySymbol} tiers={tiers} hasCoupons={hasCoupons} />
+      <TicketPurchaseForm eventId={eventId} currency={currency} currencySymbol={currencySymbol} tiers={tiers} hasCoupons={hasCoupons} />
     </>
   )
 }
