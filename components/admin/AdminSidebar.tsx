@@ -4,8 +4,10 @@ import { Wordmark } from '@/components/layout/Navbar'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
+import { Grid2x2 } from 'lucide-react'
+import { NAV_ICONS, isNavActive, type AdminNavItem } from '@/components/admin/admin-nav'
 
-export type AdminNavItem = { href: string; label: string }
+export type { AdminNavItem }
 
 export default function AdminSidebar({
   username,
@@ -20,14 +22,11 @@ export default function AdminSidebar({
 }) {
   const pathname = usePathname()
 
-  function isActive(href: string) {
-    if (href === '/admin') return pathname === '/admin'
-    return pathname.startsWith(href)
-  }
+  const isActive = (href: string) => isNavActive(pathname, href)
 
   return (
     <aside
-      className="fixed left-0 top-0 flex h-screen flex-col border-r"
+      className="fixed left-0 top-0 hidden h-screen flex-col border-r lg:flex"
       style={{
         width,
         zIndex: 40,
@@ -62,17 +61,21 @@ export default function AdminSidebar({
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-6">
         {navItems.map((item) => {
           const active = isActive(item.href)
+          const Icon = NAV_ICONS[item.href] ?? Grid2x2
           return (
             <Link
               key={item.href}
               href={item.href}
+              aria-current={active ? 'page' : undefined}
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: 13,
                 fontWeight: active ? 600 : 500,
                 letterSpacing: '0.06em',
-                display: 'block',
-                padding: '12px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '11px 14px',
                 borderRadius: 2,
                 textDecoration: 'none',
                 color: active ? 'var(--ivory)' : 'color-mix(in srgb, var(--ivory) 65%, transparent)',
@@ -82,6 +85,7 @@ export default function AdminSidebar({
                 transition: 'background 200ms, color 200ms',
               }}
             >
+              <Icon size={18} strokeWidth={active ? 2.2 : 1.8} aria-hidden style={{ color: active ? 'var(--gold)' : undefined, flexShrink: 0 }} />
               {item.label}
             </Link>
           )

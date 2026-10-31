@@ -13,8 +13,8 @@ export default function AdminPageHeader({
 }) {
   return (
     <div
-      className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
-      style={{ borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', paddingBottom: 28 }}
+      className="mb-6 flex flex-col gap-5 pb-5 md:mb-10 md:flex-row md:items-end md:justify-between md:gap-6 md:pb-7"
+      style={{ borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)' }}
     >
       <div style={{ minWidth: 0 }}>
         {eyebrow && (
@@ -48,7 +48,7 @@ export default function AdminPageHeader({
           <p
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: 15,
+              fontSize: 'clamp(14px,3.8vw,15px)',
               lineHeight: 1.5,
               color: 'color-mix(in srgb, var(--ivory) 65%, transparent)',
               marginTop: 10,
@@ -60,7 +60,7 @@ export default function AdminPageHeader({
           </p>
         )}
       </div>
-      {action && <div className="flex shrink-0 flex-wrap gap-3">{action}</div>}
+      {action && <div className="flex shrink-0 flex-wrap gap-2 sm:gap-3 max-md:[&>*]:flex-1 max-md:[&>*]:justify-center max-md:[&>*]:text-center">{action}</div>}
     </div>
   )
 }

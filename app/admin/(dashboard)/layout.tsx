@@ -1,11 +1,15 @@
 import { redirect } from 'next/navigation'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 import AdminHeader from '@/components/admin/AdminHeader'
+import AdminMobileNav from '@/components/admin/AdminMobileNav'
+import type { Viewport } from 'next'
 import { getCurrentAdmin } from '@/lib/admin-auth'
 import { ADMIN_NAV, ROLES, can } from '@/lib/permissions'
 import { getMaintenance } from '@/lib/maintenance'
 
 export const metadata = { title: 'Admin — BeeJay Sax' }
+// Full-bleed on phones so the tab bar can sit in the safe area above the home indicator.
+export const viewport: Viewport = { viewportFit: 'cover', themeColor: '#11142f' }
 
 const SIDEBAR_W = 280
 
@@ -23,10 +27,12 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
   return (
     <div className="admin-ui min-h-screen antialiased" style={{ background: 'var(--night)', color: 'var(--ivory)' }}>
       <AdminSidebar username={admin.name ?? admin.username} roleLabel={roleLabel} navItems={navItems} width={SIDEBAR_W} />
-      <div className="flex flex-col" style={{ marginLeft: SIDEBAR_W, minHeight: '100vh' }}>
+      <AdminMobileNav navItems={navItems} username={admin.name ?? admin.username} roleLabel={roleLabel} />
+      {/* The sidebar is desktop only; on phones the content uses the full width. */}
+      <div className="flex min-h-screen flex-col lg:ml-[var(--sidebar-w)]" style={{ ['--sidebar-w' as string]: `${SIDEBAR_W}px` }}>
         {maintenance.enabled && (
           <div
-            className="px-8 py-2.5 text-[13px]"
+            className="px-4 py-2.5 text-[13px] lg:px-8"
             style={{ background: 'color-mix(in srgb, var(--warn) 14%, transparent)', borderBottom: '1px solid color-mix(in srgb, var(--warn) 40%, transparent)', color: 'var(--warn)' }}
           >
             Maintenance mode is on: visitors see the maintenance page. You can still browse the site because you are signed in.
@@ -34,7 +40,7 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
         )}
         <AdminHeader />
         <main className="flex-1 overflow-x-hidden overflow-y-auto" style={{ background: 'var(--night)' }}>
-          <div className="admin-content py-10 pb-16">{children}</div>
+          <div className="admin-content admin-main py-6 lg:py-10 lg:pb-16">{children}</div>
         </main>
       </div>
     </div>

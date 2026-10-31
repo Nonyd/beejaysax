@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import SectionLabel from '@/components/ui/SectionLabel'
-import AdminPageHeader, { adminOutlineLinkStyle, adminPrimaryLinkStyle } from '@/components/admin/AdminPageHeader'
+import AdminPageHeader, { adminOutlineLinkStyle } from '@/components/admin/AdminPageHeader'
+import { CalendarPlus, Disc3, ImagePlus, MessageSquareText, ScanLine, Wallet } from 'lucide-react'
 import { requireAdmin } from '@/lib/admin-auth'
 import { ADMIN_NAV, can } from '@/lib/permissions'
 import { getRevenueReport, money } from '@/lib/revenue'
@@ -75,6 +76,16 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
   const quickLinks = ADMIN_NAV.filter((item) => item.href !== '/admin' && item.permission && can(admin, item.permission))
 
+  // The things done most often, as one-tap shortcuts.
+  const actions = [
+    { href: '/admin/events/new', label: 'New event', Icon: CalendarPlus, allowed: show.events },
+    { href: '/admin/checkin', label: 'Scan tickets', Icon: ScanLine, allowed: can(admin, 'checkin') },
+    { href: '/admin/revenue', label: 'Revenue', Icon: Wallet, allowed: show.revenue },
+    { href: '/admin/messages', label: 'Messages', Icon: MessageSquareText, allowed: show.messages },
+    { href: '/admin/releases/new', label: 'New release', Icon: Disc3, allowed: show.releases },
+    { href: '/admin/gallery', label: 'Add photos', Icon: ImagePlus, allowed: show.gallery },
+  ].filter((a) => a.allowed)
+
   return (
     <div>
       <AdminPageHeader
@@ -103,24 +114,25 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         </div>
       )}
 
-      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {/* On phones the quick actions come first: they are what you tap; the figures follow. */}
+      <div className="flex flex-col">
+      <div className="order-2 mb-8 grid grid-cols-2 gap-3 sm:order-1 sm:gap-4 lg:mb-10 xl:grid-cols-3">
         {stats.map((stat) => (
           <div
             key={stat.label}
             style={{
               border: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)',
               background: 'var(--ink)',
-              padding: '24px 28px',
               transition: 'border-color 200ms, box-shadow 200ms',
               boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
             }}
-            className="hover:border-ivory/20"
+            className={`min-w-0 rounded-[18px] p-4 hover:border-ivory/20 sm:rounded-none sm:px-7 sm:py-6 ${stat.isText ? 'col-span-2 sm:col-span-1' : ''}`}
           >
             <SectionLabel className="mb-3">{stat.label}</SectionLabel>
             <p
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: stat.isText ? 30 : 44,
+                fontSize: stat.isText ? 'clamp(26px,6vw,30px)' : 'clamp(34px,9vw,44px)',
                 color: 'var(--gold)',
                 lineHeight: 1,
                 fontWeight: 700,
@@ -138,34 +150,33 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         ))}
       </div>
 
-      {stats.length > 0 && (
-        <div className="mb-12 flex flex-wrap gap-3">
-          {show.events && (
-            <Link href="/admin/events/new" style={adminPrimaryLinkStyle()}>
-              + New Event
-            </Link>
-          )}
-          {show.releases && (
-            <Link href="/admin/releases/new" style={adminOutlineLinkStyle()}>
-              + New Release
-            </Link>
-          )}
-          {show.gallery && (
-            <Link href="/admin/gallery" style={adminOutlineLinkStyle()}>
-              Upload Photos
-            </Link>
-          )}
-          {show.messages && (
-            <Link href="/admin/messages" style={adminOutlineLinkStyle()}>
-              View Messages
-            </Link>
-          )}
-        </div>
+      {actions.length > 0 && (
+        <nav aria-label="Quick actions" className="order-1 mb-8 sm:order-2 lg:mb-12">
+          <p className="mb-3 text-[13px] font-semibold text-ivory/60 sm:hidden">Quick actions</p>
+          <ul className="grid grid-cols-4 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+            {actions.map((a, i) => (
+              <li key={a.href}>
+                <Link
+                  href={a.href}
+                  className={`flex h-full flex-col items-center gap-2 rounded-[18px] border border-ivory/10 bg-ink px-1 py-3 text-center no-underline active:scale-[0.97] sm:flex-row sm:rounded-full sm:px-6 sm:py-3 ${
+                    i === 0 ? 'sm:border-gold sm:bg-gold sm:text-night' : 'sm:bg-transparent'
+                  }`}
+                >
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-[14px] sm:h-auto sm:w-auto sm:bg-transparent ${i === 0 ? 'bg-gold text-night' : 'bg-gold/12 text-gold sm:text-current'}`}>
+                    <a.Icon className="h-5 w-5 sm:h-4 sm:w-4" aria-hidden />
+                  </span>
+                  <span className={`text-[11px] leading-tight font-semibold sm:text-[14px] ${i === 0 ? 'text-ivory sm:text-night' : 'text-ivory'}`}>{a.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       )}
+      </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-8">
         {show.events && (
-        <div style={{ border: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', background: 'var(--ink)', overflow: 'hidden' }}>
+        <div className="rounded-[18px] lg:rounded-none" style={{ border: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', background: 'var(--ink)', overflow: 'hidden' }}>
           <div style={{ borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', padding: '20px 24px' }}>
             <SectionLabel>Recent Registrations</SectionLabel>
           </div>
@@ -212,7 +223,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         )}
 
         {show.messages && (
-        <div style={{ border: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', background: 'var(--ink)', overflow: 'hidden' }}>
+        <div className="rounded-[18px] lg:rounded-none" style={{ border: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', background: 'var(--ink)', overflow: 'hidden' }}>
           <div style={{ borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)', padding: '20px 24px' }}>
             <SectionLabel>Recent Messages</SectionLabel>
           </div>

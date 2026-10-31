@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 
@@ -7,6 +9,7 @@ const titles: Record<string, string> = {
   '/admin': 'Dashboard',
   '/admin/content': 'Website content',
   '/admin/events': 'Events',
+  '/admin/revenue': 'Revenue',
   '/admin/releases': 'Releases',
   '/admin/videos': 'Videos',
   '/admin/gallery': 'Gallery',
@@ -35,21 +38,27 @@ export default function AdminHeader() {
   })
 
   return (
+    // On phones this is the app's top bar: sticky, compact, with the brand mark on the left.
     <header
-      className="flex min-h-[72px] items-stretch justify-between gap-6"
+      className="sticky top-0 z-40 flex min-h-[60px] items-center justify-between gap-3 px-4 py-2.5 lg:static lg:min-h-[72px] lg:items-stretch lg:gap-6 lg:px-8 lg:py-3.5"
       style={{
         flexShrink: 0,
         borderBottom: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)',
         background: 'color-mix(in srgb, var(--night) 92%, transparent)',
         backdropFilter: 'blur(12px)',
-        paddingLeft: 32,
-        paddingRight: 32,
-        paddingTop: 14,
-        paddingBottom: 14,
+        paddingTop: 'max(10px, env(safe-area-inset-top))',
       }}
     >
+      <Link
+        href="/admin"
+        aria-label="Admin dashboard"
+        className="shrink-0 no-underline lg:hidden"
+      >
+        <Image src="/icon.png" alt="" width={40} height={40} className="h-10 w-10 rounded-[12px]" loading="eager" />
+      </Link>
       <div className="min-w-0 flex-1">
         <p
+          className="hidden lg:block"
           style={{
             fontFamily: 'var(--font-sans)',
             fontSize: 10,
@@ -63,9 +72,10 @@ export default function AdminHeader() {
           BeeJay Sax
         </p>
         <h1
+          className="truncate"
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(22px,2.5vw,28px)',
+            fontSize: 'clamp(20px,2.5vw,28px)',
             color: 'var(--ivory)',
             fontWeight: 600,
             margin: 0,
@@ -77,7 +87,7 @@ export default function AdminHeader() {
       </div>
       <ThemeToggle className="self-center" />
       <div
-        className="hidden shrink-0 sm:block"
+        className="hidden shrink-0 lg:block"
         style={{
           alignSelf: 'center',
           borderLeft: '1px solid color-mix(in srgb, var(--ivory) 12%, transparent)',
