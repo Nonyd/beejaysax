@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 /** "Join the mailing list" form in the footer. Adds the visitor to Admin → Mailing list, tagged "Website signup". */
 export default function SignupForm() {
@@ -72,6 +73,13 @@ export default function SignupForm() {
           {state === 'busy' ? 'Joining…' : 'Join the list'}
         </button>
       </div>
+      <p className="mt-3 font-body text-[13px] leading-relaxed text-ivory/50">
+        By subscribing you agree to receive emails from BeeJay Sax. Unsubscribe anytime. See our{' '}
+        <Link href="/privacy" className="text-ivory/70 underline underline-offset-2 hover:text-gold">
+          Privacy Policy
+        </Link>
+        .
+      </p>
       {error && (
         <p role="alert" className="mt-3 font-body text-sm text-gold-lt">
           {error}

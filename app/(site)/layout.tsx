@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer'
 import BackToTop from '@/components/ui/BackToTop'
 import { PlayerProvider } from '@/components/player/PlayerProvider'
 import MiniPlayer from '@/components/player/MiniPlayer'
+import ConsentBanner from '@/components/consent/ConsentBanner'
 import { getContent } from '@/lib/content/store'
 
 // Public pages read events and editable content from the database, and CI builds have no access to
@@ -21,6 +22,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <Footer />
         <BackToTop />
         <MiniPlayer />
+        {/* Public site only: the admin sets no non-essential cookies */}
+        <ConsentBanner />
       </PlayerProvider>
     </LenisProvider>
   )

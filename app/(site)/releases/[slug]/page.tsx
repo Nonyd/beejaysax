@@ -10,6 +10,7 @@ import { fmt } from '@/lib/time'
 import { toPreviewRelease } from '@/lib/previews'
 import { PreviewButton, Tracklist } from '@/components/player/PreviewControls'
 import JsonLd from '@/components/seo/JsonLd'
+import ConsentEmbed from '@/components/consent/ConsentEmbed'
 import { breadcrumbJsonLd, pageMetadata, releaseJsonLd } from '@/lib/seo'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -109,13 +110,15 @@ export default async function ReleaseDetailPage({ params }: Props) {
 
         {yt?.[1] && (
           <div className="mt-20 aspect-video overflow-hidden rounded-[28px] bg-ink shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
-            <iframe
-              title={release.title}
-              src={`https://www.youtube.com/embed/${yt[1]}`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="h-full w-full border-0"
-            />
+            <ConsentEmbed kind="youtube">
+              <iframe
+                title={release.title}
+                src={`https://www.youtube-nocookie.com/embed/${yt[1]}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="h-full w-full border-0"
+              />
+            </ConsentEmbed>
           </div>
         )}
       </div>

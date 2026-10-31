@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Loader2, Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { processingFee } from '@/lib/payments/fees'
 
 type Tier = {
   id: string
@@ -33,11 +34,13 @@ const stepBtn =
 export default function TicketPurchaseForm({
   eventId,
   tiers,
+  currency,
   currencySymbol,
   hasCoupons,
 }: {
   eventId: string
   tiers: Tier[]
+  currency: string
   currencySymbol: string
   hasCoupons: boolean
 }) {
@@ -62,8 +65,10 @@ export default function TicketPurchaseForm({
   const maxQty = tier ? Math.max(1, Math.min(tier.maxPerOrder, tier.remaining ?? tier.maxPerOrder)) : 1
   const subtotal = (tier?.price ?? 0) * quantity
   const discount = applied ? Math.min(subtotal, applied.discount) : 0
-  const total = subtotal - discount
-  const money = (n: number) => (n === 0 ? 'Free' : `${currencySymbol}${n.toLocaleString()}`)
+  // Same calculation as the server, so the total shown is the amount charged.
+  const fee = processingFee(subtotal - discount, currency)
+  const total = subtotal - discount + fee
+  const money = (n: number) => (n === 0 ? 'Free' : `${currencySymbol}${n.toLocaleString(undefined, { maximumFractionDigits: 2 })}`)
 
   function chooseTier(id: string) {
     setTierId(id)
@@ -245,10 +250,22 @@ export default function TicketPurchaseForm({
       )}
 
       <div className="border-t-2 border-dashed border-ink/20 pt-6">
+        {(discount > 0 || fee > 0) && (
+          <div className="mb-2 flex justify-between font-body text-sm text-ink/70">
+            <span>{quantity > 1 ? `Tickets (${quantity})` : 'Ticket'}</span>
+            <span>{money(subtotal)}</span>
+          </div>
+        )}
         {discount > 0 && (
           <div className="mb-2 flex justify-between font-body text-sm text-ink/70">
-            <span>Subtotal</span>
-            <span>{money(subtotal)}</span>
+            <span>Discount</span>
+            <span>−{money(discount)}</span>
+          </div>
+        )}
+        {fee > 0 && (
+          <div className="mb-2 flex justify-between font-body text-sm text-ink/70">
+            <span>Payment processing fee</span>
+            <span>{money(fee)}</span>
           </div>
         )}
         <div className="flex items-baseline justify-between gap-4">
@@ -291,12 +308,26 @@ export default function TicketPurchaseForm({
         )}
       </button>
 
-      <p className="text-center font-body text-sm text-ink/60">
-        Questions?{' '}
-        <Link href="/contact?inquiry=booking" className="font-semibold text-clay-deep hover:underline">
-          Contact the team
-        </Link>
-      </p>
+      <div className="space-y-3">
+        <p className="text-center font-body text-[13px] leading-relaxed text-ink/60">
+          By {total > 0 ? 'buying' : 'booking'} you agree to the{' '}
+          <Link href="/ticket-terms" className="font-semibold text-clay-deep hover:underline">
+            Ticket Terms
+          </Link>{' '}
+          and{' '}
+          <Link href="/privacy" className="font-semibold text-clay-deep hover:underline">
+            Privacy Policy
+          </Link>
+          .
+        </p>
+
+        <p className="text-center font-body text-sm text-ink/60">
+          Questions?{' '}
+          <Link href="/contact?inquiry=booking" className="font-semibold text-clay-deep hover:underline">
+            Contact the team
+          </Link>
+        </p>
+      </div>
     </form>
   )
 }

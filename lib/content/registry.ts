@@ -85,6 +85,28 @@ export const CONTENT = {
       twitter: text('X (Twitter) handle', '@beejaysaxbolaji', { max: 40 }),
     },
   }),
+  legal: section({
+    title: 'Privacy & legal details',
+    group: 'Site-wide',
+    description: 'Who runs the site and how to reach them about personal data. Shown on the Privacy, Cookie, Terms and Ticket terms pages.',
+    fields: {
+      controllerName: text('Who is responsible for the data', 'Abolaji David Banjoko, trading as BeeJay Sax', {
+        help: 'The person or company that decides how visitors’ data is used (the “data controller”). Use the registered business name if there is one.',
+      }),
+      address: text('Postal address', 'Lagos, Nigeria', { help: 'A full postal address is best: regulators expect one.' }),
+      privacyEmail: text('Privacy contact email', 'booking@beejaysax.com', { help: 'Where people send data requests and privacy questions.' }),
+      dpoName: text('Data Protection Officer (name)', '', {
+        help: 'Leave empty if you have none. The Nigeria Data Protection Commission requires a DPO for some controllers, for example those processing data of large numbers of people.',
+      }),
+      dpoEmail: text('Data Protection Officer (email)', '', { help: 'Only shown when a DPO name is set.' }),
+      lastUpdated: text('“Last updated” date', '31 October 2026', { max: 40, help: 'Change this whenever you change the policies.' }),
+      refundPolicy: area(
+        'Refund policy',
+        'Tickets are non-refundable, except as set out below.\n\nIf an event is cancelled, we refund the full ticket price to the card or account you paid with. The payment processing fee is not refundable.\n\nIf an event is postponed, your ticket is valid for the new date. If you can’t make the new date, ask for a refund within 14 days of the announcement and we will refund the ticket price.\n\nYou may give your ticket to someone else by forwarding them the ticket link. Each QR code admits once: if a ticket has been copied, only the first scan gets in, and we may refuse entry for a duplicated or already-used QR code.',
+        { rows: 10, help: 'Shown on the Ticket terms page. Leave a blank line between paragraphs.' }
+      ),
+    },
+  }),
   homeHero: section({
     title: 'Home: top section',
     group: 'Home page',

@@ -9,6 +9,7 @@ import { retryQueuedEmails } from '@/lib/email/send'
 import { markPastEvents, sendDueReminders } from '@/lib/jobs/reminders'
 import { runScheduledSync } from '@/lib/sync/run'
 import { pumpCampaigns } from '@/lib/mailing/campaigns'
+import { runRetention } from '@/lib/jobs/retention'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -48,6 +49,8 @@ async function run(req: NextRequest) {
     return n
   })
   await task('musicSync', () => runScheduledSync())
+  // Once a day: deletes personal data past the Privacy Policy's retention periods.
+  await task('retention', () => runRetention())
   // Last, with most of the remaining time: finishes campaigns the admin started and then closed the page on.
   await task('campaigns', () => pumpCampaigns(150_000))
 

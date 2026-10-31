@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import { Loader2, Mail, MapPin, Phone } from 'lucide-react'
 import Adire from '@/components/ui/Adire'
 import { cn } from '@/lib/utils'
@@ -229,6 +230,13 @@ export default function ContactForm({ content, site }: { content: ContentOf<'con
             {loading && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
             {loading ? 'Sending' : 'Send message'}
           </button>
+          <p className="mt-4 text-center font-body text-[13px] leading-relaxed text-ink/60">
+            We use your details only to reply to your message. See our{' '}
+            <Link href="/privacy" className="font-semibold text-clay-deep hover:underline">
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </form>
       </div>
     </section>

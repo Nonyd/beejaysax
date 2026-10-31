@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Play, Search } from 'lucide-react'
 import { usePlayer } from '@/components/player/PlayerProvider'
+import ConsentEmbed from '@/components/consent/ConsentEmbed'
 import { cn } from '@/lib/utils'
 
 export type GalleryVideo = {
@@ -100,14 +101,16 @@ export default function VideoGallery({ videos, initialId }: { videos: GalleryVid
         <div ref={stage} className="scroll-mt-28">
           <div className="relative aspect-video overflow-hidden rounded-[28px] bg-ink shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
             {playing ? (
-              <iframe
-                key={selected.youtubeId}
-                title={selected.title}
-                src={`https://www.youtube.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
-                allow="autoplay; encrypted-media; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
-              />
+              <ConsentEmbed kind="youtube" className="absolute inset-0">
+                <iframe
+                  key={selected.youtubeId}
+                  title={selected.title}
+                  src={`https://www.youtube-nocookie.com/embed/${selected.youtubeId}?autoplay=1&rel=0`}
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full border-0"
+                />
+              </ConsentEmbed>
             ) : (
               <button
                 type="button"

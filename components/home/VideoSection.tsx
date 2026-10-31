@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Play } from 'lucide-react'
 import { usePlayer } from '@/components/player/PlayerProvider'
+import ConsentEmbed from '@/components/consent/ConsentEmbed'
 
 export type HomeVideo = { id: string; title: string; thumbnail?: string | null }
 
@@ -15,13 +16,15 @@ function VideoCard({ video, large = false }: { video: HomeVideo; large?: boolean
   return (
     <div className="relative aspect-video overflow-hidden rounded-[28px] bg-night shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
       {playing ? (
-        <iframe
-          title={video.title}
-          src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full border-0"
-        />
+        <ConsentEmbed kind="youtube" className="absolute inset-0">
+          <iframe
+            title={video.title}
+            src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1`}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full border-0"
+          />
+        </ConsentEmbed>
       ) : (
         <button
           type="button"

@@ -46,6 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     page('/videos', 0.7, 'weekly', latestVideo?.createdAt),
     page('/gallery', 0.6, 'monthly'),
     page('/contact', 0.6, 'yearly'),
+    ...['/privacy', '/cookies', '/terms', '/ticket-terms'].map((p) => page(p, 0.2, 'yearly')),
     ...events.map((e) => ({
       url: `${SITE_URL}/events/${e.id}`,
       lastModified: e.updatedAt,

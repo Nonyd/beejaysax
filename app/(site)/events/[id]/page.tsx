@@ -9,6 +9,7 @@ import { fmt } from '@/lib/time'
 import { getTierAvailability } from '@/lib/events/availability'
 import { currencySymbol } from '@/lib/events/editor-data'
 import JsonLd from '@/components/seo/JsonLd'
+import ConsentEmbed from '@/components/consent/ConsentEmbed'
 import { breadcrumbJsonLd, eventJsonLd, pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ id: string }> }
@@ -130,7 +131,9 @@ export default async function EventDetailPage({ params }: Props) {
               </p>
               {mapsSrc && (
                 <div className="mt-6 aspect-video overflow-hidden rounded-[24px] border border-line">
-                  <iframe title={`Map to ${event.venue}`} src={mapsSrc} className="h-full w-full border-0" loading="lazy" />
+                  <ConsentEmbed kind="maps">
+                    <iframe title={`Map to ${event.venue}`} src={mapsSrc} className="h-full w-full border-0" loading="lazy" />
+                  </ConsentEmbed>
                 </div>
               )}
             </div>

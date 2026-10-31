@@ -3,6 +3,7 @@ import Adire from '@/components/ui/Adire'
 import { Wordmark } from '@/components/layout/Navbar'
 import { getContent } from '@/lib/content/store'
 import SignupForm from '@/components/mailing/SignupForm'
+import CookieSettingsButton from '@/components/consent/CookieSettingsButton'
 
 const NAV = [
   { label: 'Music', href: '/releases' },
@@ -12,6 +13,14 @@ const NAV = [
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ]
+
+const LEGAL = [
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Cookies', href: '/cookies' },
+  { label: 'Terms', href: '/terms' },
+  { label: 'Ticket terms', href: '/ticket-terms' },
+]
+const legalLink = 'cursor-pointer text-ivory/50 no-underline transition-colors hover:text-gold'
 
 export default async function Footer() {
   const site = await getContent('site')
@@ -80,6 +89,20 @@ export default async function Footer() {
       <div className="site-shell">
         <div className="flex flex-col items-center justify-between gap-3 border-t border-line py-6 font-body text-[13px] text-ivory/50 md:flex-row">
           <span>© {new Date().getFullYear()} BeeJay Sax</span>
+          <nav aria-label="Legal">
+            <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              {LEGAL.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className={legalLink}>
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <CookieSettingsButton className={legalLink} />
+              </li>
+            </ul>
+          </nav>
           <a href="https://sonshubmedia.com" target="_blank" rel="noopener noreferrer" className="text-ivory/50 no-underline hover:text-gold">
             Built by SonsHub Media
           </a>
